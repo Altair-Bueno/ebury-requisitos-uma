@@ -8,10 +8,6 @@ public class Login {
     private JTextField usernameField;
     private JLabel label1;
     private JLabel label2;
-    private JLabel Image;
-
-    private void createUIComponents() {
-        // TODO: place custom component creation code here
-        Image = new JLabel(new ImageIcon("resources/EburyLogo.png"));
-    }
+    private JLabel image;
+    private JButton loginButton;
 }
