@@ -13,4 +13,14 @@ public class Informe {
     private JPanel healthCheckPanel;
     private JPanel buttonPanel;
     private JScrollPane scrollPane;
+    private JComboBox tipoComboBox;
+    private JTextField numeroProductoTextField;
+    private JTextField primerNombreTextField;
+    private JTextField segundoNombreTextField;
+    private JTextField ciudadTextField;
+    private JTextField calleTextField;
+    private JTextField numeroTextField;
+    private JTextField postalTextField;
+    private JLabel nombreLabel;
+    private JLabel direccionLabel;
 }
