@@ -25,10 +25,10 @@ public class LoginController {
           List list = query.list();
           if(list.isEmpty()){
               System.out.println("No encontrado");
-              loginView.getUsernameField().setText("");
-              loginView.getPasswordField().setText("");
+              loginView.failure();
           } else{
               System.out.println("EXITO");
+              loginView.success();
           }
 
       } catch (Exception e) {

@@ -26,4 +26,15 @@ public class Login extends JPanel {
     public JPasswordField getPasswordField(){
         return passwordField;
     }
+
+    public void failure(){
+        usernameField.setText("");
+        passwordField.setText("");
+        JOptionPane.showMessageDialog(this, "Usuario y/o contraseña erróneos.");
+    }
+
+    public void success(){
+        JFrame parent = (JFrame) this.getTopLevelAncestor();
+        parent.dispose();
+    }
 }
