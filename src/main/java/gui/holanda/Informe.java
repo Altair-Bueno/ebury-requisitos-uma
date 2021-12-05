@@ -1,8 +1,9 @@
 package gui.holanda;
 
 import javax.swing.*;
+import java.awt.*;
 
-public class Informe {
+public class Informe extends JPanel {
     private JPanel root;
     private JTextArea jsonPreviewArea;
     private JButton generarButton;
@@ -23,4 +24,8 @@ public class Informe {
     private JTextField postalTextField;
     private JLabel nombreLabel;
     private JLabel direccionLabel;
+
+    public Informe() {
+        add(root);
+    }
 }

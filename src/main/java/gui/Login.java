@@ -10,4 +10,8 @@ public class Login extends JPanel {
     private JLabel label2;
     private JLabel image;
     private JButton loginButton;
+
+    public Login() {
+        add(root);
+    }
 }
