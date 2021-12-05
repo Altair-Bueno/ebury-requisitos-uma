@@ -2,8 +2,8 @@ package gui;
 
 import javax.swing.*;
 
-public class Login {
-    private JPanel panel1;
+public class Login extends JPanel {
+    private JPanel root;
     private JPasswordField passwordField;
     private JTextField usernameField;
     private JLabel label1;
