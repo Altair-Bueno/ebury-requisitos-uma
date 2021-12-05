@@ -1,0 +1,25 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-configuration PUBLIC
+        "-//Hibernate/Hibernate Configuration DTD//EN"
+        "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+    <session-factory>
+        <property name="connection.url">jdbc:mysql://grupo10:6A9WnAAEaNcuYQfe@eburyrequisitos.cobadwnzalab.eu-central-1.rds.amazonaws.com:3306/grupo10DB
+        </property>
+        <property name="connection.driver_class">com.mysql.cj.jdbc.Driver</property>
+        <mapping class="database.AdressEntity"/>
+        <mapping class="database.AssociatedStaffEntity"/>
+        <mapping class="database.BankAccountEntity"/>
+        <mapping class="database.ClientEntity"/>
+        <mapping class="database.EburyAccountEntity"/>
+        <mapping class="database.LoginEntity"/>
+        <mapping class="database.OperationEntity"/>
+        <mapping class="database.RelationEntity"/>
+        <mapping class="database.RelationHasEburyAccountEntity"/>
+        <!-- <property name="connection.username"/> -->
+        <!-- <property name="connection.password"/> -->
+
+        <!-- DB schema will be updated if needed -->
+        <!-- <property name="hibernate.hbm2ddl.auto">update</property> -->
+    </session-factory>
+</hibernate-configuration>

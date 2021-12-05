@@ -14,4 +14,16 @@ public class Login extends JPanel {
     public Login() {
         add(root);
     }
+
+    public JButton getLoginButton() {
+        return loginButton;
+    }
+
+    public JTextField getUsernameField(){
+        return usernameField;
+    }
+
+    public JPasswordField getPasswordField(){
+        return passwordField;
+    }
 }
