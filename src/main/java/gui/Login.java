@@ -88,8 +88,10 @@ public class Login extends JPanel implements Frame{
                 frame.setVisible(true);
             }catch (NullPointerException e) {
                 var m = "El usuario y/o contraseña no se reconocen";
+                JOptionPane.showMessageDialog(login,m,m,JOptionPane.WARNING_MESSAGE);
+            } catch (Exception e) {
+                var m = e.getMessage();
                 JOptionPane.showMessageDialog(login,m,m,JOptionPane.ERROR_MESSAGE);
-            } catch (InterruptedException | ExecutionException e) {
                 e.printStackTrace();
             } finally {
                 usernameField.setEnabled(true);
