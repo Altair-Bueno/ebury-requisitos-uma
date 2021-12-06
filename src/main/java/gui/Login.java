@@ -8,7 +8,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
 
-public class Login extends JPanel implements Frame{
+public class Login extends JPanel implements Frame {
     private JPanel root;
     private JPasswordField passwordField;
     private JTextField usernameField;
@@ -19,10 +19,10 @@ public class Login extends JPanel implements Frame{
 
     public Login() {
         add(root);
-        ActionListener loginListener = (e)-> {
+        ActionListener loginListener = (e) -> {
             var username = usernameField.getText();
             var password = String.valueOf(passwordField.getPassword());
-            var search = new SearchUser(username,password,this);
+            var search = new SearchUser(username, password, this);
             search.execute();
         };
         loginButton.addActionListener(loginListener);
@@ -40,7 +40,7 @@ public class Login extends JPanel implements Frame{
         return null;
     }
 
-    private class SearchUser extends SwingWorker<LoginEntity,Void> {
+    private class SearchUser extends SwingWorker<LoginEntity, Void> {
         String username;
         String password;
         Login login;
@@ -85,12 +85,12 @@ public class Login extends JPanel implements Frame{
                 frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
                 frame.setLocationRelativeTo(null);
                 frame.setVisible(true);
-            }catch (NullPointerException e) {
+            } catch (NullPointerException e) {
                 var m = "El usuario y/o contraseña no se reconocen";
-                JOptionPane.showMessageDialog(login,m,m,JOptionPane.WARNING_MESSAGE);
+                JOptionPane.showMessageDialog(login, m, m, JOptionPane.WARNING_MESSAGE);
             } catch (Exception e) {
                 var m = e.getMessage();
-                JOptionPane.showMessageDialog(login,m,m,JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(login, m, m, JOptionPane.ERROR_MESSAGE);
                 e.printStackTrace();
             } finally {
                 usernameField.setEnabled(true);

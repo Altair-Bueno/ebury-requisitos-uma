@@ -16,6 +16,7 @@ public class Main {
         }
         FlatIntelliJLaf.setup();
     }
+
     public static void main(String[] args) {
         setUp();
         var login = new Login();
