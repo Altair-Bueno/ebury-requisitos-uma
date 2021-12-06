@@ -1,9 +1,11 @@
 package gui.holanda;
 
+import gui.Frame;
+
 import javax.swing.*;
 import java.awt.*;
 
-public class Informe extends JPanel {
+public class Informe extends JPanel implements Frame {
     private JPanel root;
     private JTextArea jsonPreviewArea;
     private JButton generarButton;
@@ -27,5 +29,16 @@ public class Informe extends JPanel {
 
     public Informe() {
         add(root);
+    }
+
+    @Override
+    public String getTitleBarName() {
+        // TODO
+        return "Informe Holanda";
+    }
+
+    @Override
+    public MenuBar getMenuBar() {
+        return null;
     }
 }

@@ -1,8 +1,11 @@
 package gui.alemania;
 
-import javax.swing.*;
+import gui.Frame;
 
-public class Informe extends JPanel {
+import javax.swing.*;
+import java.awt.*;
+
+public class Informe extends JPanel implements Frame {
     private JButton primerInformeButton;
     private JTable csvPreviewTable;
     private JButton informeSemanalButton;
@@ -13,5 +16,15 @@ public class Informe extends JPanel {
 
     public Informe() {
         add(root);
+    }
+
+    @Override
+    public String getTitleBarName() {
+        return "Informe Alemania";
+    }
+
+    @Override
+    public MenuBar getMenuBar() {
+        return null;
     }
 }
