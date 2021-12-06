@@ -1,4 +1,4 @@
-package database;
+package database.tables;
 
 import javax.persistence.*;
 import java.util.Objects;
