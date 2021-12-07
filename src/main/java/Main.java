@@ -3,8 +3,6 @@ import gui.Login;
 
 import javax.swing.*;
 
-import static javax.swing.WindowConstants.EXIT_ON_CLOSE;
-
 public class Main {
     public static void setUp() {
         if (System.getProperty("os.name").contains("Mac OS X")) {

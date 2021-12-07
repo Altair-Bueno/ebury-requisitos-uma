@@ -102,9 +102,9 @@ public class AdressEntity {
     public String toString() {
         return
                 street + " " +
-                number + " " +
-                postalCode + " " +
-                city + ", " +
-                country;
+                        number + " " +
+                        postalCode + " " +
+                        city + ", " +
+                        country;
     }
 }

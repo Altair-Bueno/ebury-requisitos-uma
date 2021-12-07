@@ -33,19 +33,20 @@ public class Informe extends JPanel implements Frame {
 
     public Informe() {
         add(root);
-        exportarButton.addActionListener(e->{
+        exportarButton.addActionListener(e -> {
             var filechooser = new JFileChooser();
             filechooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
             filechooser.setMultiSelectionEnabled(false);
             var result = filechooser.showOpenDialog(this);
             if (result == JFileChooser.APPROVE_OPTION) {
                 var folder = filechooser.getSelectedFile();
-                var file = new File(folder,"export.json");
-                var guardar = new GuardarJSONWorker(this,file);
+                var file = new File(folder, "export.json");
+                var guardar = new GuardarJSONWorker(this, file);
                 guardar.execute();
             }
         });
     }
+
     private void lockUI() {
         setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
         generarButton.setEnabled(false);
@@ -60,6 +61,7 @@ public class Informe extends JPanel implements Frame {
         numeroTextField.setEnabled(false);
         postalTextField.setEnabled(false);
     }
+
     private void unlockUI() {
         setCursor(Cursor.getDefaultCursor());
         generarButton.setEnabled(true);
@@ -74,6 +76,7 @@ public class Informe extends JPanel implements Frame {
         numeroTextField.setEnabled(true);
         postalTextField.setEnabled(true);
     }
+
     @Override
     public String getTitleBarName() {
         // TODO
@@ -85,7 +88,7 @@ public class Informe extends JPanel implements Frame {
         return null;
     }
 
-    private class GenerarWorker extends SwingWorker<String,Void> {
+    private class GenerarWorker extends SwingWorker<String, Void> {
         Informe informe;
 
         public GenerarWorker(Informe informe) {
@@ -124,14 +127,14 @@ public class Informe extends JPanel implements Frame {
                 jsonPreviewArea.setText(get());
             } catch (InterruptedException | ExecutionException e) {
                 var m = e.getMessage();
-                JOptionPane.showMessageDialog(informe,m,m,JOptionPane.ERROR_MESSAGE);
-            }finally {
+                JOptionPane.showMessageDialog(informe, m, m, JOptionPane.ERROR_MESSAGE);
+            } finally {
                 unlockUI();
             }
         }
     }
 
-    private class GuardarJSONWorker extends SwingWorker<Void,Void> {
+    private class GuardarJSONWorker extends SwingWorker<Void, Void> {
         Informe informe;
         File file;
 
@@ -150,14 +153,14 @@ public class Informe extends JPanel implements Frame {
             frame.pack();
             frame.setLocationRelativeTo(informe);
             frame.setVisible(true);
-            try (var json = new FileWriter(file)){
+            try (var json = new FileWriter(file)) {
                 json.write(jsonPreviewArea.getText());
                 progress.setValue(100);
                 var m = "Correcto";
-                JOptionPane.showMessageDialog(frame,m,m,JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(frame, m, m, JOptionPane.INFORMATION_MESSAGE);
             } catch (IOException ex) {
                 var m = ex.getMessage();
-                JOptionPane.showMessageDialog(frame,m,m,JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(frame, m, m, JOptionPane.ERROR_MESSAGE);
             } finally {
                 frame.dispose();
             }

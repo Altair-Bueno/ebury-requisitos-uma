@@ -36,8 +36,8 @@ public class Informe extends JPanel implements Frame {
             var result = filechooser.showOpenDialog(this);
             if (result == JFileChooser.APPROVE_OPTION) {
                 var folder = filechooser.getSelectedFile();
-                var file = new File(folder,"export.csv");
-                var save = new GuardarCSVWorker(this,file);
+                var file = new File(folder, "export.csv");
+                var save = new GuardarCSVWorker(this, file);
                 save.execute();
             }
         });
@@ -45,13 +45,13 @@ public class Informe extends JPanel implements Frame {
             var g = new GenerarInformeSemanalWorker(this);
             g.execute();
         });
-        enviarSFTPButton.addActionListener(e-> {
+        enviarSFTPButton.addActionListener(e -> {
             var ip = new JTextField();
             var username = new JTextField();
             var pass = new JPasswordField();
             var dest = new JTextField();
             dest.setText("/");
-            var components = new JComponent[] {
+            var components = new JComponent[]{
                     new JLabel("Host"),
                     ip,
                     new JLabel("Username"),
@@ -61,11 +61,11 @@ public class Informe extends JPanel implements Frame {
                     new JLabel("Destino"),
                     dest
             };
-            var res = JOptionPane.showConfirmDialog(this,components,"Enviar por SFTP",JOptionPane.PLAIN_MESSAGE);
+            var res = JOptionPane.showConfirmDialog(this, components, "Enviar por SFTP", JOptionPane.PLAIN_MESSAGE);
             if (res == JOptionPane.OK_OPTION) {
                 Path temp = null;
                 try {
-                    temp = Files.createTempFile(new Date().toString(),".csv");
+                    temp = Files.createTempFile(new Date().toString(), ".csv");
                     var worker = new SFTPWorker(this,
                             temp.toFile(),
                             ip.getText(),
@@ -76,7 +76,7 @@ public class Informe extends JPanel implements Frame {
                 } catch (IOException ex) {
                     ex.printStackTrace();
                     var m = ex.getMessage();
-                    JOptionPane.showMessageDialog(this,m,m,JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(this, m, m, JOptionPane.ERROR_MESSAGE);
                 }
             }
         });
@@ -90,6 +90,7 @@ public class Informe extends JPanel implements Frame {
         this.exportarButton.setEnabled(false);
 
     }
+
     private void unlockUI() {
         setCursor(Cursor.getDefaultCursor());
         this.enviarSFTPButton.setEnabled(true);
@@ -136,20 +137,20 @@ public class Informe extends JPanel implements Frame {
 
             try {
                 var jsch = new JSch();
-                var session = jsch.getSession(username,ip);
+                var session = jsch.getSession(username, ip);
                 session.setConfig("StrictHostKeyChecking", "no");
                 session.setPassword(pass);
                 session.connect();
-                var channel = (ChannelSftp)session.openChannel("sftp");
+                var channel = (ChannelSftp) session.openChannel("sftp");
                 channel.connect();
-                channel.put(file.getAbsolutePath(),dest);
+                channel.put(file.getAbsolutePath(), dest);
                 channel.exit();
                 var m = "Archivo enviado";
-                JOptionPane.showMessageDialog(informe,m,m,JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(informe, m, m, JOptionPane.INFORMATION_MESSAGE);
             } catch (Exception ex) {
                 ex.printStackTrace();
                 var m = ex.getMessage();
-                JOptionPane.showMessageDialog(informe,m,m,JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(informe, m, m, JOptionPane.ERROR_MESSAGE);
             } finally {
                 frame.dispose();
             }
@@ -162,7 +163,7 @@ public class Informe extends JPanel implements Frame {
         }
     }
 
-    private class GuardarCSVWorker extends SwingWorker<Void,Void> {
+    private class GuardarCSVWorker extends SwingWorker<Void, Void> {
         Informe informe;
         File file;
 
@@ -188,24 +189,24 @@ public class Informe extends JPanel implements Frame {
         private void generateCSV(JFrame frame, JProgressBar progress) {
             var model = csvPreviewTable.getModel();
             progress.setMaximum(model.getRowCount());
-            try (var csv = new FileWriter(file)){
+            try (var csv = new FileWriter(file)) {
                 for (int i = 0; i < model.getRowCount(); i++) {
                     csv.write(model.getColumnName(i) + ",");
                 }
                 csv.write("\n");
                 for (int i = 0; i < model.getRowCount(); i++) {
                     for (int j = 0; j < model.getColumnCount(); j++) {
-                        csv.write(model.getValueAt(i,j).toString() + ",");
+                        csv.write(model.getValueAt(i, j).toString() + ",");
                     }
                     progress.setValue(i);
                     csv.write("\n");
                 }
                 var m = "Exportación correcta";
-                JOptionPane.showMessageDialog(frame,m,m,JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(frame, m, m, JOptionPane.INFORMATION_MESSAGE);
             } catch (IOException ex) {
                 ex.printStackTrace();
                 var m = ex.getMessage();
-                JOptionPane.showMessageDialog(frame,m,m,JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(frame, m, m, JOptionPane.ERROR_MESSAGE);
             } finally {
                 frame.dispose();
             }
@@ -217,12 +218,13 @@ public class Informe extends JPanel implements Frame {
         }
     }
 
-    private class GenerarPrimerInformeWorker extends SwingWorker<List<Object>,Void>{
+    private class GenerarPrimerInformeWorker extends SwingWorker<List<Object>, Void> {
         Informe informe;
 
         public GenerarPrimerInformeWorker(Informe informe) {
             this.informe = informe;
         }
+
         @Override
         protected List<Object> doInBackground() throws Exception {
             lockUI();
@@ -246,14 +248,14 @@ public class Informe extends JPanel implements Frame {
             } catch (InterruptedException | ExecutionException e) {
                 e.printStackTrace();
                 var m = e.getMessage();
-                JOptionPane.showMessageDialog(informe,m,m,JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(informe, m, m, JOptionPane.ERROR_MESSAGE);
             } finally {
                 informe.unlockUI();
             }
         }
     }
 
-    private class GenerarInformeSemanalWorker extends SwingWorker<List<EburyAccountEntity>,Void> {
+    private class GenerarInformeSemanalWorker extends SwingWorker<List<EburyAccountEntity>, Void> {
         Informe informe;
 
         public GenerarInformeSemanalWorker(Informe informe) {
@@ -294,7 +296,7 @@ public class Informe extends JPanel implements Frame {
             } catch (InterruptedException | ExecutionException e) {
                 e.printStackTrace();
                 var m = e.getMessage();
-                JOptionPane.showMessageDialog(informe,m,m,JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(informe, m, m, JOptionPane.ERROR_MESSAGE);
             } finally {
                 informe.unlockUI();
             }

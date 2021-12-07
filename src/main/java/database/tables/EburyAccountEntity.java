@@ -67,7 +67,7 @@ public class EburyAccountEntity {
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "BankAccount_IBAN")
-    public BankAccountEntity getBankAccount(){
+    public BankAccountEntity getBankAccount() {
         return bankAccount;
     }
 
@@ -77,7 +77,7 @@ public class EburyAccountEntity {
 
     @ManyToOne
     @JoinColumn(name = "owner")
-    public ClientEntity getOwner(){
+    public ClientEntity getOwner() {
         return owner;
     }
 

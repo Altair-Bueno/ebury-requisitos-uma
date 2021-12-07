@@ -108,14 +108,14 @@ public class ClientEntity {
         this.endDate = endDate;
     }
 
-    public String fullName(){
+    public String fullName() {
         return name + " " + lastName1 + " " + lastName2;
     }
 
     @ManyToOne
     @JoinColumn(name = "address_id", insertable = false, updatable = false)
     @JoinColumn(name = "ID", insertable = false, updatable = false)
-    public AdressEntity getDireccion(){
+    public AdressEntity getDireccion() {
         return direccion;
     }
 
