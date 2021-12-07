@@ -1,16 +1,20 @@
 package gui.alemania;
 
+import com.jcraft.jsch.ChannelSftp;
+import com.jcraft.jsch.JSch;
 import database.HibernateStartUp;
 import database.tables.EburyAccountEntity;
 import gui.Frame;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableColumn;
 import java.awt.*;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
@@ -41,6 +45,41 @@ public class Informe extends JPanel implements Frame {
             var g = new GenerarInformeSemanalWorker(this);
             g.execute();
         });
+        enviarSFTPButton.addActionListener(e-> {
+            var ip = new JTextField();
+            var username = new JTextField();
+            var pass = new JPasswordField();
+            var dest = new JTextField();
+            dest.setText("/");
+            var components = new JComponent[] {
+                    new JLabel("Host"),
+                    ip,
+                    new JLabel("Username"),
+                    username,
+                    new JLabel("Password"),
+                    pass,
+                    new JLabel("Destino"),
+                    dest
+            };
+            var res = JOptionPane.showConfirmDialog(this,components,"Enviar por SFTP",JOptionPane.PLAIN_MESSAGE);
+            if (res == JOptionPane.OK_OPTION) {
+                Path temp = null;
+                try {
+                    temp = Files.createTempFile(new Date().toString(),".csv");
+                    var worker = new SFTPWorker(this,
+                            temp.toFile(),
+                            ip.getText(),
+                            username.getText(),
+                            String.valueOf(pass.getPassword()),
+                            dest.getText());
+                    worker.execute();
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                    var m = ex.getMessage();
+                    JOptionPane.showMessageDialog(this,m,m,JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        });
     }
 
     private void lockUI() {
@@ -69,6 +108,60 @@ public class Informe extends JPanel implements Frame {
         return null;
     }
 
+    private class SFTPWorker extends GuardarCSVWorker {
+        String ip;
+        String username;
+        String pass;
+        String dest;
+
+        public SFTPWorker(Informe informe, File temp, String ip, String username, String pass, String dest) {
+            super(informe, temp);
+            this.ip = ip;
+            this.username = username;
+            this.pass = pass;
+            this.dest = dest;
+        }
+
+        @Override
+        protected Void doInBackground() throws Exception {
+            super.doInBackground();
+
+            var frame = new JFrame("Send");
+            var sending = new JLabel("Sending file");
+            frame.add(sending);
+            frame.setUndecorated(true);
+            frame.pack();
+            frame.setLocationRelativeTo(informe);
+            frame.setVisible(true);
+
+            try {
+                var jsch = new JSch();
+                var session = jsch.getSession(username,ip);
+                session.setConfig("StrictHostKeyChecking", "no");
+                session.setPassword(pass);
+                session.connect();
+                var channel = (ChannelSftp)session.openChannel("sftp");
+                channel.connect();
+                channel.put(file.getAbsolutePath(),dest);
+                channel.exit();
+                var m = "Archivo enviado";
+                JOptionPane.showMessageDialog(informe,m,m,JOptionPane.INFORMATION_MESSAGE);
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                var m = ex.getMessage();
+                JOptionPane.showMessageDialog(informe,m,m,JOptionPane.ERROR_MESSAGE);
+            } finally {
+                frame.dispose();
+            }
+            return null;
+        }
+
+        @Override
+        protected void done() {
+            unlockUI();
+        }
+    }
+
     private class GuardarCSVWorker extends SwingWorker<Void,Void> {
         Informe informe;
         File file;
@@ -88,7 +181,11 @@ public class Informe extends JPanel implements Frame {
             frame.pack();
             frame.setLocationRelativeTo(informe);
             frame.setVisible(true);
+            generateCSV(frame, progress);
+            return null;
+        }
 
+        private void generateCSV(JFrame frame, JProgressBar progress) {
             var model = csvPreviewTable.getModel();
             progress.setMaximum(model.getRowCount());
             try (var csv = new FileWriter(file)){
@@ -106,12 +203,12 @@ public class Informe extends JPanel implements Frame {
                 var m = "Exportación correcta";
                 JOptionPane.showMessageDialog(frame,m,m,JOptionPane.INFORMATION_MESSAGE);
             } catch (IOException ex) {
+                ex.printStackTrace();
                 var m = ex.getMessage();
                 JOptionPane.showMessageDialog(frame,m,m,JOptionPane.ERROR_MESSAGE);
             } finally {
                 frame.dispose();
             }
-            return null;
         }
 
         @Override
@@ -147,6 +244,7 @@ public class Informe extends JPanel implements Frame {
                 }
                 System.out.println(result);
             } catch (InterruptedException | ExecutionException e) {
+                e.printStackTrace();
                 var m = e.getMessage();
                 JOptionPane.showMessageDialog(informe,m,m,JOptionPane.ERROR_MESSAGE);
             } finally {
@@ -194,6 +292,7 @@ public class Informe extends JPanel implements Frame {
                 }
                 System.out.println(result);
             } catch (InterruptedException | ExecutionException e) {
+                e.printStackTrace();
                 var m = e.getMessage();
                 JOptionPane.showMessageDialog(informe,m,m,JOptionPane.ERROR_MESSAGE);
             } finally {
