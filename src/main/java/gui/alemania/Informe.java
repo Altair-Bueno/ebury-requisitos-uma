@@ -2,7 +2,6 @@ package gui.alemania;
 
 import database.HibernateStartUp;
 import gui.Frame;
-import org.apache.commons.collections.map.ListOrderedMap;
 
 import javax.swing.*;
 import java.awt.*;
@@ -140,6 +139,7 @@ public class Informe extends JPanel implements Frame {
                 var result = get();
                 csvPreviewTable.removeAll();
                 for (var i : result) {
+                    // TODO insertar datos dentro de la tabla
                     //var c = new TableColumn(i);
                     //csvPreviewTable.addColumn(c);
                 }
@@ -175,6 +175,7 @@ public class Informe extends JPanel implements Frame {
                 var result = get();
                 csvPreviewTable.removeAll();
                 for (var i : result) {
+                    // TODO insertar datos dentro de la tabla
                     //var c = new TableColumn(i);
                     //csvPreviewTable.addColumn(c);
                 }
