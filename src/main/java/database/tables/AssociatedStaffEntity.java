@@ -62,6 +62,10 @@ public class AssociatedStaffEntity {
         this.state = state;
     }
 
+    public String fullName() {
+        return name + " " + lastName1 + " " + lastName2;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
