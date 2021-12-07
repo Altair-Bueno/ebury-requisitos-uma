@@ -40,7 +40,6 @@ public class Informe extends JPanel implements Frame {
     private JTextField postalTextField;
     private JLabel nombreLabel;
     private JLabel direccionLabel;
-    private JButton checkButton;
     private JLabel resultadoCheck;
 
     public Informe() {
@@ -59,8 +58,8 @@ public class Informe extends JPanel implements Frame {
         });
 
         generarButton.addActionListener(e -> {
-            var a = new Producto();
-            a.execute();
+            var generar = new GenerarWorker(this);
+            generar.execute();
         });
     }
 
@@ -77,7 +76,6 @@ public class Informe extends JPanel implements Frame {
         calleTextField.setEnabled(false);
         numeroTextField.setEnabled(false);
         postalTextField.setEnabled(false);
-        checkButton.setEnabled(false);
     }
 
     private void unlockUI() {
@@ -93,7 +91,6 @@ public class Informe extends JPanel implements Frame {
         calleTextField.setEnabled(true);
         numeroTextField.setEnabled(true);
         postalTextField.setEnabled(true);
-        checkButton.setEnabled(true);
     }
 
     @Override
@@ -137,7 +134,38 @@ public class Informe extends JPanel implements Frame {
 
 
         private String producto() {
-            //TODO
+            var statusIndex = tipoComboBox.getSelectedIndex();
+            var statusCuenta = "";
+            var numProd = numeroProductoTextField.getText();
+            switch (statusIndex) {
+                case 0 -> statusCuenta = "Active";
+                case 1 -> statusCuenta = "Inactive";
+                case 2 -> statusCuenta = "Blocked";
+                case 3 -> statusCuenta = "Closed";
+            }
+
+            try(Session session = HibernateStartUp.getSessionFactory().openSession()){
+                var idCuenta = (int) session
+                        .createQuery("SELECT id FROM EburyAccountEntity WHERE bankAccount ='" + numProd + "' AND status = '" + statusCuenta + "'")
+                        .list()
+                        .get(0);
+
+                var listaDNIs = (List<String>)
+                        session
+                        .createQuery("SELECT relationAssociatedStaffDni FROM RelationHasEburyAccountEntity WHERE eburyAccountId = '" + idCuenta + "'")
+                        .list();
+
+                var result = "";
+                for(String DNI : listaDNIs){
+                    var a = (AssociatedStaffEntity)session.createQuery("FROM AssociatedStaffEntity WHERE dni ='" + DNI + "'").list().get(0);
+                    result+= a.fullName() + " \n";
+                }
+
+                return result;
+            } catch (Exception e){
+                e.printStackTrace();
+            }
+
             return null;
         }
 
@@ -150,63 +178,6 @@ public class Informe extends JPanel implements Frame {
                 JOptionPane.showMessageDialog(informe, m, m, JOptionPane.ERROR_MESSAGE);
             } finally {
                 unlockUI();
-            }
-        }
-    }
-
-    private class Producto extends SwingWorker<java.util.List<String>, Void> {
-        @Override
-        protected java.util.List<String> doInBackground() throws Exception {
-            var statusIndex = tipoComboBox.getSelectedIndex();
-            var statusCuenta = "";
-            switch (statusIndex) {
-                case 0 -> statusCuenta = "Active";
-                case 1 -> statusCuenta = "Inactive";
-                case 2 -> statusCuenta = "Blocked";
-                case 3 -> statusCuenta = "Closed";
-            }
-
-            var numProd = numeroProductoTextField.getText();
-
-            try (Session session = HibernateStartUp.getSessionFactory().openSession()) {
-                int id = (int)session.createQuery("SELECT id FROM EburyAccountEntity WHERE bankAccount ='" + numProd + "' AND status = '" + statusCuenta + "'").list().get(0);
-
-                List<String> listaDNIs = (List<String>)session.createQuery("SELECT relationAssociatedStaffDni FROM RelationHasEburyAccountEntity WHERE eburyAccountId = '" + id + "'").list();
-
-                List<String> listaPersonas = new ArrayList<>();
-
-                for(String DNI : listaDNIs){
-                    AssociatedStaffEntity a = (AssociatedStaffEntity)session.createQuery("FROM AssociatedStaffEntity WHERE dni ='" + DNI + "'").list().get(0);
-                    listaPersonas.add(a.fullName());
-                }
-
-
-                /* NO BORRAR!!!
-                 int IDowner = (int)session.createQuery("SELECT relationClientId FROM RelationHasEburyAccountEntity WHERE eburyAccountId = '" + id + "'").list().get(0);
-                ClientEntity owner = (ClientEntity)session.createQuery("FROM ClientEntity WHERE id = '" + IDowner + "'").list().get(0);
-                listaPersonas.add(owner.fullName());
-                 */
-                return listaPersonas;
-
-            } catch (Exception e){
-                e.printStackTrace();
-            }
-
-            return null;
-        }
-
-        @Override
-        protected void done(){
-            List<String> result;
-            try {
-                result = get();
-                for(String persona : result){
-                    jsonPreviewArea.append(persona + "\n");
-                }
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            } catch (ExecutionException e) {
-                e.printStackTrace();
             }
         }
     }
