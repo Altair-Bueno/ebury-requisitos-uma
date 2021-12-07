@@ -11,6 +11,7 @@ import gui.Frame;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileWriter;
@@ -56,11 +57,19 @@ public class Informe extends JPanel implements Frame {
                 guardar.execute();
             }
         });
-
-        generarButton.addActionListener(e -> {
+        ActionListener actionListener = e -> {
             var generar = new GenerarWorker(this);
             generar.execute();
-        });
+        };
+        generarButton.addActionListener(actionListener);
+        numeroProductoTextField.addActionListener(actionListener);
+        numeroProductoTextField.addActionListener(actionListener);
+        primerNombreTextField.addActionListener(actionListener);
+        segundoNombreTextField.addActionListener(actionListener);
+        ciudadTextField.addActionListener(actionListener);
+        calleTextField.addActionListener(actionListener);
+        numeroTextField.addActionListener(actionListener);
+        postalTextField.addActionListener(actionListener);
     }
 
     private void lockUI() {
@@ -134,15 +143,8 @@ public class Informe extends JPanel implements Frame {
 
 
         private String producto() {
-            var statusIndex = tipoComboBox.getSelectedIndex();
-            var statusCuenta = "";
             var numProd = numeroProductoTextField.getText();
-            switch (statusIndex) {
-                case 0 -> statusCuenta = "Active";
-                case 1 -> statusCuenta = "Inactive";
-                case 2 -> statusCuenta = "Blocked";
-                case 3 -> statusCuenta = "Closed";
-            }
+            var statusCuenta = (String) tipoComboBox.getSelectedItem();
 
             try(Session session = HibernateStartUp.getSessionFactory().openSession()){
                 var idCuenta = (int) session
