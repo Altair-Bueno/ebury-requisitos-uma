@@ -8,6 +8,8 @@ import gui.Frame;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumnModel;
 import java.awt.*;
 import java.io.File;
 import java.io.FileWriter;
@@ -266,7 +268,6 @@ public class Informe extends JPanel implements Frame {
         protected List<EburyAccountEntity> doInBackground() throws Exception {
             lockUI();
             try (var session = HibernateStartUp.getSessionFactory().openSession()) {
-                // TODO querry
                 var list = session.createQuery("from EburyAccountEntity").list();
                 return list;
             }
@@ -280,7 +281,6 @@ public class Informe extends JPanel implements Frame {
                 var tablemodel = new DefaultTableModel(new String[]{"IBAN", "Nombre", "Dirección", "NIF", "Fecha Nacimiento/Creación"}, 0);
 
                 for (var i : result) {
-                    // TODO insertar datos dentro de la tabla
                     var cuentabanc = i.getBankAccount();
                     var duenyo = i.getOwner();
                     tablemodel.addRow(
@@ -292,6 +292,7 @@ public class Informe extends JPanel implements Frame {
                                     duenyo.getBirthDate() == null ? "null" : duenyo.getBirthDate().toString()
                             });
                     csvPreviewTable.setModel(tablemodel);
+                    resizeColumnWidth(csvPreviewTable);
                 }
             } catch (InterruptedException | ExecutionException e) {
                 e.printStackTrace();
@@ -299,6 +300,21 @@ public class Informe extends JPanel implements Frame {
                 JOptionPane.showMessageDialog(informe, m, m, JOptionPane.ERROR_MESSAGE);
             } finally {
                 informe.unlockUI();
+            }
+        }
+
+        public void resizeColumnWidth(JTable table) {
+            final TableColumnModel columnModel = table.getColumnModel();
+            for (int column = 0; column < table.getColumnCount(); column++) {
+                int width = 15; // Min width
+                for (int row = 0; row < table.getRowCount(); row++) {
+                    TableCellRenderer renderer = table.getCellRenderer(row, column);
+                    Component comp = table.prepareRenderer(renderer, row, column);
+                    width = Math.max(comp.getPreferredSize().width +1 , width);
+                }
+                if(width > 300)
+                    width=300;
+                columnModel.getColumn(column).setPreferredWidth(width);
             }
         }
     }
