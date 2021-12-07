@@ -23,7 +23,7 @@ public class Main {
         var frame = new JFrame(login.getTitleBarName());
         frame.setMenuBar(login.getMenuBar());
         frame.add(login);
-        frame.setDefaultCloseOperation(EXIT_ON_CLOSE);
+        frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         frame.pack();
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
