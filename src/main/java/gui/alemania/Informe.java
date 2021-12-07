@@ -1,9 +1,12 @@
 package gui.alemania;
 
 import database.HibernateStartUp;
+import database.tables.EburyAccountEntity;
 import gui.Frame;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumn;
 import java.awt.*;
 import java.io.File;
 import java.io.FileWriter;
@@ -152,7 +155,7 @@ public class Informe extends JPanel implements Frame {
         }
     }
 
-    private class GenerarInformeSemanalWorker extends SwingWorker<List<Object>,Void> {
+    private class GenerarInformeSemanalWorker extends SwingWorker<List<EburyAccountEntity>,Void> {
         Informe informe;
 
         public GenerarInformeSemanalWorker(Informe informe) {
@@ -160,11 +163,11 @@ public class Informe extends JPanel implements Frame {
         }
 
         @Override
-        protected List<Object> doInBackground() throws Exception {
+        protected List<EburyAccountEntity> doInBackground() throws Exception {
             lockUI();
             try (var session = HibernateStartUp.getSessionFactory().openSession()) {
                 // TODO querry
-                return session.createQuery("from BankAccountEntity, EburyAccountEntity").list();
+                return (List<EburyAccountEntity>) session.createQuery("FROM EburyAccountEntity").list();
             }
         }
 
@@ -173,10 +176,21 @@ public class Informe extends JPanel implements Frame {
             try {
                 var result = get();
                 csvPreviewTable.removeAll();
+                var tablemodel = new DefaultTableModel(new String[]{"IBAN", "Nombre", "Dirección", "NIF", "Fecha Nacimiento/Creación"}, result.size());
+
                 for (var i : result) {
                     // TODO insertar datos dentro de la tabla
-                    //var c = new TableColumn(i);
-                    //csvPreviewTable.addColumn(c);
+                    var cuentabanc = i.getBankAccount();
+                    var duenyo = i.getOwner();
+                    tablemodel.addRow(
+                            new String[]{
+                                    cuentabanc.getIban(),
+                                    duenyo.fullName(),
+                                    duenyo.getDireccion().toString(),
+                                    duenyo.getNif(),
+                                    duenyo.getBirthDate().toString()
+                            });
+                    csvPreviewTable = new JTable(tablemodel);
                 }
                 System.out.println(result);
             } catch (InterruptedException | ExecutionException e) {

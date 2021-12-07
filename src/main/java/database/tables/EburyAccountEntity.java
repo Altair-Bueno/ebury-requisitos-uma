@@ -12,6 +12,8 @@ public class EburyAccountEntity {
     private String accounttype;
     private Date registerdate;
     private Date closedate;
+    private BankAccountEntity bankAccount;
+    private ClientEntity owner;
 
     @Id
     @Column(name = "id")
@@ -61,6 +63,26 @@ public class EburyAccountEntity {
 
     public void setClosedate(Date closedate) {
         this.closedate = closedate;
+    }
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "BankAccount_IBAN")
+    public BankAccountEntity getBankAccount(){
+        return bankAccount;
+    }
+
+    public void setBankAccount(BankAccountEntity bankAccount) {
+        this.bankAccount = bankAccount;
+    }
+
+    @ManyToOne
+    @JoinColumn(name = "owner")
+    public ClientEntity getOwner(){
+        return owner;
+    }
+
+    public void setOwner(ClientEntity owner) {
+        this.owner = owner;
     }
 
     @Override

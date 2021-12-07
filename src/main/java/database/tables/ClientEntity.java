@@ -16,6 +16,7 @@ public class ClientEntity {
     private Date birthDate;
     private Date registerDate;
     private Date endDate;
+    private AdressEntity direccion;
 
     @Id
     @Column(name = "ID")
@@ -105,6 +106,21 @@ public class ClientEntity {
 
     public void setEndDate(Date endDate) {
         this.endDate = endDate;
+    }
+
+    public String fullName(){
+        return name + " " + lastName1 + " " + lastName2;
+    }
+
+    @ManyToOne
+    @JoinColumn(name = "address_id", insertable = false, updatable = false)
+    @JoinColumn(name = "ID", insertable = false, updatable = false)
+    public AdressEntity getDireccion(){
+        return direccion;
+    }
+
+    public void setDireccion(AdressEntity direccion) {
+        this.direccion = direccion;
     }
 
     @Override

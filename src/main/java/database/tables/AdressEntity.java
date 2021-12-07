@@ -97,4 +97,14 @@ public class AdressEntity {
     public int hashCode() {
         return Objects.hash(id, clientId, street, number, city, postalCode, country);
     }
+
+    @Override
+    public String toString() {
+        return
+                street + " " +
+                number + " " +
+                postalCode + " " +
+                city + ", " +
+                country;
+    }
 }
