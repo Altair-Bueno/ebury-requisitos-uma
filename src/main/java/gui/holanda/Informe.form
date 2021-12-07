@@ -17,7 +17,11 @@
         <children>
           <component id="1be9b" class="javax.swing.JTextArea" binding="jsonPreviewArea">
             <constraints/>
-            <properties/>
+            <properties>
+              <editable value="false"/>
+              <focusable value="true"/>
+              <text value=""/>
+            </properties>
           </component>
         </children>
       </scrollpane>

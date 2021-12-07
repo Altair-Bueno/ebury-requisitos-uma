@@ -28,7 +28,6 @@ public class Informe extends JPanel implements Frame {
             filechooser.setMultiSelectionEnabled(false);
             var result = filechooser.showOpenDialog(this);
             if (result == JFileChooser.APPROVE_OPTION) {
-                // TODO save
                 var folder = filechooser.getSelectedFile();
                 var file = new File(folder,"export.csv");
                 var save = new GuardarCSVWorker(this,file);
