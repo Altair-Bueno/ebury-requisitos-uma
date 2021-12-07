@@ -1,9 +1,7 @@
 package gui.holanda;
 
-import com.mysql.cj.xdevapi.Client;
 import database.HibernateStartUp;
 import database.tables.AssociatedStaffEntity;
-import database.tables.ClientEntity;
 import org.hibernate.Session;
 
 
@@ -11,7 +9,6 @@ import gui.Frame;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileWriter;
@@ -37,11 +34,12 @@ public class Informe extends JPanel implements Frame {
     private JTextField segundoNombreTextField;
     private JTextField ciudadTextField;
     private JTextField calleTextField;
-    private JTextField numeroTextField;
     private JTextField postalTextField;
+    private JTextField tercerNombreTextField;
     private JLabel nombreLabel;
     private JLabel direccionLabel;
     private JLabel resultadoCheck;
+
 
     public Informe() {
         add(root);
@@ -66,9 +64,9 @@ public class Informe extends JPanel implements Frame {
         numeroProductoTextField.addActionListener(actionListener);
         primerNombreTextField.addActionListener(actionListener);
         segundoNombreTextField.addActionListener(actionListener);
+        tercerNombreTextField.addActionListener(actionListener);
         ciudadTextField.addActionListener(actionListener);
         calleTextField.addActionListener(actionListener);
-        numeroTextField.addActionListener(actionListener);
         postalTextField.addActionListener(actionListener);
     }
 
@@ -81,9 +79,9 @@ public class Informe extends JPanel implements Frame {
         numeroProductoTextField.setEnabled(false);
         primerNombreTextField.setEnabled(false);
         segundoNombreTextField.setEnabled(false);
+        tercerNombreTextField.setEnabled(false);
         ciudadTextField.setEnabled(false);
         calleTextField.setEnabled(false);
-        numeroTextField.setEnabled(false);
         postalTextField.setEnabled(false);
     }
 
@@ -96,9 +94,9 @@ public class Informe extends JPanel implements Frame {
         numeroProductoTextField.setEnabled(true);
         primerNombreTextField.setEnabled(true);
         segundoNombreTextField.setEnabled(true);
+        tercerNombreTextField.setEnabled(true);
         ciudadTextField.setEnabled(true);
         calleTextField.setEnabled(true);
-        numeroTextField.setEnabled(true);
         postalTextField.setEnabled(true);
     }
 
@@ -137,7 +135,31 @@ public class Informe extends JPanel implements Frame {
         }
 
         private String cliente() {
-            // TODO
+            JTextField[] campos = new JTextField[]{
+                    primerNombreTextField,
+                    segundoNombreTextField,
+                    tercerNombreTextField,
+                    ciudadTextField,
+                    calleTextField,
+                    postalTextField
+                    };
+            String [] filtersApplied = new String[6]; // "null" if not applied, value otherwise
+
+            for(int i = 0; i<6; i++){
+                var texto = campos[i].getText();
+                var name = campos[i].getName();
+                filtersApplied[i] = texto.equals("") ? "null" : (name + " = '" + texto + "'");
+            }
+            try(Session session = HibernateStartUp.getSessionFactory().openSession()){
+                for(int i = 0; i<6; i++){
+                    if(!filtersApplied[i].equals("null")){
+
+                    }
+                }
+            } catch (Exception e){
+                e.printStackTrace();
+            }
+
             return null;
         }
 
