@@ -1,17 +1,26 @@
 package database.tables;
 
 import javax.persistence.Column;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import java.io.Serializable;
 import java.util.Objects;
 
 public class RelationHasEburyAccountEntityPK implements Serializable {
-    private String relationAssociatedStaffDni;
-    private int relationClientId;
-    private int eburyAccountId;
-
     @Column(name = "Relation_AssociatedStaff_DNI")
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private String relationAssociatedStaffDni;
+    @Column(name = "Relation_Client_ID")
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int relationClientId;
+    @Column(name = "EburyAccount_id")
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int eburyAccountId;
+
     public String getRelationAssociatedStaffDni() {
         return relationAssociatedStaffDni;
     }
@@ -20,8 +29,6 @@ public class RelationHasEburyAccountEntityPK implements Serializable {
         this.relationAssociatedStaffDni = relationAssociatedStaffDni;
     }
 
-    @Column(name = "Relation_Client_ID")
-    @Id
     public int getRelationClientId() {
         return relationClientId;
     }
@@ -30,8 +37,6 @@ public class RelationHasEburyAccountEntityPK implements Serializable {
         this.relationClientId = relationClientId;
     }
 
-    @Column(name = "EburyAccount_id")
-    @Id
     public int getEburyAccountId() {
         return eburyAccountId;
     }

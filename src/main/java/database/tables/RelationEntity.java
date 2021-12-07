@@ -8,13 +8,21 @@ import java.util.Objects;
 @Table(name = "Relation", schema = "grupo10DB", catalog = "")
 @IdClass(RelationEntityPK.class)
 public class RelationEntity {
-    private String associatedStaffDni;
-    private int clientId;
-    private Date start;
-    private Date end;
-
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     @Column(name = "AssociatedStaff_DNI")
+    private String associatedStaffDni;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @Column(name = "Client_ID")
+    private int clientId;
+    @Basic
+    @Column(name = "start")
+    private Date start;
+    @Basic
+    @Column(name = "end")
+    private Date end;
+
     public String getAssociatedStaffDni() {
         return associatedStaffDni;
     }
@@ -23,8 +31,6 @@ public class RelationEntity {
         this.associatedStaffDni = associatedStaffDni;
     }
 
-    @Id
-    @Column(name = "Client_ID")
     public int getClientId() {
         return clientId;
     }
@@ -33,8 +39,6 @@ public class RelationEntity {
         this.clientId = clientId;
     }
 
-    @Basic
-    @Column(name = "start")
     public Date getStart() {
         return start;
     }
@@ -43,8 +47,6 @@ public class RelationEntity {
         this.start = start;
     }
 
-    @Basic
-    @Column(name = "end")
     public Date getEnd() {
         return end;
     }

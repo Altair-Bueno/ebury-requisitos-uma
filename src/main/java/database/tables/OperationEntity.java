@@ -8,17 +8,34 @@ import java.util.Objects;
 @Table(name = "Operation", schema = "grupo10DB", catalog = "")
 @IdClass(OperationEntityPK.class)
 public class OperationEntity {
-    private int id;
-    private String bankAccountIban;
-    private int eburyAccountId;
-    private Date date;
-    private double amount;
-    private Double conversionrate;
-    private Double comission;
-    private String beneficiary;
-
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     @Column(name = "id")
+    private int id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @Column(name = "BankAccount_IBAN")
+    private String bankAccountIban;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @Column(name = "EburyAccount_id")
+    private int eburyAccountId;
+    @Basic
+    @Column(name = "date")
+    private Date date;
+    @Basic
+    @Column(name = "amount")
+    private double amount;
+    @Basic
+    @Column(name = "conversionrate")
+    private Double conversionrate;
+    @Basic
+    @Column(name = "comission")
+    private Double comission;
+    @Basic
+    @Column(name = "beneficiary")
+    private String beneficiary;
+
     public int getId() {
         return id;
     }
@@ -27,8 +44,6 @@ public class OperationEntity {
         this.id = id;
     }
 
-    @Id
-    @Column(name = "BankAccount_IBAN")
     public String getBankAccountIban() {
         return bankAccountIban;
     }
@@ -37,8 +52,6 @@ public class OperationEntity {
         this.bankAccountIban = bankAccountIban;
     }
 
-    @Id
-    @Column(name = "EburyAccount_id")
     public int getEburyAccountId() {
         return eburyAccountId;
     }
@@ -47,8 +60,6 @@ public class OperationEntity {
         this.eburyAccountId = eburyAccountId;
     }
 
-    @Basic
-    @Column(name = "date")
     public Date getDate() {
         return date;
     }
@@ -57,8 +68,6 @@ public class OperationEntity {
         this.date = date;
     }
 
-    @Basic
-    @Column(name = "amount")
     public double getAmount() {
         return amount;
     }
@@ -67,8 +76,6 @@ public class OperationEntity {
         this.amount = amount;
     }
 
-    @Basic
-    @Column(name = "conversionrate")
     public Double getConversionrate() {
         return conversionrate;
     }
@@ -77,8 +84,6 @@ public class OperationEntity {
         this.conversionrate = conversionrate;
     }
 
-    @Basic
-    @Column(name = "comission")
     public Double getComission() {
         return comission;
     }
@@ -87,8 +92,6 @@ public class OperationEntity {
         this.comission = comission;
     }
 
-    @Basic
-    @Column(name = "beneficiary")
     public String getBeneficiary() {
         return beneficiary;
     }

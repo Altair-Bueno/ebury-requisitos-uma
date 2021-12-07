@@ -1,16 +1,22 @@
 package database.tables;
 
 import javax.persistence.Column;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import java.io.Serializable;
 import java.util.Objects;
 
-public class AdressEntityPK implements Serializable {
-    private int id;
-    private int clientId;
-
+public class AddressEntityPK implements Serializable {
     @Column(name = "ID")
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
+    @Column(name = "Client_ID")
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int clientId;
+
     public int getId() {
         return id;
     }
@@ -19,8 +25,6 @@ public class AdressEntityPK implements Serializable {
         this.id = id;
     }
 
-    @Column(name = "Client_ID")
-    @Id
     public int getClientId() {
         return clientId;
     }
@@ -33,7 +37,7 @@ public class AdressEntityPK implements Serializable {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        AdressEntityPK that = (AdressEntityPK) o;
+        AddressEntityPK that = (AddressEntityPK) o;
         return id == that.id && clientId == that.clientId;
     }
 

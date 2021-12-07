@@ -1,17 +1,26 @@
 package database.tables;
 
 import javax.persistence.Column;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import java.io.Serializable;
 import java.util.Objects;
 
 public class OperationEntityPK implements Serializable {
-    private int id;
-    private String bankAccountIban;
-    private int eburyAccountId;
-
     @Column(name = "id")
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
+    @Column(name = "BankAccount_IBAN")
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private String bankAccountIban;
+    @Column(name = "EburyAccount_id")
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int eburyAccountId;
+
     public int getId() {
         return id;
     }
@@ -20,8 +29,6 @@ public class OperationEntityPK implements Serializable {
         this.id = id;
     }
 
-    @Column(name = "BankAccount_IBAN")
-    @Id
     public String getBankAccountIban() {
         return bankAccountIban;
     }
@@ -30,8 +37,6 @@ public class OperationEntityPK implements Serializable {
         this.bankAccountIban = bankAccountIban;
     }
 
-    @Column(name = "EburyAccount_id")
-    @Id
     public int getEburyAccountId() {
         return eburyAccountId;
     }

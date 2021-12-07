@@ -144,7 +144,14 @@ public class Informe extends JPanel implements Frame {
 
         private String producto() {
             var numProd = numeroProductoTextField.getText();
-            var statusCuenta = (String) tipoComboBox.getSelectedItem();
+            var statusIndex = tipoComboBox.getSelectedIndex();
+            var statusCuenta = "";
+            switch (statusIndex) {
+                case 0 -> statusCuenta = "Active";
+                case 1 -> statusCuenta = "Inactive";
+                case 2 -> statusCuenta = "Blocked";
+                case 3 -> statusCuenta = "Closed";
+            }
 
             try(Session session = HibernateStartUp.getSessionFactory().openSession()){
                 var idCuenta = (int) session

@@ -6,14 +6,23 @@ import java.util.Objects;
 @Entity
 @Table(name = "AssociatedStaff", schema = "grupo10DB", catalog = "")
 public class AssociatedStaffEntity {
-    private String dni;
-    private String name;
-    private String lastName1;
-    private String lastName2;
-    private String state;
-
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     @Column(name = "DNI")
+    private String dni;
+    @Basic
+    @Column(name = "name")
+    private String name;
+    @Basic
+    @Column(name = "last_name1")
+    private String lastName1;
+    @Basic
+    @Column(name = "last_name2")
+    private String lastName2;
+    @Basic
+    @Column(name = "state")
+    private String state;
+
     public String getDni() {
         return dni;
     }
@@ -22,8 +31,6 @@ public class AssociatedStaffEntity {
         this.dni = dni;
     }
 
-    @Basic
-    @Column(name = "name")
     public String getName() {
         return name;
     }
@@ -32,8 +39,6 @@ public class AssociatedStaffEntity {
         this.name = name;
     }
 
-    @Basic
-    @Column(name = "last_name1")
     public String getLastName1() {
         return lastName1;
     }
@@ -42,8 +47,6 @@ public class AssociatedStaffEntity {
         this.lastName1 = lastName1;
     }
 
-    @Basic
-    @Column(name = "last_name2")
     public String getLastName2() {
         return lastName2;
     }
@@ -52,8 +55,6 @@ public class AssociatedStaffEntity {
         this.lastName2 = lastName2;
     }
 
-    @Basic
-    @Column(name = "state")
     public String getState() {
         return state;
     }

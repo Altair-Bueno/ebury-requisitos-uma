@@ -9,7 +9,7 @@
         </property>
         <property name="connection.driver_class">com.mysql.cj.jdbc.Driver
         </property>
-        <mapping class="database.tables.AdressEntity"/>
+        <mapping class="database.tables.AddressEntity"/>
         <mapping class="database.tables.AssociatedStaffEntity"/>
         <mapping class="database.tables.BankAccountEntity"/>
         <mapping class="database.tables.ClientEntity"/>

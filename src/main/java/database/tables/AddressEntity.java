@@ -4,19 +4,30 @@ import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
-@Table(name = "Adress", schema = "grupo10DB", catalog = "")
-@IdClass(AdressEntityPK.class)
-public class AdressEntity {
-    private int id;
-    private int clientId;
-    private String street;
-    private Integer number;
-    private String city;
-    private String postalCode;
-    private String country;
-
+@Table(name = "Address", schema = "grupo10DB", catalog = "")
+@IdClass(AddressEntityPK.class)
+public class AddressEntity {
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     @Column(name = "ID")
+    private int id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @Column(name = "Client_ID")
+    private int clientId;
+    @Basic
+    @Column(name = "street")
+    private String street;
+    @Basic
+    @Column(name = "city")
+    private String city;
+    @Basic
+    @Column(name = "postal_code")
+    private String postalCode;
+    @Basic
+    @Column(name = "country")
+    private String country;
+
     public int getId() {
         return id;
     }
@@ -25,8 +36,6 @@ public class AdressEntity {
         this.id = id;
     }
 
-    @Id
-    @Column(name = "Client_ID")
     public int getClientId() {
         return clientId;
     }
@@ -35,8 +44,6 @@ public class AdressEntity {
         this.clientId = clientId;
     }
 
-    @Basic
-    @Column(name = "street")
     public String getStreet() {
         return street;
     }
@@ -45,18 +52,6 @@ public class AdressEntity {
         this.street = street;
     }
 
-    @Basic
-    @Column(name = "number")
-    public Integer getNumber() {
-        return number;
-    }
-
-    public void setNumber(Integer number) {
-        this.number = number;
-    }
-
-    @Basic
-    @Column(name = "city")
     public String getCity() {
         return city;
     }
@@ -65,8 +60,6 @@ public class AdressEntity {
         this.city = city;
     }
 
-    @Basic
-    @Column(name = "postal_code")
     public String getPostalCode() {
         return postalCode;
     }
@@ -75,8 +68,6 @@ public class AdressEntity {
         this.postalCode = postalCode;
     }
 
-    @Basic
-    @Column(name = "country")
     public String getCountry() {
         return country;
     }
@@ -89,22 +80,20 @@ public class AdressEntity {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        AdressEntity that = (AdressEntity) o;
-        return id == that.id && clientId == that.clientId && Objects.equals(street, that.street) && Objects.equals(number, that.number) && Objects.equals(city, that.city) && Objects.equals(postalCode, that.postalCode) && Objects.equals(country, that.country);
+        AddressEntity that = (AddressEntity) o;
+        return id == that.id && clientId == that.clientId && Objects.equals(street, that.street) && Objects.equals(city, that.city) && Objects.equals(postalCode, that.postalCode) && Objects.equals(country, that.country);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, clientId, street, number, city, postalCode, country);
+        return Objects.hash(id, clientId, street, city, postalCode, country);
     }
 
     @Override
     public String toString() {
-        return
-                street + " " +
-                        number + " " +
-                        postalCode + " " +
-                        city + ", " +
-                        country;
+        return  street + " " +
+                postalCode + " " +
+                city + ", " +
+                country;
     }
 }

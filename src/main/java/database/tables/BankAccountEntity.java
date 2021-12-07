@@ -6,15 +6,26 @@ import java.util.Objects;
 @Entity
 @Table(name = "BankAccount", schema = "grupo10DB", catalog = "")
 public class BankAccountEntity {
-    private String iban;
-    private int eburyAccountId;
-    private int eburyAccountOwner;
-    private String swift;
-    private String curency;
-    private String country;
-
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     @Column(name = "IBAN")
+    private String iban;
+    @Basic
+    @Column(name = "EburyAccount_id")
+    private int eburyAccountId;
+    @Basic
+    @Column(name = "EburyAccount_owner")
+    private int eburyAccountOwner;
+    @Basic
+    @Column(name = "SWIFT")
+    private String swift;
+    @Basic
+    @Column(name = "curency")
+    private String curency;
+    @Basic
+    @Column(name = "country")
+    private String country;
+
     public String getIban() {
         return iban;
     }
@@ -23,8 +34,6 @@ public class BankAccountEntity {
         this.iban = iban;
     }
 
-    @Basic
-    @Column(name = "EburyAccount_id")
     public int getEburyAccountId() {
         return eburyAccountId;
     }
@@ -33,8 +42,6 @@ public class BankAccountEntity {
         this.eburyAccountId = eburyAccountId;
     }
 
-    @Basic
-    @Column(name = "EburyAccount_owner")
     public int getEburyAccountOwner() {
         return eburyAccountOwner;
     }
@@ -43,8 +50,6 @@ public class BankAccountEntity {
         this.eburyAccountOwner = eburyAccountOwner;
     }
 
-    @Basic
-    @Column(name = "SWIFT")
     public String getSwift() {
         return swift;
     }
@@ -53,8 +58,6 @@ public class BankAccountEntity {
         this.swift = swift;
     }
 
-    @Basic
-    @Column(name = "curency")
     public String getCurency() {
         return curency;
     }
@@ -63,8 +66,6 @@ public class BankAccountEntity {
         this.curency = curency;
     }
 
-    @Basic
-    @Column(name = "country")
     public String getCountry() {
         return country;
     }

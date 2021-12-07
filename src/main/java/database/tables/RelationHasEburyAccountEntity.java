@@ -7,12 +7,19 @@ import java.util.Objects;
 @Table(name = "Relation_has_EburyAccount", schema = "grupo10DB", catalog = "")
 @IdClass(RelationHasEburyAccountEntityPK.class)
 public class RelationHasEburyAccountEntity {
-    private String relationAssociatedStaffDni;
-    private int relationClientId;
-    private int eburyAccountId;
-
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     @Column(name = "Relation_AssociatedStaff_DNI")
+    private String relationAssociatedStaffDni;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @Column(name = "Relation_Client_ID")
+    private int relationClientId;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @Column(name = "EburyAccount_id")
+    private int eburyAccountId;
+
     public String getRelationAssociatedStaffDni() {
         return relationAssociatedStaffDni;
     }
@@ -21,8 +28,6 @@ public class RelationHasEburyAccountEntity {
         this.relationAssociatedStaffDni = relationAssociatedStaffDni;
     }
 
-    @Id
-    @Column(name = "Relation_Client_ID")
     public int getRelationClientId() {
         return relationClientId;
     }
@@ -31,8 +36,6 @@ public class RelationHasEburyAccountEntity {
         this.relationClientId = relationClientId;
     }
 
-    @Id
-    @Column(name = "EburyAccount_id")
     public int getEburyAccountId() {
         return eburyAccountId;
     }

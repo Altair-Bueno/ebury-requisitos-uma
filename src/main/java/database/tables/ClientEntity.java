@@ -7,19 +7,39 @@ import java.util.Objects;
 @Entity
 @Table(name = "Client", schema = "grupo10DB", catalog = "")
 public class ClientEntity {
-    private int id;
-    private String status;
-    private String nif;
-    private String name;
-    private String lastName1;
-    private String lastName2;
-    private Date birthDate;
-    private Date registerDate;
-    private Date endDate;
-    private AdressEntity direccion;
-
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     @Column(name = "ID")
+    private int id;
+    @Basic
+    @Column(name = "status")
+    private String status;
+    @Basic
+    @Column(name = "NIF")
+    private String nif;
+    @Basic
+    @Column(name = "name")
+    private String name;
+    @Basic
+    @Column(name = "last_name1")
+    private String lastName1;
+    @Basic
+    @Column(name = "last_name2")
+    private String lastName2;
+    @Basic
+    @Column(name = "birth_date")
+    private Date birthDate;
+    @Basic
+    @Column(name = "register_date")
+    private Date registerDate;
+    @Basic
+    @Column(name = "end_date")
+    private Date endDate;
+    @ManyToOne
+    @JoinColumn(name = "address_id", insertable = false, updatable = false)
+    @JoinColumn(name = "ID", insertable = false, updatable = false)
+    private AddressEntity direccion;
+
     public int getId() {
         return id;
     }
@@ -28,8 +48,6 @@ public class ClientEntity {
         this.id = id;
     }
 
-    @Basic
-    @Column(name = "status")
     public String getStatus() {
         return status;
     }
@@ -38,8 +56,6 @@ public class ClientEntity {
         this.status = status;
     }
 
-    @Basic
-    @Column(name = "NIF")
     public String getNif() {
         return nif;
     }
@@ -48,8 +64,6 @@ public class ClientEntity {
         this.nif = nif;
     }
 
-    @Basic
-    @Column(name = "name")
     public String getName() {
         return name;
     }
@@ -58,8 +72,6 @@ public class ClientEntity {
         this.name = name;
     }
 
-    @Basic
-    @Column(name = "last_name1")
     public String getLastName1() {
         return lastName1;
     }
@@ -68,8 +80,6 @@ public class ClientEntity {
         this.lastName1 = lastName1;
     }
 
-    @Basic
-    @Column(name = "last_name2")
     public String getLastName2() {
         return lastName2;
     }
@@ -78,8 +88,6 @@ public class ClientEntity {
         this.lastName2 = lastName2;
     }
 
-    @Basic
-    @Column(name = "birth_date")
     public Date getBirthDate() {
         return birthDate;
     }
@@ -88,8 +96,6 @@ public class ClientEntity {
         this.birthDate = birthDate;
     }
 
-    @Basic
-    @Column(name = "register_date")
     public Date getRegisterDate() {
         return registerDate;
     }
@@ -98,8 +104,6 @@ public class ClientEntity {
         this.registerDate = registerDate;
     }
 
-    @Basic
-    @Column(name = "end_date")
     public Date getEndDate() {
         return endDate;
     }
@@ -108,19 +112,16 @@ public class ClientEntity {
         this.endDate = endDate;
     }
 
-    public String fullName() {
-        return name + " " + lastName1 + " " + lastName2;
-    }
-
-    @ManyToOne
-    @JoinColumn(name = "address_id", insertable = false, updatable = false)
-    @JoinColumn(name = "ID", insertable = false, updatable = false)
-    public AdressEntity getDireccion() {
+    public AddressEntity getDireccion() {
         return direccion;
     }
 
-    public void setDireccion(AdressEntity direccion) {
+    public void setDireccion(AddressEntity direccion) {
         this.direccion = direccion;
+    }
+
+    public String fullName() {
+        return name + " " + lastName1 + " " + lastName2;
     }
 
     @Override
@@ -128,11 +129,11 @@ public class ClientEntity {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ClientEntity that = (ClientEntity) o;
-        return id == that.id && Objects.equals(status, that.status) && Objects.equals(nif, that.nif) && Objects.equals(name, that.name) && Objects.equals(lastName1, that.lastName1) && Objects.equals(lastName2, that.lastName2) && Objects.equals(birthDate, that.birthDate) && Objects.equals(registerDate, that.registerDate) && Objects.equals(endDate, that.endDate);
+        return id == that.id && Objects.equals(status, that.status) && Objects.equals(nif, that.nif) && Objects.equals(name, that.name) && Objects.equals(lastName1, that.lastName1) && Objects.equals(lastName2, that.lastName2) && Objects.equals(birthDate, that.birthDate) && Objects.equals(registerDate, that.registerDate) && Objects.equals(endDate, that.endDate) && Objects.equals(direccion, that.direccion);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, status, nif, name, lastName1, lastName2, birthDate, registerDate, endDate);
+        return Objects.hash(id, status, nif, name, lastName1, lastName2, birthDate, registerDate, endDate, direccion);
     }
 }

@@ -1,16 +1,22 @@
 package database.tables;
 
 import javax.persistence.Column;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import java.io.Serializable;
 import java.util.Objects;
 
 public class RelationEntityPK implements Serializable {
-    private String associatedStaffDni;
-    private int clientId;
-
     @Column(name = "AssociatedStaff_DNI")
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private String associatedStaffDni;
+    @Column(name = "Client_ID")
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int clientId;
+
     public String getAssociatedStaffDni() {
         return associatedStaffDni;
     }
@@ -19,8 +25,6 @@ public class RelationEntityPK implements Serializable {
         this.associatedStaffDni = associatedStaffDni;
     }
 
-    @Column(name = "Client_ID")
-    @Id
     public int getClientId() {
         return clientId;
     }

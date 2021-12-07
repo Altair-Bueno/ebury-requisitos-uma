@@ -6,12 +6,20 @@ import java.util.Objects;
 @Entity
 @Table(name = "Login", schema = "grupo10DB", catalog = "")
 public class LoginEntity {
-    private String user;
-    private String password;
-    private String rol;
-
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     @Column(name = "user")
+    private String user;
+    @Basic
+    @Column(name = "password")
+    private String password;
+    @Basic
+    @Column(name = "rol")
+    private String rol;
+    @Basic
+    @Column(name = "AS_FK")
+    private String asFk;
+
     public String getUser() {
         return user;
     }
@@ -20,8 +28,6 @@ public class LoginEntity {
         this.user = user;
     }
 
-    @Basic
-    @Column(name = "password")
     public String getPassword() {
         return password;
     }
@@ -30,8 +36,6 @@ public class LoginEntity {
         this.password = password;
     }
 
-    @Basic
-    @Column(name = "rol")
     public String getRol() {
         return rol;
     }
@@ -40,16 +44,24 @@ public class LoginEntity {
         this.rol = rol;
     }
 
+    public String getAsFk() {
+        return asFk;
+    }
+
+    public void setAsFk(String asFk) {
+        this.asFk = asFk;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         LoginEntity that = (LoginEntity) o;
-        return Objects.equals(user, that.user) && Objects.equals(password, that.password) && Objects.equals(rol, that.rol);
+        return Objects.equals(user, that.user) && Objects.equals(password, that.password) && Objects.equals(rol, that.rol) && Objects.equals(asFk, that.asFk);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(user, password, rol);
+        return Objects.hash(user, password, rol, asFk);
     }
 }

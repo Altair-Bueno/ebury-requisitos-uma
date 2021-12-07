@@ -267,7 +267,8 @@ public class Informe extends JPanel implements Frame {
             lockUI();
             try (var session = HibernateStartUp.getSessionFactory().openSession()) {
                 // TODO querry
-                return (List<EburyAccountEntity>) session.createQuery("FROM EburyAccountEntity").list();
+                var list = session.createQuery("from EburyAccountEntity").list();
+                return list;
             }
         }
 
@@ -276,23 +277,22 @@ public class Informe extends JPanel implements Frame {
             try {
                 var result = get();
                 csvPreviewTable.removeAll();
-                var tablemodel = new DefaultTableModel(new String[]{"IBAN", "Nombre", "Dirección", "NIF", "Fecha Nacimiento/Creación"}, result.size());
+                var tablemodel = new DefaultTableModel(new String[]{"IBAN", "Nombre", "Dirección", "NIF", "Fecha Nacimiento/Creación"}, 0);
 
                 for (var i : result) {
                     // TODO insertar datos dentro de la tabla
                     var cuentabanc = i.getBankAccount();
                     var duenyo = i.getOwner();
                     tablemodel.addRow(
-                            new String[]{
+                            new Object[]{
                                     cuentabanc.getIban(),
                                     duenyo.fullName(),
-                                    duenyo.getDireccion().toString(),
+                                    duenyo.getDireccion() == null ? "null" : duenyo.getDireccion().toString(),
                                     duenyo.getNif(),
-                                    duenyo.getBirthDate().toString()
+                                    duenyo.getBirthDate() == null ? "null" : duenyo.getBirthDate().toString()
                             });
-                    csvPreviewTable = new JTable(tablemodel);
+                    csvPreviewTable.setModel(tablemodel);
                 }
-                System.out.println(result);
             } catch (InterruptedException | ExecutionException e) {
                 e.printStackTrace();
                 var m = e.getMessage();
