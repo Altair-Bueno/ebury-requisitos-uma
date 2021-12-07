@@ -7,6 +7,7 @@ import java.awt.*;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.concurrent.ExecutionException;
 
 public class Informe extends JPanel implements Frame {
     private JPanel root;
@@ -103,20 +104,30 @@ public class Informe extends JPanel implements Frame {
         }
 
         private String healthcheck() {
+            // TODO
             return null;
         }
 
         private String cliente() {
+            // TODO
             return null;
         }
 
         private String producto() {
+            // TODO
             return null;
         }
 
         @Override
         protected void done() {
-            unlockUI();
+            try {
+                jsonPreviewArea.setText(get());
+            } catch (InterruptedException | ExecutionException e) {
+                var m = e.getMessage();
+                JOptionPane.showMessageDialog(informe,m,m,JOptionPane.ERROR_MESSAGE);
+            }finally {
+                unlockUI();
+            }
         }
     }
 
