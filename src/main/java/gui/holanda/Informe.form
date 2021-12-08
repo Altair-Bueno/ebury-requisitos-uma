@@ -79,6 +79,7 @@
                 </constraints>
                 <properties>
                   <model>
+                    <item value="-"/>
                     <item value="Activa"/>
                     <item value="Inactiva"/>
                     <item value="Bloqueada"/>

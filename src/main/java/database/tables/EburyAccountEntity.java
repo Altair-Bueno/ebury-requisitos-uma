@@ -42,6 +42,8 @@ public class EburyAccountEntity {
         return bankAccount;
     }
 
+    public String getInfo() { return "[" + bankAccount.getIban() + "] " + "[" + owner.fullName() + "] " + "[" + getStatus() + "] " + "[" + getAccounttype() + "] " + "[" + getRegisterdate() + "] " + "[" + getClosedate() + "]" ;}
+
     public void setBankAccount(BankAccountEntity bankAccount) {
         this.bankAccount = bankAccount;
     }

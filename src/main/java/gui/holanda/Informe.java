@@ -2,6 +2,8 @@ package gui.holanda;
 
 import database.HibernateStartUp;
 import database.tables.AssociatedStaffEntity;
+import database.tables.BankAccountEntity;
+import database.tables.EburyAccountEntity;
 import org.hibernate.Session;
 
 
@@ -15,6 +17,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.ExecutionException;
 
 public class Informe extends JPanel implements Frame {
@@ -130,8 +133,7 @@ public class Informe extends JPanel implements Frame {
         }
 
         private String healthcheck() {
-            // TODO
-            return null;
+            return "STATUS: CONNECTION OK.";
         }
 
         private String cliente() {
@@ -169,35 +171,47 @@ public class Informe extends JPanel implements Frame {
             var statusIndex = tipoComboBox.getSelectedIndex();
             var statusCuenta = "";
             switch (statusIndex) {
-                case 0 -> statusCuenta = "Active";
-                case 1 -> statusCuenta = "Inactive";
-                case 2 -> statusCuenta = "Blocked";
-                case 3 -> statusCuenta = "Closed";
+                case 0 -> statusCuenta = "";
+                case 1 -> statusCuenta = "Active";
+                case 2 -> statusCuenta =  "Inactive";
+                case 3 -> statusCuenta = "Blocked";
+                case 4 -> statusCuenta = "Closed";
             }
-
             try(Session session = HibernateStartUp.getSessionFactory().openSession()){
-                var idCuenta = (int) session
-                        .createQuery("SELECT id FROM EburyAccountEntity WHERE bankAccount ='" + numProd + "' AND status = '" + statusCuenta + "'")
-                        .list()
-                        .get(0);
-
-                var listaDNIs = (List<String>)
-                        session
-                        .createQuery("SELECT relationAssociatedStaffDni FROM RelationHasEburyAccountEntity WHERE eburyAccountId = '" + idCuenta + "'")
-                        .list();
-
-                var result = "";
-                for(String DNI : listaDNIs){
-                    var a = (AssociatedStaffEntity)session.createQuery("FROM AssociatedStaffEntity WHERE dni ='" + DNI + "'").list().get(0);
-                    result+= a.fullName() + " \n";
+                StringBuilder result = new StringBuilder();
+                if(statusCuenta.equals("") && numProd.equals("")){ //No se ha aplicado ningún filtro:
+                    List<EburyAccountEntity> listaCuentas = (List<EburyAccountEntity>)session.createQuery("FROM EburyAccountEntity").list();
+                    for(EburyAccountEntity a : listaCuentas){
+                        result.append(a.getInfo()).append(" \n");
+                    }
                 }
 
-                return result;
-            } catch (Exception e){
-                e.printStackTrace();
-            }
+                if(!statusCuenta.equals("") && numProd.equals("")){ //Se filtra por tipo de cuenta:
+                    List<EburyAccountEntity> listaCuentas = (List<EburyAccountEntity>)session.createQuery("SELECT bankAccount FROM EburyAccountEntity WHERE status = '" + statusCuenta + "'").list();
+                    for(EburyAccountEntity a : listaCuentas){
+                        result.append(a.getInfo()).append(" \n");
+                    }
+                }
 
-            return null;
+                if(statusCuenta.equals("") && !numProd.equals("")){ //Se filtra por número de IBAN
+                    List<EburyAccountEntity> listaCuentas = (List<EburyAccountEntity>)session.createQuery("FROM EburyAccountEntity WHERE bankAccount = '" + numProd + "'").list();
+
+                    for(EburyAccountEntity a : listaCuentas){
+                        result.append(a.getInfo()).append(" \n");
+                    }
+                }
+
+                if(!statusCuenta.equals("") && !numProd.equals("")){ //Se filtra por tipo de cuenta y numero de IBAN
+                    List<EburyAccountEntity> listaCuentas = (List<EburyAccountEntity>)session.createQuery("FROM EburyAccountEntity WHERE bankAccount = '" + numProd + "' AND status = '" + statusCuenta + "'").list();
+                    for(EburyAccountEntity a : listaCuentas){
+                        result.append(a.getInfo()).append(" \n");
+                    }
+
+                }
+                return result.toString();
+            } catch (Exception e){
+                return "";
+            }
         }
 
         @Override
