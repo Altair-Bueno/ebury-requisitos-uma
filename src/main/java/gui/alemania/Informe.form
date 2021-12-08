@@ -59,7 +59,11 @@
         <children>
           <component id="ed703" class="javax.swing.JTable" binding="csvPreviewTable">
             <constraints/>
-            <properties/>
+            <properties>
+              <autoResizeMode value="0"/>
+              <cellSelectionEnabled value="false"/>
+              <enabled value="false"/>
+            </properties>
           </component>
         </children>
       </scrollpane>

@@ -192,6 +192,7 @@ public class Informe extends JPanel implements Frame {
             var model = csvPreviewTable.getModel();
             progress.setMaximum(model.getRowCount());
             try (var csv = new FileWriter(file)) {
+                // TODO añade un montón de columnas que no deberían estar
                 for (int i = 0; i < model.getRowCount(); i++) {
                     csv.write(model.getColumnName(i) + ",");
                 }
@@ -231,7 +232,7 @@ public class Informe extends JPanel implements Frame {
         protected List<Object> doInBackground() throws Exception {
             lockUI();
             try (var session = HibernateStartUp.getSessionFactory().openSession()) {
-                // TODO querry
+                // TODO querry no es la correcta. Completar
                 return session.createQuery("from BankAccountEntity, EburyAccountEntity").list();
             }
         }
@@ -268,8 +269,7 @@ public class Informe extends JPanel implements Frame {
         protected List<EburyAccountEntity> doInBackground() throws Exception {
             lockUI();
             try (var session = HibernateStartUp.getSessionFactory().openSession()) {
-                var list = session.createQuery("from EburyAccountEntity").list();
-                return list;
+                return session.createQuery("from EburyAccountEntity").list();
             }
         }
 
@@ -278,6 +278,7 @@ public class Informe extends JPanel implements Frame {
             try {
                 var result = get();
                 csvPreviewTable.removeAll();
+                // TODO no está bien del todo. Mirar las diapositivas del profesor
                 var tablemodel = new DefaultTableModel(new String[]{"IBAN", "Nombre", "Dirección", "NIF", "Fecha Nacimiento/Creación"}, 0);
 
                 for (var i : result) {
@@ -287,13 +288,13 @@ public class Informe extends JPanel implements Frame {
                             new Object[]{
                                     cuentabanc.getIban(),
                                     duenyo.fullName(),
-                                    duenyo.getDireccion() == null ? "null" : duenyo.getDireccion().toString(),
+                                    duenyo.getDireccion() == null ? "noexistente" : duenyo.getDireccion().toString(),
                                     duenyo.getNif(),
-                                    duenyo.getBirthDate() == null ? "null" : duenyo.getBirthDate().toString()
+                                    duenyo.getBirthDate() == null ? "noexistente" : duenyo.getBirthDate().toString()
                             });
-                    csvPreviewTable.setModel(tablemodel);
-                    resizeColumnWidth(csvPreviewTable);
                 }
+                csvPreviewTable.setModel(tablemodel);
+                resizeColumnWidth(csvPreviewTable);
             } catch (InterruptedException | ExecutionException e) {
                 e.printStackTrace();
                 var m = e.getMessage();
