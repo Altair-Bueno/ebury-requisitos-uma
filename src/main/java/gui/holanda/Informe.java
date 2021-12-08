@@ -1,9 +1,7 @@
 package gui.holanda;
 
 import database.HibernateStartUp;
-import database.tables.AssociatedStaffEntity;
-import database.tables.BankAccountEntity;
-import database.tables.EburyAccountEntity;
+import database.tables.*;
 import org.hibernate.Session;
 
 
@@ -18,6 +16,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.StringJoiner;
 import java.util.concurrent.ExecutionException;
 
 public class Informe extends JPanel implements Frame {
@@ -58,6 +57,7 @@ public class Informe extends JPanel implements Frame {
                 guardar.execute();
             }
         });
+
         ActionListener actionListener = e -> {
             var generar = new GenerarWorker(this);
             generar.execute();
@@ -123,6 +123,7 @@ public class Informe extends JPanel implements Frame {
 
         @Override
         protected String doInBackground() throws Exception {
+            jsonPreviewArea.setText("Cargando información...");
             lockUI();
             return switch (filterTabbedPane.getSelectedIndex()) {
                 case 0 -> producto();
@@ -142,6 +143,10 @@ public class Informe extends JPanel implements Frame {
         }
 
         private String cliente() {
+            String queryclient, queryaddress, result = "";
+
+            queryclient = "FROM ClientEntity ";
+
             JTextField[] campos = new JTextField[]{
                     primerNombreTextField,
                     segundoNombreTextField,
@@ -150,19 +155,60 @@ public class Informe extends JPanel implements Frame {
                     calleTextField,
                     postalTextField
                     };
-            String [] filtersApplied = new String[6]; // "null" if not applied, value otherwise
 
-            for(int i = 0; i<6; i++){
-                var texto = campos[i].getText();
-                var name = campos[i].getName();
-                filtersApplied[i] = texto.equals("") ? "null" : (name + " = '" + texto + "'");
-            }
             try(Session session = HibernateStartUp.getSessionFactory().openSession()){
-                for(int i = 0; i<6; i++){
-                    if(!filtersApplied[i].equals("null")){
+                for(int i = 0; i<3; i++){
+                    var texto = campos[i].getText();
+                    var name = campos[i].getName();
 
+                    if(!texto.equals("")){
+                        if(i==0){
+                            queryclient += "WHERE";
+                        } else {
+                            queryclient+= " AND";
+                        }
+                        queryclient += " " + name + " LIKE ('%" + texto + "%')";
                     }
                 }
+
+                List<ClientEntity> clienfil = (List<ClientEntity>) session.createQuery(queryclient).list();
+
+                for(int i = 0; i < clienfil.size(); i++){
+                    queryaddress = "FROM AddressEntity WHERE clientId = " + clienfil.get(i).getId();
+                    var aplicado = false;
+                    for(int j = 3; j<6; j++){
+                        var texto = campos[j].getText();
+                        var name = campos[j].getName();
+                        if(!texto.equals("")){
+                            queryaddress += " AND " + name + " LIKE ('" + texto + "%')";
+                            aplicado = true;
+                        }
+                    }
+
+                    List<AddressEntity> dirsclien = (List<AddressEntity>) session.createQuery(queryaddress).list();
+                    if(dirsclien.size()==0) {
+                        // Si no se hace este if, se incluyen clientes incluso si
+                        // se ha aplicado filtro de direccion, ya que un cliente puede
+                        // o no tener direcciones registradas. Por tanto, si la consulta
+                        // de direcciones sale vacía puede ser porque el cliente no tenga
+                        // direcciones registradas, o porque se haya aplicado el filtro y
+                        // no se haya encontrado nada.
+
+                        if(!aplicado){ // Consulta de direcciones vacía y no hay filtros aplicados
+                            result += "[" + clienfil.get(i).fullName() + "]";
+                            result += "\n";
+                        }
+                    } else {
+                        result += "[" + clienfil.get(i).fullName() + "] [";
+                        for(int j = 0; j<dirsclien.size()-1;j++){
+                            result += dirsclien.get(j) + ", ";
+                        }
+                        if(dirsclien.size()>0) result += dirsclien.get(dirsclien.size()-1) + "]";
+                        result += "\n";
+                    }
+                }
+
+                return result;
             } catch (Exception e){
                 e.printStackTrace();
             }
