@@ -194,7 +194,9 @@ public class Informe extends JPanel implements Frame {
                         // direcciones registradas, o porque se haya aplicado el filtro y
                         // no se haya encontrado nada.
 
-                        if(!aplicado){ // Consulta de direcciones vacía y no hay filtros aplicados
+                        if(!aplicado){
+                            // Consulta de direcciones vacía y no hay filtros aplicados:
+                            // El cliente no tiene direcciones registradas -> Se incluye en el resultado
                             result += "[" + clienfil.get(i).fullName() + "]";
                             result += "\n";
                         }
