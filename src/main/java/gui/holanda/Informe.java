@@ -133,6 +133,11 @@ public class Informe extends JPanel implements Frame {
         }
 
         private String healthcheck() {
+            try(Session session = HibernateStartUp.getSessionFactory().openSession()){
+                session.createQuery("FROM EburyAccountEntity");
+            } catch (Exception e){
+                return "STATUS: ERROR.";
+            }
             return "STATUS: CONNECTION OK.";
         }
 
@@ -187,7 +192,7 @@ public class Informe extends JPanel implements Frame {
                 }
 
                 if(!statusCuenta.equals("") && numProd.equals("")){ //Se filtra por tipo de cuenta:
-                    List<EburyAccountEntity> listaCuentas = (List<EburyAccountEntity>)session.createQuery("SELECT bankAccount FROM EburyAccountEntity WHERE status = '" + statusCuenta + "'").list();
+                    List<EburyAccountEntity> listaCuentas = (List<EburyAccountEntity>)session.createQuery("FROM EburyAccountEntity WHERE status = '" + statusCuenta + "'").list();
                     for(EburyAccountEntity a : listaCuentas){
                         result.append(a.getInfo()).append(" \n");
                     }
@@ -208,6 +213,7 @@ public class Informe extends JPanel implements Frame {
                     }
 
                 }
+                JOptionPane.showMessageDialog(informe, "Información generada.");
                 return result.toString();
             } catch (Exception e){
                 return "";
