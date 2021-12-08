@@ -213,9 +213,9 @@ public class Informe extends JPanel implements Frame {
                     }
 
                 }
-                JOptionPane.showMessageDialog(informe, "Información generada.");
                 return result.toString();
             } catch (Exception e){
+                JOptionPane.showMessageDialog(informe, "No hay información para mostrar o ha habido algún error.");
                 return "";
             }
         }
