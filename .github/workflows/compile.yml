@@ -1,0 +1,19 @@
+name: Compile java app
+on:
+  push:
+    branches:
+      - release
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Build with maven
+        run: ./build.py
+      - name: Move artifact
+        run: mkdir temp && cp target/*.jar temp
+      - uses: actions/upload-artifact@v2
+        with:
+          name: Package
+          path: temp
