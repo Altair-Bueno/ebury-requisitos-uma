@@ -10,6 +10,8 @@ import gui.Frame;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -41,6 +43,8 @@ public class Informe extends JPanel implements Frame {
     private JLabel nombreLabel;
     private JLabel direccionLabel;
     private JLabel resultadoCheck;
+    private JButton limpiarProductoButton;
+    private JButton limpiarClienteButton;
 
 
     public Informe() {
@@ -71,6 +75,24 @@ public class Informe extends JPanel implements Frame {
         ciudadTextField.addActionListener(actionListener);
         calleTextField.addActionListener(actionListener);
         postalTextField.addActionListener(actionListener);
+        limpiarProductoButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                numeroProductoTextField.setText("");
+                tipoComboBox.setSelectedIndex(0);
+            }
+        });
+        limpiarClienteButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                primerNombreTextField.setText("");
+                segundoNombreTextField.setText("");
+                ciudadTextField.setText("");
+                calleTextField.setText("");
+                postalTextField.setText("");
+                tercerNombreTextField.setText("");
+            }
+        });
     }
 
     private void lockUI() {
@@ -230,6 +252,9 @@ public class Informe extends JPanel implements Frame {
                 case 3 -> statusCuenta = "Blocked";
                 case 4 -> statusCuenta = "Closed";
             }
+
+
+
             try(Session session = HibernateStartUp.getSessionFactory().openSession()){
                 StringBuilder result = new StringBuilder();
                 if(statusCuenta.equals("") && numProd.equals("")){ //No se ha aplicado ningún filtro:
