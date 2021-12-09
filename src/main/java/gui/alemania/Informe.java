@@ -256,7 +256,7 @@ public class Informe extends JPanel implements Frame {
                     for (int j = 0; j < model.getColumnCount()-1; j++) {
                         csv.write(model.getValueAt(i, j).toString().replace(',', Character.MIN_VALUE) + ",");
                     }
-                    csv.write(model.getValueAt(i, model.getColumnCount()-1).toString().replace(',', Character.MIN_VALUE) + ",");
+                    csv.write(model.getValueAt(i, model.getColumnCount()-1).toString().replace(',', Character.MIN_VALUE));
                     progress.setValue(i);
                     csv.write("\n");
                 }
