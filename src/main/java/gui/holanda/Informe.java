@@ -231,11 +231,8 @@ public class Informe extends JPanel implements Frame {
         postalTextField.setToolTipText("Código Postal");
         filtroClientePanel.add(postalTextField, new GridConstraints(7, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
         nombreLabel = new JLabel();
-        nombreLabel.setText("Nombre");
-        filtroClientePanel.add(nombreLabel, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        direccionLabel = new JLabel();
-        direccionLabel.setText("Dirección");
-        filtroClientePanel.add(direccionLabel, new GridConstraints(4, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        nombreLabel.setText("Nombre completo");
+        filtroClientePanel.add(nombreLabel, new GridConstraints(0, 0, 1, 2, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         tercerNombreTextField = new JTextField();
         tercerNombreTextField.setName("last_name2");
         filtroClientePanel.add(tercerNombreTextField, new GridConstraints(3, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
@@ -260,6 +257,9 @@ public class Informe extends JPanel implements Frame {
         limpiarClienteButton = new JButton();
         limpiarClienteButton.setText("Limpiar");
         filtroClientePanel.add(limpiarClienteButton, new GridConstraints(9, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        direccionLabel = new JLabel();
+        direccionLabel.setText("Dirección");
+        filtroClientePanel.add(direccionLabel, new GridConstraints(4, 0, 1, 2, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         healthCheckPanel = new JPanel();
         healthCheckPanel.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
         filterTabbedPane.addTab("HealthCheck", healthCheckPanel);
