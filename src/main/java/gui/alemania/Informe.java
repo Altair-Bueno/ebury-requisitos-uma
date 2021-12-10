@@ -247,16 +247,18 @@ public class Informe extends JPanel implements Frame {
             progress.setMaximum(model.getRowCount());
             try (var csv = new FileWriter(file)) {
                 // TODO añade un montón de columnas que no deberían estar
-                for (int i = 0; i < model.getColumnCount()-1; i++) {
+                for (int i = 0; i < model.getColumnCount() - 1; i++) {
                     csv.write(model.getColumnName(i) + ",");
                 }
-                    csv.write(model.getColumnName(model.getColumnCount()-1));
+                csv.write(model.getColumnName(model.getColumnCount() - 1));
                 csv.write("\n");
                 for (int i = 0; i < model.getRowCount(); i++) {
-                    for (int j = 0; j < model.getColumnCount()-1; j++) {
-                        csv.write(model.getValueAt(i, j).toString().replace(',', Character.MIN_VALUE) + ",");
+                    for (int j = 0; j < model.getColumnCount() - 1; j++) {
+                        var value = model.getValueAt(i, j).toString();
+                        var safeValue = value.replace(",", "");
+                        csv.write(safeValue + ",");
                     }
-                    csv.write(model.getValueAt(i, model.getColumnCount()-1).toString().replace(',', Character.MIN_VALUE));
+                    csv.write(model.getValueAt(i, model.getColumnCount() - 1).toString().replace(',', Character.MIN_VALUE));
                     progress.setValue(i);
                     csv.write("\n");
                 }
