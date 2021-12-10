@@ -136,6 +136,7 @@ public class Login extends JPanel implements Frame {
                 frame.pack();
                 frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
                 frame.setLocationRelativeTo(null);
+                frame.setSize(frame.getSize());
                 frame.setVisible(true);
             } catch (NullPointerException e) {
                 var m = "El usuario y/o contraseña no se reconocen";
