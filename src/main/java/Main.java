@@ -6,7 +6,7 @@ import javax.swing.*;
 public class Main {
     public static void setUp() {
         if (System.getProperty("os.name").contains("Mac OS X")) {
-            System.setProperty("com.apple.mrj.application.apple.menu.about.name", "Multicenter");
+            System.setProperty("com.apple.mrj.application.apple.menu.about.name", "Ebury");
             System.setProperty("apple.awt.graphics.EnableQ2DX", "true");
             System.setProperty("apple.laf.useScreenMenuBar", "true");
             System.setProperty("apple.awt.textantialiasing", "true");

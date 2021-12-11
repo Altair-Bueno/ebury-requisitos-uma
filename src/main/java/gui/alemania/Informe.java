@@ -14,6 +14,8 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumnModel;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -24,6 +26,8 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 public class Informe extends JPanel implements Frame {
+    private final Long FIVE_YEARS = Long.parseLong("157784760000");
+    private final Long ONE_WEEK = Long.parseLong("604800000");
     private JButton primerInformeButton;
     private JTable csvPreviewTable;
     private JButton informeSemanalButton;
@@ -48,6 +52,10 @@ public class Informe extends JPanel implements Frame {
         });
         informeSemanalButton.addActionListener(e -> {
             var g = new GenerarInformeSemanalWorker(this);
+            g.execute();
+        });
+        primerInformeButton.addActionListener(e -> {
+            var g = new GenerarPrimerInformeWorker(this);
             g.execute();
         });
         enviarSFTPButton.addActionListener(e -> {
@@ -279,7 +287,7 @@ public class Informe extends JPanel implements Frame {
         }
     }
 
-    private class GenerarPrimerInformeWorker extends SwingWorker<List<Object>, Void> {
+    private class GenerarPrimerInformeWorker extends SwingWorker<List<EburyAccountEntity>, Void> {
         Informe informe;
 
         public GenerarPrimerInformeWorker(Informe informe) {
@@ -287,11 +295,11 @@ public class Informe extends JPanel implements Frame {
         }
 
         @Override
-        protected List<Object> doInBackground() throws Exception {
+        protected List<EburyAccountEntity> doInBackground() throws Exception {
             lockUI();
             try (var session = HibernateStartUp.getSessionFactory().openSession()) {
                 // TODO querry no es la correcta. Completar
-                return session.createQuery("from BankAccountEntity, EburyAccountEntity").list();
+                return session.createQuery("from EburyAccountEntity").list();
             }
         }
 
@@ -300,18 +308,49 @@ public class Informe extends JPanel implements Frame {
             try {
                 var result = get();
                 csvPreviewTable.removeAll();
+                // TODO no está bien del todo. Mirar las diapositivas del profesor
+                var tablemodel = new DefaultTableModel(new String[]{"IBAN", "Nombre", "Dirección", "NIF", "Fecha Nacimiento/Creación"}, 0);
+
                 for (var i : result) {
-                    // TODO insertar datos dentro de la tabla
-                    //var c = new TableColumn(i);
-                    //csvPreviewTable.addColumn(c);
+                    var cuentabanc = i.getBankAccount();
+                    var duenyo = i.getOwner();
+                    var fiveYearsAgo = new Date();
+                    fiveYearsAgo = new Date(fiveYearsAgo.getTime() - FIVE_YEARS);
+                    if(fiveYearsAgo.getTime() <= duenyo.getRegisterDate().getTime()) {
+                        tablemodel.addRow(
+                            new Object[]{
+                                    cuentabanc.getIban(),
+                                    duenyo.fullName(),
+                                    duenyo.getDireccion() == null ? "noexistente" : duenyo.getDireccion().toString(),
+                                    duenyo.getNif(),
+                                    duenyo.getBirthDate() == null ? "noexistente" : duenyo.getBirthDate().toString()
+                            }
+                        );
+                    }
                 }
-                System.out.println(result);
+                csvPreviewTable.setModel(tablemodel);
+                resizeColumnWidth(csvPreviewTable);
             } catch (InterruptedException | ExecutionException e) {
                 e.printStackTrace();
                 var m = e.getMessage();
                 JOptionPane.showMessageDialog(informe, m, m, JOptionPane.ERROR_MESSAGE);
             } finally {
                 informe.unlockUI();
+            }
+        }
+
+        public void resizeColumnWidth(JTable table) {
+            final TableColumnModel columnModel = table.getColumnModel();
+            for (int column = 0; column < table.getColumnCount(); column++) {
+                int width = 15; // Min width
+                for (int row = 0; row < table.getRowCount(); row++) {
+                    TableCellRenderer renderer = table.getCellRenderer(row, column);
+                    Component comp = table.prepareRenderer(renderer, row, column);
+                    width = Math.max(comp.getPreferredSize().width + 1, width);
+                }
+                if (width > 300)
+                    width = 300;
+                columnModel.getColumn(column).setPreferredWidth(width);
             }
         }
     }
@@ -342,14 +381,18 @@ public class Informe extends JPanel implements Frame {
                 for (var i : result) {
                     var cuentabanc = i.getBankAccount();
                     var duenyo = i.getOwner();
-                    tablemodel.addRow(
-                            new Object[]{
-                                    cuentabanc.getIban(),
-                                    duenyo.fullName(),
-                                    duenyo.getDireccion() == null ? "noexistente" : duenyo.getDireccion().toString(),
-                                    duenyo.getNif(),
-                                    duenyo.getBirthDate() == null ? "noexistente" : duenyo.getBirthDate().toString()
-                            });
+                    var weekAgo = new Date();
+                    weekAgo = new Date(weekAgo.getTime() - ONE_WEEK);
+                    if(weekAgo.getTime() <= duenyo.getRegisterDate().getTime()) {
+                        tablemodel.addRow(
+                                new Object[]{
+                                        cuentabanc.getIban(),
+                                        duenyo.fullName(),
+                                        duenyo.getDireccion() == null ? "noexistente" : duenyo.getDireccion().toString(),
+                                        duenyo.getNif(),
+                                        duenyo.getBirthDate() == null ? "noexistente" : duenyo.getBirthDate().toString()
+                                });
+                    }
                 }
                 csvPreviewTable.setModel(tablemodel);
                 resizeColumnWidth(csvPreviewTable);
