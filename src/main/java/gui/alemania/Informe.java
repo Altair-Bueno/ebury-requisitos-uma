@@ -35,6 +35,7 @@ public class Informe extends JPanel implements Frame {
     private JButton exportarButton;
     private JScrollPane scrollPane;
     private JPanel root;
+    private JProgressBar progressBar1;
 
     public Informe() {
         add(root);
@@ -190,7 +191,6 @@ public class Informe extends JPanel implements Frame {
         @Override
         protected Void doInBackground() throws Exception {
             super.doInBackground();
-
             var frame = new JFrame("Send");
             var sending = new JLabel("Sending file");
             frame.add(sending);
@@ -240,24 +240,22 @@ public class Informe extends JPanel implements Frame {
         protected Void doInBackground() throws Exception {
             lockUI();
             var frame = new JFrame("Save");
-            var progress = new JProgressBar();
-            frame.add(progress);
             frame.setUndecorated(true);
             frame.pack();
             frame.setLocationRelativeTo(informe);
             frame.setVisible(true);
-            generateCSV(frame, progress);
+            generateCSV(frame);
             return null;
         }
 
-        private void generateCSV(JFrame frame, JProgressBar progress) {
+        private void generateCSV(JFrame frame) {
             var model = csvPreviewTable.getModel();
-            progress.setMaximum(model.getRowCount());
+            progressBar1.setMaximum(model.getRowCount());
             try (var csv = new FileWriter(file)) {
                 // TODO añade un montón de columnas que no deberían estar
-                for (int i = 0; i < model.getColumnCount() - 1; i++) {
-                    csv.write(model.getColumnName(i) + ",");
-                }
+                //for (int i = 0; i < model.getColumnCount() - 1; i++) {
+                //    csv.write(model.getColumnName(i) + ",");
+                //}
                 csv.write(model.getColumnName(model.getColumnCount() - 1));
                 csv.write("\n");
                 for (int i = 0; i < model.getRowCount(); i++) {
@@ -267,7 +265,7 @@ public class Informe extends JPanel implements Frame {
                         csv.write(safeValue + ",");
                     }
                     csv.write(model.getValueAt(i, model.getColumnCount() - 1).toString().replace(',', Character.MIN_VALUE));
-                    progress.setValue(i);
+                    progressBar1.setValue(i);
                     csv.write("\n");
                 }
                 var m = "Exportación correcta";
@@ -296,9 +294,11 @@ public class Informe extends JPanel implements Frame {
 
         @Override
         protected List<EburyAccountEntity> doInBackground() throws Exception {
+            progressBar1.setMaximum(1000);
             lockUI();
             try (var session = HibernateStartUp.getSessionFactory().openSession()) {
                 // TODO querry no es la correcta. Completar
+                progressBar1.setValue(25);
                 return session.createQuery("from EburyAccountEntity").list();
             }
         }
@@ -310,10 +310,10 @@ public class Informe extends JPanel implements Frame {
                 csvPreviewTable.removeAll();
                 // TODO no está bien del todo. Mirar las diapositivas del profesor
                 var tablemodel = new DefaultTableModel(new String[]{"IBAN", "Nombre", "Dirección", "NIF", "Fecha Nacimiento/Creación"}, 0);
-
-                for (var i : result) {
-                    var cuentabanc = i.getBankAccount();
-                    var duenyo = i.getOwner();
+                progressBar1.setMaximum(result.size());
+                for (int i = 0; i<result.size(); i++) {
+                    var cuentabanc = result.get(i).getBankAccount();
+                    var duenyo = result.get(i).getOwner();
                     var fiveYearsAgo = new Date();
                     fiveYearsAgo = new Date(fiveYearsAgo.getTime() - FIVE_YEARS);
                     if(fiveYearsAgo.getTime() <= duenyo.getRegisterDate().getTime()) {
@@ -327,9 +327,11 @@ public class Informe extends JPanel implements Frame {
                             }
                         );
                     }
+                    progressBar1.setValue(i);
                 }
                 csvPreviewTable.setModel(tablemodel);
                 resizeColumnWidth(csvPreviewTable);
+                progressBar1.setValue(progressBar1.getMaximum());
             } catch (InterruptedException | ExecutionException e) {
                 e.printStackTrace();
                 var m = e.getMessage();
@@ -364,8 +366,11 @@ public class Informe extends JPanel implements Frame {
 
         @Override
         protected List<EburyAccountEntity> doInBackground() throws Exception {
+            progressBar1.setValue(0);
+            progressBar1.setMaximum(1000);
             lockUI();
             try (var session = HibernateStartUp.getSessionFactory().openSession()) {
+                progressBar1.setValue(25);
                 return session.createQuery("from EburyAccountEntity").list();
             }
         }
@@ -377,10 +382,10 @@ public class Informe extends JPanel implements Frame {
                 csvPreviewTable.removeAll();
                 // TODO no está bien del todo. Mirar las diapositivas del profesor
                 var tablemodel = new DefaultTableModel(new String[]{"IBAN", "Nombre", "Dirección", "NIF", "Fecha Nacimiento/Creación"}, 0);
-
-                for (var i : result) {
-                    var cuentabanc = i.getBankAccount();
-                    var duenyo = i.getOwner();
+                progressBar1.setMaximum(result.size());
+                for (int i = 0; i<result.size(); i++) {
+                    var cuentabanc = result.get(i).getBankAccount();
+                    var duenyo = result.get(i).getOwner();
                     var weekAgo = new Date();
                     weekAgo = new Date(weekAgo.getTime() - ONE_WEEK);
                     if(weekAgo.getTime() <= duenyo.getRegisterDate().getTime()) {
@@ -393,9 +398,11 @@ public class Informe extends JPanel implements Frame {
                                         duenyo.getBirthDate() == null ? "noexistente" : duenyo.getBirthDate().toString()
                                 });
                     }
+                    progressBar1.setValue(i);
                 }
                 csvPreviewTable.setModel(tablemodel);
                 resizeColumnWidth(csvPreviewTable);
+                progressBar1.setValue(progressBar1.getMaximum());
             } catch (InterruptedException | ExecutionException e) {
                 e.printStackTrace();
                 var m = e.getMessage();
