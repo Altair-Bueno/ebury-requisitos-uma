@@ -13,10 +13,10 @@ public class OperationEntityPK implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String bankAccountIban;
-    @JoinColumn(name = "EburyAccount_id")
+    @Column(name = "EburyAccount_id")
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private EburyAccountEntity eburyAccount;
+    private int eburyAccount;
 
     public int getId() {
         return id;
@@ -34,11 +34,11 @@ public class OperationEntityPK implements Serializable {
         this.bankAccountIban = bankAccountIban;
     }
 
-    public EburyAccountEntity getEburyAccount() {
+    public int getEburyAccount() {
         return eburyAccount;
     }
 
-    public void setEburyAccount(EburyAccountEntity eburyAccount) {
+    public void setEburyAccount(int eburyAccount) {
         this.eburyAccount = eburyAccount;
     }
 
@@ -47,7 +47,7 @@ public class OperationEntityPK implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         OperationEntityPK that = (OperationEntityPK) o;
-        return id == that.id && eburyAccount.equals(that.eburyAccount) && Objects.equals(bankAccountIban, that.bankAccountIban);
+        return id == that.id && eburyAccount == (that.eburyAccount) && Objects.equals(bankAccountIban, that.bankAccountIban);
     }
 
     @Override

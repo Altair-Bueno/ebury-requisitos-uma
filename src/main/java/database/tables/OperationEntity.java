@@ -18,7 +18,7 @@ public class OperationEntity {
     private String bankAccountIban;
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
-    @ManyToOne(targetEntity=EburyAccountEntity.class, fetch=FetchType.EAGER)
+    @ManyToOne
     @JoinColumn(name = "EburyAccount_id")
     public EburyAccountEntity eburyAccount;
     @Basic

@@ -157,8 +157,6 @@ public class Informe extends JPanel implements Frame {
         enviarSFTPButton.setEnabled(true);
         enviarSFTPButton.setText("Enviar por SFTP");
         root.add(enviarSFTPButton, new GridConstraints(4, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        final Spacer spacer1 = new Spacer();
-        root.add(spacer1, new GridConstraints(2, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
         exportarButton = new JButton();
         exportarButton.setEnabled(true);
         exportarButton.setText("Exportar...");
@@ -170,6 +168,13 @@ public class Informe extends JPanel implements Frame {
         csvPreviewTable.setCellSelectionEnabled(false);
         csvPreviewTable.setEnabled(false);
         scrollPane.setViewportView(csvPreviewTable);
+        final JPanel panel1 = new JPanel();
+        panel1.setLayout(new GridLayoutManager(2, 1, new Insets(0, 0, 0, 0), -1, -1));
+        root.add(panel1, new GridConstraints(2, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+        progressBar1 = new JProgressBar();
+        panel1.add(progressBar1, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        final Spacer spacer1 = new Spacer();
+        panel1.add(spacer1, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
     }
 
     /**
@@ -322,11 +327,11 @@ public class Informe extends JPanel implements Frame {
                 // TODO no está bien del todo. Mirar las diapositivas del profesor
                 var tablemodel = new DefaultTableModel(new String[]{"IBAN", "Depósito", "Apertura", "Disolución", "Nombre", "Fecha Nacimiento/Creación", "Beneficiario"}, 0);
                 progressBar1.setMaximum(result.size());
-                for (int i = 0; i<result.size(); i++) {
+                for (int i = 0; i < result.size(); i++) {
                     //var fiveYearsAgo = new Date();
                     //fiveYearsAgo = new Date(fiveYearsAgo.getTime() - FIVE_YEARS);
                     //TODO Condición de los cinco años
-                    if(true) {
+                    if (true) {
                         tablemodel.addRow(new Object[]{
                                 (String) result.get(i)[0],
                                 (String) result.get(i)[1],
@@ -394,12 +399,12 @@ public class Informe extends JPanel implements Frame {
                 // TODO no está bien del todo. Mirar las diapositivas del profesor
                 var tablemodel = new DefaultTableModel(new String[]{"IBAN", "Nombre", "Dirección", "NIF", "Fecha Nacimiento/Creación"}, 0);
                 progressBar1.setMaximum(result.size());
-                for (int i = 0; i<result.size(); i++) {
+                for (int i = 0; i < result.size(); i++) {
                     var cuentabanc = result.get(i).getBankAccount();
                     var duenyo = result.get(i).getOwner();
                     var weekAgo = new Date();
                     weekAgo = new Date(weekAgo.getTime() - ONE_WEEK);
-                    if(weekAgo.getTime() <= duenyo.getRegisterDate().getTime()) {
+                    if (weekAgo.getTime() <= duenyo.getRegisterDate().getTime()) {
                         tablemodel.addRow(
                                 new Object[]{
                                         cuentabanc.getIban(),
