@@ -1,9 +1,6 @@
 package database.tables;
 
-import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Objects;
 
@@ -16,10 +13,10 @@ public class OperationEntityPK implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String bankAccountIban;
-    @Column(name = "EburyAccount_id")
+    @JoinColumn(name = "EburyAccount_id")
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int eburyAccountId;
+    private EburyAccountEntity eburyAccount;
 
     public int getId() {
         return id;
@@ -37,12 +34,12 @@ public class OperationEntityPK implements Serializable {
         this.bankAccountIban = bankAccountIban;
     }
 
-    public int getEburyAccountId() {
-        return eburyAccountId;
+    public EburyAccountEntity getEburyAccount() {
+        return eburyAccount;
     }
 
-    public void setEburyAccountId(int eburyAccountId) {
-        this.eburyAccountId = eburyAccountId;
+    public void setEburyAccount(EburyAccountEntity eburyAccount) {
+        this.eburyAccount = eburyAccount;
     }
 
     @Override
@@ -50,11 +47,11 @@ public class OperationEntityPK implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         OperationEntityPK that = (OperationEntityPK) o;
-        return id == that.id && eburyAccountId == that.eburyAccountId && Objects.equals(bankAccountIban, that.bankAccountIban);
+        return id == that.id && eburyAccount.equals(that.eburyAccount) && Objects.equals(bankAccountIban, that.bankAccountIban);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, bankAccountIban, eburyAccountId);
+        return Objects.hash(id, bankAccountIban, eburyAccount);
     }
 }

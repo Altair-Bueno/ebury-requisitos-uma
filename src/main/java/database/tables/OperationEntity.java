@@ -18,8 +18,9 @@ public class OperationEntity {
     private String bankAccountIban;
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
-    @Column(name = "EburyAccount_id")
-    private int eburyAccountId;
+    @ManyToOne(targetEntity=EburyAccountEntity.class, fetch=FetchType.EAGER)
+    @JoinColumn(name = "EburyAccount_id")
+    public EburyAccountEntity eburyAccount;
     @Basic
     @Column(name = "date")
     private Date date;
@@ -52,12 +53,12 @@ public class OperationEntity {
         this.bankAccountIban = bankAccountIban;
     }
 
-    public int getEburyAccountId() {
-        return eburyAccountId;
+    public EburyAccountEntity getEburyAccount() {
+        return eburyAccount;
     }
 
-    public void setEburyAccountId(int eburyAccountId) {
-        this.eburyAccountId = eburyAccountId;
+    public void setEburyAccount(EburyAccountEntity eburyAccount) {
+        this.eburyAccount = eburyAccount;
     }
 
     public Date getDate() {
@@ -105,11 +106,11 @@ public class OperationEntity {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         OperationEntity that = (OperationEntity) o;
-        return id == that.id && eburyAccountId == that.eburyAccountId && Double.compare(that.amount, amount) == 0 && Objects.equals(bankAccountIban, that.bankAccountIban) && Objects.equals(date, that.date) && Objects.equals(conversionrate, that.conversionrate) && Objects.equals(comission, that.comission) && Objects.equals(beneficiary, that.beneficiary);
+        return id == that.id && eburyAccount.equals(that.eburyAccount) && Double.compare(that.amount, amount) == 0 && Objects.equals(bankAccountIban, that.bankAccountIban) && Objects.equals(date, that.date) && Objects.equals(conversionrate, that.conversionrate) && Objects.equals(comission, that.comission) && Objects.equals(beneficiary, that.beneficiary);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, bankAccountIban, eburyAccountId, date, amount, conversionrate, comission, beneficiary);
+        return Objects.hash(id, bankAccountIban, eburyAccount, date, amount, conversionrate, comission, beneficiary);
     }
 }

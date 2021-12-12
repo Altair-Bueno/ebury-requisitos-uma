@@ -7,8 +7,12 @@ import com.jcraft.jsch.ChannelSftp;
 import com.jcraft.jsch.JSch;
 import database.HibernateStartUp;
 import database.tables.EburyAccountEntity;
+import database.tables.OperationEntity;
 import gui.Frame;
 
+import javax.persistence.Tuple;
+import javax.persistence.TupleElement;
+import javax.persistence.TypedQuery;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
@@ -21,6 +25,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -252,10 +257,10 @@ public class Informe extends JPanel implements Frame {
             var model = csvPreviewTable.getModel();
             progressBar1.setMaximum(model.getRowCount());
             try (var csv = new FileWriter(file)) {
-                // TODO añade un montón de columnas que no deberían estar
-                //for (int i = 0; i < model.getColumnCount() - 1; i++) {
-                //    csv.write(model.getColumnName(i) + ",");
-                //}
+                //TODO añade un montón de columnas que no deberían estar
+                for (int i = 0; i < model.getColumnCount() - 1; i++) {
+                    csv.write(model.getColumnName(i) + ",");
+                }
                 csv.write(model.getColumnName(model.getColumnCount() - 1));
                 csv.write("\n");
                 for (int i = 0; i < model.getRowCount(); i++) {
@@ -285,7 +290,7 @@ public class Informe extends JPanel implements Frame {
         }
     }
 
-    private class GenerarPrimerInformeWorker extends SwingWorker<List<EburyAccountEntity>, Void> {
+    private class GenerarPrimerInformeWorker extends SwingWorker<List<Object[]>, Void> {
         Informe informe;
 
         public GenerarPrimerInformeWorker(Informe informe) {
@@ -293,13 +298,19 @@ public class Informe extends JPanel implements Frame {
         }
 
         @Override
-        protected List<EburyAccountEntity> doInBackground() throws Exception {
+        protected List<Object[]> doInBackground() throws Exception {
             progressBar1.setMaximum(1000);
             lockUI();
             try (var session = HibernateStartUp.getSessionFactory().openSession()) {
                 // TODO querry no es la correcta. Completar
-                progressBar1.setValue(25);
-                return session.createQuery("from EburyAccountEntity").list();
+                progressBar1.setValue(250);
+                var b = session.createQuery("select op.id from OperationEntity op, EburyAccountEntity ac where not op.eburyAccount.id = 1", Object[].class).getResultList();
+                System.out.println(b);
+                var c = session.createQuery("select op.id, ac.status from OperationEntity op join op.eburyAccount ac", Object[].class).getResultList();
+                System.out.println(c);
+                var a = session.createQuery("select ac.bankAccount.iban, coalesce(op.amount, 'noexistente'), ac.registerdate, coalesce(ac.closedate, 'noexistente'), concat(ac.owner.name, ' ' , coalesce(ac.owner.lastName1, ''), ' ', coalesce(ac.owner.lastName2, '')), coalesce(ac.owner.birthDate, 'noexistente') , coalesce(op.beneficiary, 'noexistente') from OperationEntity op join op.eburyAccount ac", Object[].class).getResultList();
+                System.out.println(a);
+                return a;
             }
         }
 
@@ -309,23 +320,23 @@ public class Informe extends JPanel implements Frame {
                 var result = get();
                 csvPreviewTable.removeAll();
                 // TODO no está bien del todo. Mirar las diapositivas del profesor
-                var tablemodel = new DefaultTableModel(new String[]{"IBAN", "Nombre", "Dirección", "NIF", "Fecha Nacimiento/Creación"}, 0);
+                var tablemodel = new DefaultTableModel(new String[]{"IBAN", "Depósito", "Apertura", "Disolución", "Nombre", "Fecha Nacimiento/Creación", "Beneficiario"}, 0);
                 progressBar1.setMaximum(result.size());
                 for (int i = 0; i<result.size(); i++) {
-                    var cuentabanc = result.get(i).getBankAccount();
-                    var duenyo = result.get(i).getOwner();
-                    var fiveYearsAgo = new Date();
-                    fiveYearsAgo = new Date(fiveYearsAgo.getTime() - FIVE_YEARS);
-                    if(fiveYearsAgo.getTime() <= duenyo.getRegisterDate().getTime()) {
-                        tablemodel.addRow(
-                            new Object[]{
-                                    cuentabanc.getIban(),
-                                    duenyo.fullName(),
-                                    duenyo.getDireccion() == null ? "noexistente" : duenyo.getDireccion().toString(),
-                                    duenyo.getNif(),
-                                    duenyo.getBirthDate() == null ? "noexistente" : duenyo.getBirthDate().toString()
-                            }
-                        );
+                    //var fiveYearsAgo = new Date();
+                    //fiveYearsAgo = new Date(fiveYearsAgo.getTime() - FIVE_YEARS);
+                    //TODO Condición de los cinco años
+                    if(true) {
+                        tablemodel.addRow(new Object[]{
+                                (String) result.get(i)[0],
+                                (String) result.get(i)[1],
+                                (String) result.get(i)[2],
+                                (String) result.get(i)[3],
+                                (String) result.get(i)[4],
+                                (String) result.get(i)[5],
+                                (String) result.get(i)[6],
+                                (String) result.get(i)[7],
+                        });
                     }
                     progressBar1.setValue(i);
                 }
