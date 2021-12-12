@@ -261,8 +261,15 @@ public class Informe extends JPanel implements Frame {
                 for (int i = 0; i < model.getColumnCount() - 1; i++) {
                     csv.write(model.getColumnName(i) + ",");
                 }
-                csv.write(model.getColumnName(model.getColumnCount() - 1));
-                csv.write("\n");
+                //csv.write(model.getColumnName(model.getColumnCount() - 1));
+                //csv.write("\n");
+
+                //El número de una cuenta,
+                // el día de apertura y el día de terminación o disolución,
+                // El nombre y, en el caso de personas físicas (no empresas), la fecha
+                // de nacimiento, del propietario y de la persona con derecho a
+                // disponer, y, si corresponde, el nombre y la dirección de un
+                // beneficiario final diferente -> 9
                 for (int i = 0; i < model.getRowCount(); i++) {
                     for (int j = 0; j < model.getColumnCount() - 1; j++) {
                         var value = model.getValueAt(i, j).toString();
@@ -368,7 +375,7 @@ public class Informe extends JPanel implements Frame {
         }
     }
 
-    private class GenerarInformeSemanalWorker extends SwingWorker<List<EburyAccountEntity>, Void> {
+    private class GenerarInformeSemanalWorker extends SwingWorker<List<Object[]>, Void> {
         Informe informe;
 
         public GenerarInformeSemanalWorker(Informe informe) {
@@ -376,13 +383,20 @@ public class Informe extends JPanel implements Frame {
         }
 
         @Override
-        protected List<EburyAccountEntity> doInBackground() throws Exception {
+        protected List<Object[]> doInBackground() throws Exception {
             progressBar1.setValue(0);
             progressBar1.setMaximum(1000);
             lockUI();
             try (var session = HibernateStartUp.getSessionFactory().openSession()) {
                 progressBar1.setValue(25);
-                return session.createQuery("from EburyAccountEntity").list();
+                return null;
+                /*return session.createQuery("select ac.bankAccount, coalesce(op.amount," +
+                                " 'noexistente'), ac.registerdate, coalesce(ac.closedate, " +
+                                "'noexistente'), concat(ac.owner.name, ' ' , coalesce(ac.owner.lastName1, '')," +
+                                " ' ', coalesce(ac.owner.lastName2, '')), coalesce(ac.owner.birthDate, 'noexistente') ," +
+                                " coalesce(op.beneficiary, 'noexistente') from OperationEntity op join op.eburyAccountId ac " +
+                                " where ac.status='Active'",
+                        Object[].class).getResultList();*/
             }
         }
 
@@ -392,23 +406,10 @@ public class Informe extends JPanel implements Frame {
                 var result = get();
                 csvPreviewTable.removeAll();
                 // TODO no está bien del todo. Mirar las diapositivas del profesor
-                var tablemodel = new DefaultTableModel(new String[]{"IBAN", "Nombre", "Dirección", "NIF", "Fecha Nacimiento/Creación"}, 0);
+                var tablemodel = new DefaultTableModel(new String[]{"IBAN", "Depósito", "Apertura", "Disolución", "Nombre", "Fecha Nacimiento/Creación", "Asociado", "Beneficiario"}, 0);
                 progressBar1.setMaximum(result.size());
                 for (int i = 0; i<result.size(); i++) {
-                    var cuentabanc = result.get(i).getBankAccount();
-                    var duenyo = result.get(i).getOwner();
-                    var weekAgo = new Date();
-                    weekAgo = new Date(weekAgo.getTime() - ONE_WEEK);
-                    if(weekAgo.getTime() <= duenyo.getRegisterDate().getTime()) {
-                        tablemodel.addRow(
-                                new Object[]{
-                                        cuentabanc.getIban(),
-                                        duenyo.fullName(),
-                                        duenyo.getDireccion() == null ? "noexistente" : duenyo.getDireccion().toString(),
-                                        duenyo.getNif(),
-                                        duenyo.getBirthDate() == null ? "noexistente" : duenyo.getBirthDate().toString()
-                                });
-                    }
+                    tablemodel.addRow(result.get(i));
                     progressBar1.setValue(i);
                 }
                 csvPreviewTable.setModel(tablemodel);
