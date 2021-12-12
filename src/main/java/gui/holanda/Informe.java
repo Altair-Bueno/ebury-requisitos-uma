@@ -22,7 +22,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 import java.util.StringJoiner;
 import java.util.concurrent.ExecutionException;
 
@@ -416,18 +415,51 @@ public class Informe extends JPanel implements Frame {
                     listaCuentas = (List<EburyAccountEntity>) session.createQuery("FROM EburyAccountEntity WHERE bankAccount = '" + numProd + "' AND status = '" + statusCuenta + "'").list();
                 }
 
+                Gson parser = new Gson();
+                StringJoiner sj = new StringJoiner(",\n", "{\n", "}\n");
+                for (EburyAccountEntity ac : listaCuentas) {
+                    Name name = new Name(
+                            ac.getOwner().getName(),
+                            ac.getOwner().getLastName1()
+                    );
+                    Address add = new Address(
+                            ac.getOwner().getDireccion().getCity(),
+                            ac.getOwner().getDireccion().getStreet(),
+                            ac.getOwner().getDireccion().getNumber(),
+                            ac.getOwner().getDireccion().getPostalCode(),
+                            ac.getOwner().getDireccion().getCountry()
+                    );
+                    AccountHolder achold = new AccountHolder(
+                            ac.getStatus().equals("Active"),
+                            "Individual",
+                            name,
+                            add
+                    );
+                    Product p = new Product(
+                            achold,
+                            ac.getAccounttype(),
+                            ac.getBankAccount().getIban(),
+                            ac.getStatus(),
+                            ac.getRegisterdate().toString(),
+                            ac.getClosedate().toString()
+                    );
+                    sj.add(parser.toJson(ac));
+                }
+                System.out.println(sj.toString());
+                return sj.toString();
+                /*
                 var list = listaCuentas.stream().map(a -> {
                     var owner = a.getOwner();
                     List<AddressEntity> querry = session.createQuery("from AddressEntity a where a.clientId ='" + owner.getId() + "';").list();
                     var dir = querry.stream().map(d ->
-                        new Adress(d.getCity(),d.getStreet(),d.getNumber(),d.getPostalCode(),d.getCountry())
+                            new Address(d.getCity(), d.getStreet(), d.getNumber(), d.getPostalCode(), d.getCountry())
                     ).toList();
 
                     var accountHolder = new ArrayList<AccountHolder>();
                     accountHolder.add(new AccountHolder(
                             owner.getStatus().equals("Active"),
                             "Individual",
-                            new Name(owner.getName(),owner.getLastName1()),
+                            new Name(owner.getName(), owner.getLastName1()),
                             dir
                     ));
 
@@ -446,10 +478,12 @@ public class Informe extends JPanel implements Frame {
                             endDate.toString());
                 }).toList();
 
-                var products = new Products(list);
 
-                var gson = new Gson();
-                return gson.toJson(products);
+
+                var products = new Products(list);
+ */
+                //var gson = new Gson();
+                //return gson.toJson(products);
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(informe, "No hay información para mostrar o ha habido algún error.");
                 return "";

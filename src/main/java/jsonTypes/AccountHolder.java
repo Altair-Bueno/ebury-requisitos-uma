@@ -8,7 +8,7 @@ public class AccountHolder implements Serializable {
     Boolean activeCustomer;
     String accountType;
     Name name;
-    List<Adress> adress;
+    Address address;
 
     public Boolean getActiveCustomer() {
         return activeCustomer;
@@ -34,18 +34,18 @@ public class AccountHolder implements Serializable {
         this.name = name;
     }
 
-    public List<Adress> getAdress() {
-        return adress;
+    public Address getAddress() {
+        return address;
     }
 
-    public void setAdress(List<Adress> adress) {
-        this.adress = adress;
+    public void setAdress(Address address) {
+        this.address = address;
     }
 
-    public AccountHolder(Boolean activeCustomer, String accountType, Name name, List<Adress> adress) {
+    public AccountHolder(Boolean activeCustomer, String accountType, Name name, Address address) {
         this.activeCustomer = activeCustomer;
         this.accountType = accountType;
         this.name = name;
-        this.adress = adress;
+        this.address = address;
     }
 }

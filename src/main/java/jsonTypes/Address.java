@@ -2,7 +2,7 @@ package jsonTypes;
 
 import java.io.Serializable;
 
-public class Adress implements Serializable {
+public class Address implements Serializable {
 
     String city;
     String street;
@@ -10,7 +10,7 @@ public class Adress implements Serializable {
     String postalCode;
     String country;
 
-    public Adress(String city, String street, String number, String postalCode, String country) {
+    public Address(String city, String street, String number, String postalCode, String country) {
         this.city = city;
         this.street = street;
         this.number = number;
