@@ -418,34 +418,30 @@ public class Informe extends JPanel implements Frame {
                 Gson parser = new Gson();
                 StringJoiner sj = new StringJoiner(",\n", "{\n", "}\n");
                 for (EburyAccountEntity ac : listaCuentas) {
-                    Name name = new Name(
-                            ac.getOwner().getName(),
-                            ac.getOwner().getLastName1()
-                    );
-                    Address add = new Address(
-                            ac.getOwner().getDireccion().getCity(),
-                            ac.getOwner().getDireccion().getStreet(),
-                            ac.getOwner().getDireccion().getNumber(),
-                            ac.getOwner().getDireccion().getPostalCode(),
-                            ac.getOwner().getDireccion().getCountry()
-                    );
-                    AccountHolder achold = new AccountHolder(
-                            ac.getStatus().equals("Active"),
-                            "Individual",
-                            name,
-                            add
-                    );
                     Product p = new Product(
-                            achold,
+                            new AccountHolder(
+                                ac.getStatus().equals("Active"),
+                                "Individual",
+                                new Name(
+                                        ac.getOwner().getName(),
+                                        ac.getOwner().getLastName1()
+                                ),
+                                new Address(
+                                        ac.getOwner().getDireccion().getCity(),
+                                        ac.getOwner().getDireccion().getStreet(),
+                                        ac.getOwner().getDireccion().getNumber(),
+                                        ac.getOwner().getDireccion().getPostalCode(),
+                                        ac.getOwner().getDireccion().getCountry()
+                                )
+                            ),
                             ac.getAccounttype(),
                             ac.getBankAccount().getIban(),
                             ac.getStatus(),
                             ac.getRegisterdate().toString(),
-                            ac.getClosedate().toString()
+                            ac.getClosedate() == null ? null : ac.getClosedate().toString()
                     );
-                    sj.add(parser.toJson(ac));
+                    sj.add(parser.toJson(p));
                 }
-                System.out.println(sj.toString());
                 return sj.toString();
                 /*
                 var list = listaCuentas.stream().map(a -> {
@@ -485,6 +481,7 @@ public class Informe extends JPanel implements Frame {
                 //var gson = new Gson();
                 //return gson.toJson(products);
             } catch (Exception e) {
+                e.printStackTrace();
                 JOptionPane.showMessageDialog(informe, "No hay información para mostrar o ha habido algún error.");
                 return "";
             }
