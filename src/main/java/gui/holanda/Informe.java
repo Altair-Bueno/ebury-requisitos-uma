@@ -1,10 +1,12 @@
 package gui.holanda;
 
+import com.google.gson.Gson;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
 import database.HibernateStartUp;
 import database.tables.*;
+import jsonTypes.*;
 import org.hibernate.Session;
 
 
@@ -396,36 +398,58 @@ public class Informe extends JPanel implements Frame {
 
             try (Session session = HibernateStartUp.getSessionFactory().openSession()) {
                 StringBuilder result = new StringBuilder();
+                List<EburyAccountEntity> listaCuentas = null;
                 if (statusCuenta.equals("") && numProd.equals("")) { //No se ha aplicado ningún filtro:
-                    List<EburyAccountEntity> listaCuentas = (List<EburyAccountEntity>) session.createQuery("FROM EburyAccountEntity").list();
-                    for (EburyAccountEntity a : listaCuentas) {
-                        result.append(a.getInfo()).append(" \n");
-                    }
+                    listaCuentas = (List<EburyAccountEntity>) session.createQuery("FROM EburyAccountEntity").list();
                 }
 
                 if (!statusCuenta.equals("") && numProd.equals("")) { //Se filtra por tipo de cuenta:
-                    List<EburyAccountEntity> listaCuentas = (List<EburyAccountEntity>) session.createQuery("FROM EburyAccountEntity WHERE status = '" + statusCuenta + "'").list();
-                    for (EburyAccountEntity a : listaCuentas) {
-                        result.append(a.getInfo()).append(" \n");
-                    }
+                    listaCuentas = (List<EburyAccountEntity>) session.createQuery("FROM EburyAccountEntity WHERE status = '" + statusCuenta + "'").list();
                 }
 
                 if (statusCuenta.equals("") && !numProd.equals("")) { //Se filtra por número de IBAN
-                    List<EburyAccountEntity> listaCuentas = (List<EburyAccountEntity>) session.createQuery("FROM EburyAccountEntity WHERE bankAccount = '" + numProd + "'").list();
+                    listaCuentas = (List<EburyAccountEntity>) session.createQuery("FROM EburyAccountEntity WHERE bankAccount = '" + numProd + "'").list();
 
-                    for (EburyAccountEntity a : listaCuentas) {
-                        result.append(a.getInfo()).append(" \n");
-                    }
                 }
 
                 if (!statusCuenta.equals("") && !numProd.equals("")) { //Se filtra por tipo de cuenta y numero de IBAN
-                    List<EburyAccountEntity> listaCuentas = (List<EburyAccountEntity>) session.createQuery("FROM EburyAccountEntity WHERE bankAccount = '" + numProd + "' AND status = '" + statusCuenta + "'").list();
-                    for (EburyAccountEntity a : listaCuentas) {
-                        result.append(a.getInfo()).append(" \n");
-                    }
-
+                    listaCuentas = (List<EburyAccountEntity>) session.createQuery("FROM EburyAccountEntity WHERE bankAccount = '" + numProd + "' AND status = '" + statusCuenta + "'").list();
                 }
-                return result.toString();
+
+                var list = listaCuentas.stream().map(a -> {
+                    var owner = a.getOwner();
+                    List<AddressEntity> querry = session.createQuery("from AddressEntity a where a.clientId ='" + owner.getId() + "';").list();
+                    var dir = querry.stream().map(d ->
+                        new Adress(d.getCity(),d.getStreet(),d.getNumber(),d.getPostalCode(),d.getCountry())
+                    ).toList();
+
+                    var accountHolder = new ArrayList<AccountHolder>();
+                    accountHolder.add(new AccountHolder(
+                            owner.getStatus().equals("Active"),
+                            "Individual",
+                            new Name(owner.getName(),owner.getLastName1()),
+                            dir
+                    ));
+
+                    //var accountHolder = a.
+                    var productType = a.getAccounttype();
+                    var productNumber = a.getBankAccount();
+                    var status = a.getStatus();
+                    var startDate = a.getRegisterdate();
+                    var endDate = a.getClosedate();
+                    return new Product(
+                            accountHolder,
+                            productType,
+                            productNumber.getIban(),
+                            status,
+                            startDate.toString(),
+                            endDate.toString());
+                }).toList();
+
+                var products = new Products(list);
+
+                var gson = new Gson();
+                return gson.toJson(products);
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(informe, "No hay información para mostrar o ha habido algún error.");
                 return "";

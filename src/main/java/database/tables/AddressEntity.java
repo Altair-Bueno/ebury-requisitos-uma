@@ -19,6 +19,9 @@ public class AddressEntity {
     @Column(name = "street")
     private String street;
     @Basic
+    @Column(name = "number")
+    private String number;
+    @Basic
     @Column(name = "city")
     private String city;
     @Basic
@@ -50,6 +53,14 @@ public class AddressEntity {
 
     public void setStreet(String street) {
         this.street = street;
+    }
+
+    public String getNumber() {
+        return number;
+    }
+
+    public void setNumber(String number) {
+        this.number = number;
     }
 
     public String getCity() {
