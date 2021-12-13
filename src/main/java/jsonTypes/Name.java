@@ -8,7 +8,7 @@ public class Name implements Serializable {
 
     public Name(String firstName, String secondName) {
         this.firstName = firstName;
-        this.secondName = secondName;
+        this.secondName = secondName == null ? "" : secondName;
     }
 
     public String getFirstName() {

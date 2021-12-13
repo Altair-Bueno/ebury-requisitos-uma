@@ -416,7 +416,7 @@ public class Informe extends JPanel implements Frame {
                 }
 
                 Gson parser = new Gson();
-                StringJoiner sj = new StringJoiner(",\n", "{\n", "}\n");
+                StringJoiner sj = new StringJoiner(",\n", "{\"products\":[\n", "]}\n");
                 for (EburyAccountEntity ac : listaCuentas) {
                     Product p = new Product(
                             new AccountHolder(
@@ -437,7 +437,7 @@ public class Informe extends JPanel implements Frame {
                             ac.getAccounttype(),
                             ac.getBankAccount().getIban(),
                             ac.getStatus(),
-                            ac.getRegisterdate().toString(),
+                            ac.getRegisterdate() == null ? null : ac.getRegisterdate().toString(),
                             ac.getClosedate() == null ? null : ac.getClosedate().toString()
                     );
                     sj.add(parser.toJson(p));
