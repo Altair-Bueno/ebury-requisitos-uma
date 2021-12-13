@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.StringJoiner;
 import java.util.concurrent.ExecutionException;
+import com.google.gson.*;
 
 public class Informe extends JPanel implements Frame {
     private JPanel root;
@@ -416,6 +417,8 @@ public class Informe extends JPanel implements Frame {
                 }
 
                 Gson parser = new Gson();
+                Gson gson = new GsonBuilder().setPrettyPrinting().create();
+
                 StringJoiner sj = new StringJoiner(",", "{\"products\":[", "]}");
                 for (EburyAccountEntity ac : listaCuentas) {
                     var listAddress = new ArrayList<Address>();
@@ -446,7 +449,8 @@ public class Informe extends JPanel implements Frame {
                     );
                     sj.add(parser.toJson(p));
                 }
-                return sj.toString();
+                JsonElement je = JsonParser.parseString(sj.toString());
+                return gson.toJson(je);
             } catch (Exception e) {
                 e.printStackTrace();
                 JOptionPane.showMessageDialog(informe, "No hay información para mostrar o ha habido algún error.");
