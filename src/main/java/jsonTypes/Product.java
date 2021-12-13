@@ -5,14 +5,14 @@ import java.util.List;
 
 
 public class Product implements Serializable {
-    AccountHolder accountHolder;
+    List<AccountHolder> accountHolder;
     String productType;
     String productNumber;
     String status;
     String startDate;
     String endDate;
 
-    public Product(AccountHolder accountHolder, String productType, String productNumber, String status, String startDate, String endDate) {
+    public Product(List<AccountHolder> accountHolder, String productType, String productNumber, String status, String startDate, String endDate) {
         this.accountHolder = accountHolder;
         this.productType = productType;
         this.productNumber = productNumber;
@@ -21,11 +21,11 @@ public class Product implements Serializable {
         this.endDate = endDate;
     }
 
-    public AccountHolder getAccountHolder() {
+    public List<AccountHolder> getAccountHolder() {
         return accountHolder;
     }
 
-    public void setAccountHolder(AccountHolder accountHolder) {
+    public void setAccountHolder(List<AccountHolder> accountHolder) {
         this.accountHolder = accountHolder;
     }
 

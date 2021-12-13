@@ -102,6 +102,7 @@ public class Informe extends JPanel implements Frame {
     }
 
     private void lockUI() {
+        this.progressBar1.setValue(0);
         setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
         this.enviarSFTPButton.setEnabled(false);
         this.informeSemanalButton.setEnabled(false);
@@ -111,6 +112,7 @@ public class Informe extends JPanel implements Frame {
     }
 
     private void unlockUI() {
+        this.progressBar1.setValue(this.progressBar1.getMaximum());
         setCursor(Cursor.getDefaultCursor());
         this.enviarSFTPButton.setEnabled(true);
         this.informeSemanalButton.setEnabled(true);

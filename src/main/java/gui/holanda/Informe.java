@@ -416,24 +416,28 @@ public class Informe extends JPanel implements Frame {
                 }
 
                 Gson parser = new Gson();
-                StringJoiner sj = new StringJoiner(",\n", "{\"products\":[\n", "]}\n");
+                StringJoiner sj = new StringJoiner(",", "{\"products\":[", "]}");
                 for (EburyAccountEntity ac : listaCuentas) {
-                    Product p = new Product(
-                            new AccountHolder(
-                                ac.getStatus().equals("Active"),
-                                "Individual",
-                                new Name(
-                                        ac.getOwner().getName(),
-                                        ac.getOwner().getLastName1()
-                                ),
-                                new Address(
-                                        ac.getOwner().getDireccion().getCity(),
-                                        ac.getOwner().getDireccion().getStreet(),
-                                        ac.getOwner().getDireccion().getNumber(),
-                                        ac.getOwner().getDireccion().getPostalCode(),
-                                        ac.getOwner().getDireccion().getCountry()
-                                )
+                    var listAddress = new ArrayList<Address>();
+                    listAddress.add(new Address(
+                            ac.getOwner().getDireccion().getCity(),
+                            ac.getOwner().getDireccion().getStreet(),
+                            ac.getOwner().getDireccion().getNumber(),
+                            ac.getOwner().getDireccion().getPostalCode(),
+                            ac.getOwner().getDireccion().getCountry()
+                    ));
+                    var listAccountHolder = new ArrayList<AccountHolder>();
+                    listAccountHolder.add(new AccountHolder(
+                            ac.getStatus().equals("Active"),
+                            "Individual",
+                            new Name(
+                                    ac.getOwner().getName(),
+                                    ac.getOwner().getLastName1()
                             ),
+                            listAddress
+                    ));
+                    Product p = new Product(
+                            listAccountHolder,
                             ac.getAccounttype(),
                             ac.getBankAccount().getIban(),
                             ac.getStatus(),
@@ -443,43 +447,6 @@ public class Informe extends JPanel implements Frame {
                     sj.add(parser.toJson(p));
                 }
                 return sj.toString();
-                /*
-                var list = listaCuentas.stream().map(a -> {
-                    var owner = a.getOwner();
-                    List<AddressEntity> querry = session.createQuery("from AddressEntity a where a.clientId ='" + owner.getId() + "';").list();
-                    var dir = querry.stream().map(d ->
-                            new Address(d.getCity(), d.getStreet(), d.getNumber(), d.getPostalCode(), d.getCountry())
-                    ).toList();
-
-                    var accountHolder = new ArrayList<AccountHolder>();
-                    accountHolder.add(new AccountHolder(
-                            owner.getStatus().equals("Active"),
-                            "Individual",
-                            new Name(owner.getName(), owner.getLastName1()),
-                            dir
-                    ));
-
-                    //var accountHolder = a.
-                    var productType = a.getAccounttype();
-                    var productNumber = a.getBankAccount();
-                    var status = a.getStatus();
-                    var startDate = a.getRegisterdate();
-                    var endDate = a.getClosedate();
-                    return new Product(
-                            accountHolder,
-                            productType,
-                            productNumber.getIban(),
-                            status,
-                            startDate.toString(),
-                            endDate.toString());
-                }).toList();
-
-
-
-                var products = new Products(list);
- */
-                //var gson = new Gson();
-                //return gson.toJson(products);
             } catch (Exception e) {
                 e.printStackTrace();
                 JOptionPane.showMessageDialog(informe, "No hay información para mostrar o ha habido algún error.");
