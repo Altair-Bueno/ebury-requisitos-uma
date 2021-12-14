@@ -341,93 +341,49 @@ public class Informe extends JPanel implements Frame {
 
                 List<ClientEntity> clienfil = (List<ClientEntity>) session.createQuery(queryclient).list();
 
-                // Addresses query builder
-                for (int i = 0; i < clienfil.size(); i++) {
-                    var cl = clienfil.get(i);
-                    queryaddress = "FROM AddressEntity WHERE clientId = " + cl.getId();
-                    var aplicado = false;
-                    for (int j = 3; j < 6; j++) {
-                        var texto = campos[j].getText();
-                        var name = campos[j].getName();
-                        if (!texto.equals("")) {
-                            queryaddress += " AND " + name + " LIKE ('" + texto + "%')";
-                            aplicado = true;
-                        }
+                var list = new ArrayList<Client>();
+
+                for(ClientEntity cl : clienfil){
+                    // Cuentas del cliente
+                    List<EburyAccountEntity> prodclient = (List<EburyAccountEntity>) session.createQuery("FROM EburyAccountEntity WHERE owner = " + cl.getId()).list();
+
+                    List<ProductClient> productos = new ArrayList<>();
+                    for(EburyAccountEntity ea : prodclient){
+                        var producto = new ProductClient(
+                                ea.getAccounttype(),
+                                ea.getBankAccount().getIban(),
+                                ea.getStatus());
+                        productos.add(producto);
                     }
-                    List<AddressEntity> dirsclien = (List<AddressEntity>) session.createQuery(queryaddress).list();
 
-                    // Products query
-                    List<EburyAccountEntity> prodsclien = (List<EburyAccountEntity>) session.createQuery("FROM EburyAccountEntity WHERE owner = " + cl.getId()).list();
+                    // Direcciones del cliente
+                    List<AddressEntity> dirclien = (List<AddressEntity>) session.createQuery("FROM AddressEntity WHERE clientId = " + cl.getId()).list();
 
-                    // JSON Builder
-                    var jsoncliente = new JsonBuilder();
-
-                    if (!aplicado || dirsclien.size() > 0) {
-                        // Products JSON Builder
-                        var jsonaccount = new JsonBuilder();
-
-                        for (int p = 0; p < prodsclien.size(); p++) {
-                            var pr = prodsclien.get(p);
-                            jsonaccount.add("productNumber", pr.getBankAccount().getIban());
-                            jsonaccount.add("status", pr.getStatus());
-                        }
-
-                        // Name JSON Builder
-                        var jsonname = new JsonBuilder();
-
-                        jsonname.add("firstName", cl.getName());
-                        if (cl.getLastName1() != null)
-                            jsonname.add("lastName1", cl.getLastName1());
-                        if (cl.getLastName2() != null)
-                            jsonname.add("lastName2", cl.getLastName2());
-
-                        // Addresses JSON Builder
-                        var jsonaddresses = new JsonBuilder();
-                        if (dirsclien.size() > 0) {
-                            var cont = 1;
-                            for (AddressEntity d : dirsclien) {
-                                var jsonaddress = new JsonBuilder();
-                                var vacio = true;
-                                if (d.getCity() != null) {
-                                    jsonaddress.add("city", d.getCity());
-                                    vacio = false;
-                                }
-                                if (d.getStreet() != null) {
-                                    jsonaddress.add("street", d.getStreet());
-                                    vacio = false;
-                                }
-                                if (d.getPostalCode() != null) {
-                                    jsonaddress.add("postalCode", d.getPostalCode());
-                                    vacio = false;
-                                }
-                                if (d.getCountry() != null) {
-                                    jsonaddress.add("country", d.getCountry());
-                                    vacio = false;
-                                }
-
-                                if (!vacio)
-                                    jsonaddresses.add("address" + cont, jsonaddress);
-                                cont++;
-                            }
-                        }
-
-                        // Client JSON Builder
-                        jsoncliente.add("products", jsonaccount);
-                        jsoncliente.add("activeCustomer", String.valueOf((cl.getStatus().equals("Active"))));
-                        if (cl.getBirthDate() != null)
-                            jsoncliente.add("dateOfBirth", cl.getBirthDate().toString());
-                        jsoncliente.add("name", jsonname);
-                        if (dirsclien.size() > 0)
-                            jsoncliente = jsoncliente.add("addresses", jsonaddresses);
-
-                        // Final JSON Builder
-                        jsonres.add("Individual" + cl.getId(), jsoncliente);
+                    List<Address> addresses = new ArrayList<>();
+                    for(AddressEntity ae : dirclien){
+                        var address = new Address(
+                                ae.getCity(),
+                                ae.getStreet(),
+                                ae.getNumber(),
+                                ae.getPostalCode(),
+                                ae.getCountry());
+                        addresses.add(address);
                     }
+
+                    // Nombre
+                    list.add(new Client(
+                            productos,
+                            cl.getStatus().equals("Active"),
+                            (cl.getBirthDate() == null ? "" : cl.getBirthDate().toString()),
+                            new Name(cl.getName(), cl.getLastName1()),
+                            addresses
+                    ));
+
                 }
 
                 Gson gson = new GsonBuilder().setPrettyPrinting().create();
-                JsonElement je = JsonParser.parseString(jsonres.toJson());
-                return gson.toJson(je);
+                var clients = new Clients(list);
+                return gson.toJson(clients);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -469,7 +425,6 @@ public class Informe extends JPanel implements Frame {
                     listaCuentas = (List<EburyAccountEntity>) session.createQuery("FROM EburyAccountEntity WHERE bankAccount = '" + numProd + "' AND status = '" + statusCuenta + "'").list();
                 }
 
-                // StringJoiner sj = new StringJoiner(",", "{\"products\":[", "]}");
                 var list = new ArrayList<Product>();
                 for (EburyAccountEntity ac : listaCuentas) {
                     var listAddress = new ArrayList<Address>();
@@ -499,7 +454,6 @@ public class Informe extends JPanel implements Frame {
                             ac.getClosedate() == null ? null : ac.getClosedate().toString()
                     );
                     list.add(p);
-                    //sj.add(parser.toJson(p));
                 }
                 Gson gson = new GsonBuilder().setPrettyPrinting().create();
                 var products = new Products(list);
