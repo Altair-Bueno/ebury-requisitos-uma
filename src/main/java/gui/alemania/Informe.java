@@ -304,13 +304,15 @@ public class Informe extends JPanel implements Frame {
             try (var session = HibernateStartUp.getSessionFactory().openSession()) {
                 // TODO querry no es la correcta. Completar
                 progressBar1.setValue(250);
-                var b = session.createQuery("select op.id from OperationEntity op, EburyAccountEntity ac where not op.eburyAccount.id = 1", Object[].class).getResultList();
+                /*var b = session.createQuery("select op.id from OperationEntity op, EburyAccountEntity ac where not op.eburyAccount.id = 1", Object[].class).getResultList();
                 System.out.println(b);
                 var c = session.createQuery("select op.id, ac.status from OperationEntity op join op.eburyAccount ac", Object[].class).getResultList();
                 System.out.println(c);
                 var a = session.createQuery("select ac.bankAccount.iban, coalesce(op.amount, 'noexistente'), ac.registerdate, coalesce(ac.closedate, 'noexistente'), concat(ac.owner.name, ' ' , coalesce(ac.owner.lastName1, ''), ' ', coalesce(ac.owner.lastName2, '')), coalesce(ac.owner.birthDate, 'noexistente') , coalesce(op.beneficiary, 'noexistente') from OperationEntity op join op.eburyAccount ac", Object[].class).getResultList();
-                System.out.println(a);
-                return a;
+                System.out.println(a);*/
+                var a = session.createQuery("from OperationEntity").list();
+
+                return null;
             }
         }
 
