@@ -1,6 +1,9 @@
 package gui.holanda;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
@@ -24,7 +27,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.StringJoiner;
 import java.util.concurrent.ExecutionException;
-import com.google.gson.*;
 
 public class Informe extends JPanel implements Frame {
     private JPanel root;
@@ -306,7 +308,8 @@ public class Informe extends JPanel implements Frame {
         }
 
         private String cliente() {
-            String queryclient, queryaddress, result = "";
+            String queryclient, queryaddress, queryebaccount, result = "";
+            JsonBuilder jsonres = new JsonBuilder();
 
             queryclient = "FROM ClientEntity ";
 
@@ -320,6 +323,8 @@ public class Informe extends JPanel implements Frame {
             };
 
             try (Session session = HibernateStartUp.getSessionFactory().openSession()) {
+
+                // Clients query builder
                 for (int i = 0; i < 3; i++) {
                     var texto = campos[i].getText();
                     var name = campos[i].getName();
@@ -336,8 +341,10 @@ public class Informe extends JPanel implements Frame {
 
                 List<ClientEntity> clienfil = (List<ClientEntity>) session.createQuery(queryclient).list();
 
+                // Addresses query builder
                 for (int i = 0; i < clienfil.size(); i++) {
-                    queryaddress = "FROM AddressEntity WHERE clientId = " + clienfil.get(i).getId();
+                    var cl = clienfil.get(i);
+                    queryaddress = "FROM AddressEntity WHERE clientId = " + cl.getId();
                     var aplicado = false;
                     for (int j = 3; j < 6; j++) {
                         var texto = campos[j].getText();
@@ -347,34 +354,75 @@ public class Informe extends JPanel implements Frame {
                             aplicado = true;
                         }
                     }
-
                     List<AddressEntity> dirsclien = (List<AddressEntity>) session.createQuery(queryaddress).list();
-                    if (dirsclien.size() == 0) {
-                        // Si no se hace este if, se incluyen clientes incluso si
-                        // se ha aplicado filtro de direccion, ya que un cliente puede
-                        // o no tener direcciones registradas. Por tanto, si la consulta
-                        // de direcciones sale vacía puede ser porque el cliente no tenga
-                        // direcciones registradas, o porque se haya aplicado el filtro y
-                        // no se haya encontrado nada.
 
-                        if (!aplicado) {
-                            // Consulta de direcciones vacía y no hay filtros aplicados:
-                            // El cliente no tiene direcciones registradas -> Se incluye en el resultado
-                            result += "[" + clienfil.get(i).fullName() + "]";
-                            result += "\n";
+                    // Products query
+                    List<EburyAccountEntity> prodsclien = (List<EburyAccountEntity>) session.createQuery("FROM EburyAccountEntity WHERE owner = " + cl.getId()).list();
+
+                    // JSON Builder
+                    var jsoncliente = new JsonBuilder();
+
+                    if(!aplicado || dirsclien.size()>0){
+                        // Products JSON Builder
+                        var jsonaccount = new JsonBuilder();
+
+                        for(int p = 0; p<prodsclien.size(); p++){
+                            var pr = prodsclien.get(p);
+                            jsonaccount.add("productNumber", pr.getBankAccount().getIban());
+                            jsonaccount.add("status", pr.getStatus());
                         }
-                    } else {
-                        result += "[" + clienfil.get(i).fullName() + "] [";
-                        for (int j = 0; j < dirsclien.size() - 1; j++) {
-                            result += dirsclien.get(j) + ", ";
+
+                        // Name JSON Builder
+                        var jsonname = new JsonBuilder();
+
+                        jsonname.add("firstName", cl.getName());
+                        if(cl.getLastName1() != null) jsonname.add("lastName1", cl.getLastName1());
+                        if(cl.getLastName2() != null) jsonname.add("lastName2", cl.getLastName2());
+
+                        // Addresses JSON Builder
+                        var jsonaddresses = new JsonBuilder();
+                        if(dirsclien.size()>0){
+                            var cont = 1;
+                            for(AddressEntity d : dirsclien){
+                                var jsonaddress = new JsonBuilder();
+                                var vacio = true;
+                                if(d.getCity() != null) {
+                                    jsonaddress.add("city", d.getCity());
+                                    vacio = false;
+                                }
+                                if(d.getStreet() != null){
+                                    jsonaddress.add("street", d.getStreet());
+                                    vacio = false;
+                                }
+                                if(d.getPostalCode() != null){
+                                    jsonaddress.add("postalCode", d.getPostalCode());
+                                    vacio = false;
+                                }
+                                if(d.getCountry() != null) {
+                                    jsonaddress.add("country", d.getCountry());
+                                    vacio = false;
+                                }
+
+                                if(!vacio) jsonaddresses.add("address" + cont, jsonaddress);
+                                cont++;
+                            }
                         }
-                        if (dirsclien.size() > 0)
-                            result += dirsclien.get(dirsclien.size() - 1) + "]";
-                        result += "\n";
+
+                        // Client JSON Builder
+                        jsoncliente.add("products", jsonaccount);
+                        jsoncliente.add("activeCustomer", String.valueOf((cl.getStatus().equals("Active"))));
+                        if(cl.getBirthDate() != null) jsoncliente.add("dateOfBirth", cl.getBirthDate().toString());
+                        jsoncliente.add("name", jsonname);
+                        if(dirsclien.size()>0) jsoncliente = jsoncliente.add("addresses", jsonaddresses);
+
+                        // Final JSON Builder
+                        jsonres.add("Individual" + cl.getId(), jsoncliente);
                     }
                 }
 
-                return result;
+                Gson gson = new GsonBuilder().setPrettyPrinting().create();
+                JsonElement je = JsonParser.parseString(jsonres.toJson());
+                return gson.toJson(je);
             } catch (Exception e) {
                 e.printStackTrace();
             }
