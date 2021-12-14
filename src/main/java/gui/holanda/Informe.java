@@ -343,7 +343,6 @@ public class Informe extends JPanel implements Frame {
                 List<ClientEntity> clienfil = (List<ClientEntity>) session.createQuery(queryclient).list();
                 List<ClientEntity> aux = new ArrayList<>(), aux2 = new ArrayList<>(), aux3 = new ArrayList<>();
 
-
                 for(ClientEntity cl : clienfil){
                     var ciudadf = campos[3].getText().toUpperCase(Locale.ROOT);
                     var callef = campos[4].getText().toUpperCase(Locale.ROOT);
@@ -368,51 +367,55 @@ public class Informe extends JPanel implements Frame {
 
                 }
 
+                if(aux.isEmpty()) {
+                    JOptionPane.showMessageDialog(informe, "No hay información que corresponda con los filtros.");
+                    return "";
+                }else {//
+                    // --------------------------------------------- //
+                    var list = new ArrayList<Client>();
 
-                // --------------------------------------------- //
-                var list = new ArrayList<Client>();
+                    for (ClientEntity cl : aux) {
+                        // Cuentas del cliente
+                        List<EburyAccountEntity> prodclient = (List<EburyAccountEntity>) session.createQuery("FROM EburyAccountEntity WHERE owner = " + cl.getId()).list();
 
-                for(ClientEntity cl : aux){
-                    // Cuentas del cliente
-                    List<EburyAccountEntity> prodclient = (List<EburyAccountEntity>) session.createQuery("FROM EburyAccountEntity WHERE owner = " + cl.getId()).list();
+                        List<ProductClient> productos = new ArrayList<>();
+                        for (EburyAccountEntity ea : prodclient) {
+                            var producto = new ProductClient(
+                                    ea.getAccounttype(),
+                                    ea.getBankAccount().getIban(),
+                                    ea.getStatus());
+                            productos.add(producto);
+                        }
 
-                    List<ProductClient> productos = new ArrayList<>();
-                    for(EburyAccountEntity ea : prodclient){
-                        var producto = new ProductClient(
-                                ea.getAccounttype(),
-                                ea.getBankAccount().getIban(),
-                                ea.getStatus());
-                        productos.add(producto);
+                        // Direcciones del cliente
+                        List<AddressEntity> dirclien = (List<AddressEntity>) session.createQuery("FROM AddressEntity WHERE clientId = " + cl.getId()).list();
+
+                        List<Address> addresses = new ArrayList<>();
+                        for (AddressEntity ae : dirclien) {
+                            var address = new Address(
+                                    ae.getCity(),
+                                    ae.getStreet(),
+                                    ae.getNumber(),
+                                    ae.getPostalCode(),
+                                    ae.getCountry());
+                            addresses.add(address);
+                        }
+
+                        // Nombre
+                        list.add(new Client(
+                                productos,
+                                cl.getStatus().equals("Active"),
+                                (cl.getBirthDate() == null ? "" : cl.getBirthDate().toString()),
+                                new Name(cl.getName(), cl.getLastName1()),
+                                addresses
+                        ));
+
                     }
 
-                    // Direcciones del cliente
-                    List<AddressEntity> dirclien = (List<AddressEntity>) session.createQuery("FROM AddressEntity WHERE clientId = " + cl.getId()).list();
-
-                    List<Address> addresses = new ArrayList<>();
-                    for(AddressEntity ae : dirclien){
-                        var address = new Address(
-                                ae.getCity(),
-                                ae.getStreet(),
-                                ae.getNumber(),
-                                ae.getPostalCode(),
-                                ae.getCountry());
-                        addresses.add(address);
-                    }
-
-                    // Nombre
-                    list.add(new Client(
-                            productos,
-                            cl.getStatus().equals("Active"),
-                            (cl.getBirthDate() == null ? "" : cl.getBirthDate().toString()),
-                            new Name(cl.getName(), cl.getLastName1()),
-                            addresses
-                    ));
-
+                    Gson gson = new GsonBuilder().setPrettyPrinting().create();
+                    var clients = new Clients(list);
+                    return gson.toJson(clients);
                 }
-
-                Gson gson = new GsonBuilder().setPrettyPrinting().create();
-                var clients = new Clients(list);
-                return gson.toJson(clients);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -453,42 +456,47 @@ public class Informe extends JPanel implements Frame {
                 if (!statusCuenta.equals("") && !numProd.equals("")) { //Se filtra por tipo de cuenta y numero de IBAN
                     listaCuentas = (List<EburyAccountEntity>) session.createQuery("FROM EburyAccountEntity WHERE bankAccount = '" + numProd + "' AND status = '" + statusCuenta + "'").list();
                 }
+                if(listaCuentas.isEmpty()) {
+                    JOptionPane.showMessageDialog(informe, "No hay información que corresponda con los filtros.");
+                    return "";
+                }else {
 
-                var list = new ArrayList<Product>();
-                for (EburyAccountEntity ac : listaCuentas) {
-                    var listAddress = new ArrayList<Address>();
-                    for(AddressEntity dir : ac.getOwner().getDireccion()){
-                        listAddress.add(new Address(
-                                dir.getCity(),
-                                dir.getStreet(),
-                                dir.getNumber(),
-                                dir.getPostalCode(),
-                                dir.getCountry()));
+                    var list = new ArrayList<Product>();
+                    for (EburyAccountEntity ac : listaCuentas) {
+                        var listAddress = new ArrayList<Address>();
+                        for (AddressEntity dir : ac.getOwner().getDireccion()) {
+                            listAddress.add(new Address(
+                                    dir.getCity(),
+                                    dir.getStreet(),
+                                    dir.getNumber(),
+                                    dir.getPostalCode(),
+                                    dir.getCountry()));
+                        }
+
+                        var listAccountHolder = new ArrayList<AccountHolder>();
+                        listAccountHolder.add(new AccountHolder(
+                                ac.getStatus().equals("Active"),
+                                "Individual",
+                                new Name(
+                                        ac.getOwner().getName(),
+                                        ac.getOwner().getLastName1()
+                                ),
+                                listAddress
+                        ));
+                        Product p = new Product(
+                                listAccountHolder,
+                                ac.getAccounttype(),
+                                ac.getBankAccount().getIban(),
+                                ac.getStatus(),
+                                ac.getRegisterdate() == null ? null : ac.getRegisterdate().toString(),
+                                ac.getClosedate() == null ? null : ac.getClosedate().toString()
+                        );
+                        list.add(p);
                     }
-
-                    var listAccountHolder = new ArrayList<AccountHolder>();
-                    listAccountHolder.add(new AccountHolder(
-                            ac.getStatus().equals("Active"),
-                            "Individual",
-                            new Name(
-                                    ac.getOwner().getName(),
-                                    ac.getOwner().getLastName1()
-                            ),
-                            listAddress
-                    ));
-                    Product p = new Product(
-                            listAccountHolder,
-                            ac.getAccounttype(),
-                            ac.getBankAccount().getIban(),
-                            ac.getStatus(),
-                            ac.getRegisterdate() == null ? null : ac.getRegisterdate().toString(),
-                            ac.getClosedate() == null ? null : ac.getClosedate().toString()
-                    );
-                    list.add(p);
+                    Gson gson = new GsonBuilder().setPrettyPrinting().create();
+                    var products = new Products(list);
+                    return gson.toJson(products);
                 }
-                Gson gson = new GsonBuilder().setPrettyPrinting().create();
-                var products = new Products(list);
-                return gson.toJson(products);
             } catch (Exception e) {
                 e.printStackTrace();
                 JOptionPane.showMessageDialog(informe, "No hay información para mostrar o ha habido algún error.");
@@ -500,6 +508,9 @@ public class Informe extends JPanel implements Frame {
         protected void done() {
             try {
                 jsonPreviewArea.setText(get());
+                if(get().equals(null)){
+                    JOptionPane.showMessageDialog(informe, "No hay información que corresponda con los filtros.");
+                }
             } catch (InterruptedException | ExecutionException e) {
                 var m = e.getMessage();
                 JOptionPane.showMessageDialog(informe, m, m, JOptionPane.ERROR_MESSAGE);
