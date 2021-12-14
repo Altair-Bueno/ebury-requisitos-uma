@@ -2,6 +2,7 @@ package database.tables;
 
 import javax.persistence.*;
 import java.sql.Date;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -35,10 +36,9 @@ public class ClientEntity {
     @Basic
     @Column(name = "end_date")
     private Date endDate;
-    @ManyToOne
-    @JoinColumn(name = "address_id", insertable = false, updatable = false)
-    @JoinColumn(name = "ID", insertable = false, updatable = false)
-    private AddressEntity direccion;
+    @OneToMany
+    @JoinColumn(name = "Client_ID", insertable = false, updatable = false)
+    private List<AddressEntity> direccion;
 
     public int getId() {
         return id;
@@ -112,11 +112,11 @@ public class ClientEntity {
         this.endDate = endDate;
     }
 
-    public AddressEntity getDireccion() {
+    public List<AddressEntity> getDireccion() {
         return direccion;
     }
 
-    public void setDireccion(AddressEntity direccion) {
+    public void setDireccion(List<AddressEntity> direccion) {
         this.direccion = direccion;
     }
 

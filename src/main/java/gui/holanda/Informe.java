@@ -25,6 +25,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.StringJoiner;
 import java.util.concurrent.ExecutionException;
 
@@ -308,8 +309,8 @@ public class Informe extends JPanel implements Frame {
         }
 
         private String cliente() {
-            String queryclient, queryaddress, queryebaccount, result = "";
-            JsonBuilder jsonres = new JsonBuilder();
+            String queryclient;
+            Boolean filtrocliente = false;
 
             queryclient = "FROM ClientEntity ";
 
@@ -340,10 +341,38 @@ public class Informe extends JPanel implements Frame {
                 }
 
                 List<ClientEntity> clienfil = (List<ClientEntity>) session.createQuery(queryclient).list();
+                List<ClientEntity> aux = new ArrayList<>(), aux2 = new ArrayList<>(), aux3 = new ArrayList<>();
 
-                var list = new ArrayList<Client>();
 
                 for(ClientEntity cl : clienfil){
+                    var ciudadf = campos[3].getText().toUpperCase(Locale.ROOT);
+                    var callef = campos[4].getText().toUpperCase(Locale.ROOT);
+                    var cpf = campos[5].getText().toUpperCase(Locale.ROOT);
+
+                    for(AddressEntity a : cl.getDireccion()){
+                        var ciudadc = a.getCity().toUpperCase(Locale.ROOT);
+                        var callec = a.getStreet().toUpperCase(Locale.ROOT);
+                        var cpc = a.getPostalCode().toUpperCase(Locale.ROOT);
+
+                        var filtrociudad = !ciudadf.equals("");
+                        var filtrocalle = !callef.equals("");
+                        var filtrocp = !cpf.equals("");
+
+                        if(filtrociudad ^ filtrocalle ^ filtrocp){
+                            if(ciudadc.contains(ciudadf) ^ callec.contains(callef) ^ cpc.contains(cpf)){
+                                aux.add(cl);
+                            }
+                        }
+
+                    }
+
+                }
+
+
+                // --------------------------------------------- //
+                var list = new ArrayList<Client>();
+
+                for(ClientEntity cl : aux){
                     // Cuentas del cliente
                     List<EburyAccountEntity> prodclient = (List<EburyAccountEntity>) session.createQuery("FROM EburyAccountEntity WHERE owner = " + cl.getId()).list();
 
@@ -428,13 +457,15 @@ public class Informe extends JPanel implements Frame {
                 var list = new ArrayList<Product>();
                 for (EburyAccountEntity ac : listaCuentas) {
                     var listAddress = new ArrayList<Address>();
-                    listAddress.add(new Address(
-                            ac.getOwner().getDireccion().getCity(),
-                            ac.getOwner().getDireccion().getStreet(),
-                            ac.getOwner().getDireccion().getNumber(),
-                            ac.getOwner().getDireccion().getPostalCode(),
-                            ac.getOwner().getDireccion().getCountry()
-                    ));
+                    for(AddressEntity dir : ac.getOwner().getDireccion()){
+                        listAddress.add(new Address(
+                                dir.getCity(),
+                                dir.getStreet(),
+                                dir.getNumber(),
+                                dir.getPostalCode(),
+                                dir.getCountry()));
+                    }
+
                     var listAccountHolder = new ArrayList<AccountHolder>();
                     listAccountHolder.add(new AccountHolder(
                             ac.getStatus().equals("Active"),
