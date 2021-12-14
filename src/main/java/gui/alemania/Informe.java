@@ -306,24 +306,24 @@ public class Informe extends JPanel implements Frame {
                 progressBar1.setValue(250);
                 //var result = session.createQuery("select op.bankAccountIban, op.amount, op.eburyAccount.registerdate, op.eburyAccount.closedate, concat(op.eburyAccount.owner.name, ' ', op.eburyAccount.owner.lastName1, ' ', op.eburyAccount.owner.lastName2), op.eburyAccount.owner.birthDate, op.beneficiary from OperationEntity op", Object[].class).getResultList();
                 var ibans = session.createQuery("select op.bankAccountIban from OperationEntity op order by op.eburyAccount.id").getResultList();
-                var depositos = session.createQuery("select op.amount from OperationEntity op order by op.eburyAccount.id").getResultList();
-                var aperturas = session.createQuery("select ac.registerdate from EburyAccountEntity ac order by ac.id").getResultList();
-                var disoluciones = session.createQuery("select ac.closedate from EburyAccountEntity ac order by ac.id").getResultList();
-                var nombres = session.createQuery("select concat(ac.owner.name, ' ', ac.owner.lastName1, ' ', ac.owner.lastName2) from EburyAccountEntity ac order by ac.id").getResultList();
+                var apellidos = session.createQuery("select op.owner.lastName1 from EburyAccountEntity op order by op.id").getResultList();
+                var nombres = session.createQuery("select ac.owner.name from EburyAccountEntity ac order by ac.id").getResultList();
+                var direcciones = session.createQuery("select ac.owner.direccion from EburyAccountEntity ac order by ac.id").getResultList();
+                var nifs = session.createQuery("select ac.owner.nif from EburyAccountEntity ac order by ac.id").getResultList();
                 var fechasNacimiento = session.createQuery("select ac.owner.birthDate from EburyAccountEntity ac order by ac.id").getResultList();
-                var beneficiarios = session.createQuery("select op.beneficiary from OperationEntity op order by op.eburyAccount.id").getResultList();
+                var aperturas = session.createQuery("select ac.registerdate from EburyAccountEntity ac order by ac.id").getResultList();
                 var result = new LinkedList<Object[]>();
                 for(int i = 0; i< ibans.size(); i++) {
-                    var aux = new Object[]{ibans.get(i), depositos.get(i), aperturas.get(i), disoluciones.get(i), nombres.get(i), fechasNacimiento.get(i), beneficiarios.get(i)};
+                    var aux = new Object[]{ibans.get(i), apellidos.get(i), nombres.get(i), direcciones.get(i), nifs.get(i), fechasNacimiento.get(i), aperturas.get(i)};
                     result.add(aux);
                 }
+                return result;
                 //var b = session.createQuery("select op.id from OperationEntity op, EburyAccountEntity ac where not op.eburyAccount.id = 1", Object[].class).getResultList();
                 //System.out.println(b);
                 //var c = session.createQuery("select op.id, ac.status from OperationEntity op join op.eburyAccount ac", Object[].class).getResultList();
                 //System.out.println(c);
                 //var a = session.createQuery("select ac.bankAccount.iban, coalesce(op.amount, 'noexistente'), ac.registerdate, coalesce(ac.closedate, 'noexistente'), concat(ac.owner.name, ' ' , coalesce(ac.owner.lastName1, ''), ' ', coalesce(ac.owner.lastName2, '')), coalesce(ac.owner.birthDate, 'noexistente') , coalesce(op.beneficiary, 'noexistente') from OperationEntity op join op.eburyAccount ac", Object[].class).getResultList();
                 //System.out.println(a);
-                return result;
             }
         }
 
@@ -333,21 +333,20 @@ public class Informe extends JPanel implements Frame {
                 var result = get();
                 csvPreviewTable.removeAll();
                 // TODO no está bien del todo. Mirar las diapositivas del profesor
-                var tablemodel = new DefaultTableModel(new String[]{"IBAN", "Depósito", "Apertura", "Disolución", "Nombre", "Fecha Nacimiento/Creación", "Beneficiario"}, 0);
+                var tablemodel = new DefaultTableModel(new String[]{"IBAN", "Apellido", "Nombre", "Direcciones", "NIF/CIF", "Fecha Nacimiento/Creación"}, 0);
                 progressBar1.setMaximum(result.size());
                 for (int i = 0; i < result.size(); i++) {
                     var fiveYearsAgo = new Date();
                     fiveYearsAgo = new Date(fiveYearsAgo.getTime() - FIVE_YEARS);
                     //TODO Condición de los cinco años
-                    if (fiveYearsAgo.getTime() <= ((Date)result.get(i)[2]).getTime()) {
+                    if (fiveYearsAgo.getTime() <= ((Date)result.get(i)[6]).getTime()) {
                         tablemodel.addRow(new Object[]{
                                 result.get(i)[0]==null?"noexistente":result.get(i)[0],
                                 result.get(i)[1]==null?"noexistente":result.get(i)[1],
                                 result.get(i)[2]==null?"noexistente":result.get(i)[2],
                                 result.get(i)[3]==null?"noexistente":result.get(i)[3],
                                 result.get(i)[4]==null?"noexistente":result.get(i)[4],
-                                result.get(i)[5]==null?"noexistente":result.get(i)[5],
-                                result.get(i)[6]==null?"noexistente":result.get(i)[6]
+                                result.get(i)[5]==null?"noexistente":result.get(i)[5]
                         });
                     }
                     progressBar1.setValue(i);
@@ -395,21 +394,20 @@ public class Informe extends JPanel implements Frame {
             try (var session = HibernateStartUp.getSessionFactory().openSession()) {
                 progressBar1.setValue(250);
                 var ibans = session.createQuery("select op.bankAccountIban from OperationEntity op order by op.eburyAccount.id").getResultList();
-                var depositos = session.createQuery("select op.amount from OperationEntity op order by op.eburyAccount.id").getResultList();
-                var aperturas = session.createQuery("select ac.registerdate from EburyAccountEntity ac order by ac.id").getResultList();
-                var disoluciones = session.createQuery("select ac.closedate from EburyAccountEntity ac order by ac.id").getResultList();
-                var nombres = session.createQuery("select concat(ac.owner.name, ' ', ac.owner.lastName1, ' ', ac.owner.lastName2) from EburyAccountEntity ac order by ac.id").getResultList();
+                var apellidos = session.createQuery("select op.owner.lastName1 from EburyAccountEntity op order by op.id").getResultList();
+                var nombres = session.createQuery("select ac.owner.name from EburyAccountEntity ac order by ac.id").getResultList();
+                var direcciones = session.createQuery("select ac.owner.direccion from EburyAccountEntity ac order by ac.id").getResultList();
+                var nifs = session.createQuery("select ac.owner.nif from EburyAccountEntity ac order by ac.id").getResultList();
                 var fechasNacimiento = session.createQuery("select ac.owner.birthDate from EburyAccountEntity ac order by ac.id").getResultList();
-                var beneficiarios = session.createQuery("select op.beneficiary from OperationEntity op order by op.eburyAccount.id").getResultList();
+                var aperturas = session.createQuery("select ac.registerdate from EburyAccountEntity ac order by ac.id").getResultList();
                 var result = new LinkedList<Object[]>();
                 for(int i = 0; i< ibans.size(); i++) {
-                    var aux = new Object[]{ibans.get(i), depositos.get(i), aperturas.get(i), disoluciones.get(i), nombres.get(i), fechasNacimiento.get(i), beneficiarios.get(i)};
+                    var aux = new Object[]{ibans.get(i), apellidos.get(i), nombres.get(i), direcciones.get(i), nifs.get(i), fechasNacimiento.get(i), aperturas.get(i)};
                     result.add(aux);
                 }
                 return result;
                 /*
                 return session.createQuery("from EburyAccountEntity").list();
-
                  */
             }
         }
@@ -420,21 +418,20 @@ public class Informe extends JPanel implements Frame {
                 var result = get();
                 csvPreviewTable.removeAll();
                 // TODO no está bien del todo. Mirar las diapositivas del profesor
-                var tablemodel = new DefaultTableModel(new String[]{"IBAN", "Depósito", "Apertura", "Disolución", "Nombre", "Fecha Nacimiento/Creación", "Beneficiario"}, 0);
+                var tablemodel = new DefaultTableModel(new String[]{"IBAN", "Apellido", "Nombre", "Direcciones", "NIF/CIF", "Fecha Nacimiento/Creación"}, 0);
                 progressBar1.setMaximum(result.size());
                 for (int i = 0; i < result.size(); i++) {
                     var weekAgo = new Date();
                     weekAgo = new Date(weekAgo.getTime() - ONE_WEEK);
                     //TODO Condición de los cinco años
-                    if (weekAgo.getTime() <= ((Date)result.get(i)[2]).getTime()) {
+                    if (weekAgo.getTime() <= ((Date)result.get(i)[6]).getTime()) {
                         tablemodel.addRow(new Object[]{
                                 result.get(i)[0]==null?"noexistente":result.get(i)[0],
                                 result.get(i)[1]==null?"noexistente":result.get(i)[1],
                                 result.get(i)[2]==null?"noexistente":result.get(i)[2],
                                 result.get(i)[3]==null?"noexistente":result.get(i)[3],
                                 result.get(i)[4]==null?"noexistente":result.get(i)[4],
-                                result.get(i)[5]==null?"noexistente":result.get(i)[5],
-                                result.get(i)[6]==null?"noexistente":result.get(i)[6]
+                                result.get(i)[5]==null?"noexistente":result.get(i)[5]
                         });
                     }
                     progressBar1.setValue(i);
