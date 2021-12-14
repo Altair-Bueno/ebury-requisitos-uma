@@ -305,7 +305,7 @@ public class Informe extends JPanel implements Frame {
                 // TODO querry no es la correcta. Completars
                 progressBar1.setValue(250);
                 //var result = session.createQuery("select op.bankAccountIban, op.amount, op.eburyAccount.registerdate, op.eburyAccount.closedate, concat(op.eburyAccount.owner.name, ' ', op.eburyAccount.owner.lastName1, ' ', op.eburyAccount.owner.lastName2), op.eburyAccount.owner.birthDate, op.beneficiary from OperationEntity op", Object[].class).getResultList();
-                var ibans = session.createQuery("select op.bankAccountIban from OperationEntity op order by op.eburyAccount.id").getResultList();
+                var ibans = session.createQuery("select ac.bankAccount.id from EburyAccountEntity ac order by ac.id").getResultList();
                 var apellidos = session.createQuery("select op.owner.lastName1 from EburyAccountEntity op order by op.id").getResultList();
                 var nombres = session.createQuery("select ac.owner.name from EburyAccountEntity ac order by ac.id").getResultList();
                 var direcciones = session.createQuery("select ac.owner.direccion from EburyAccountEntity ac order by ac.id").getResultList();
@@ -393,7 +393,7 @@ public class Informe extends JPanel implements Frame {
             lockUI();
             try (var session = HibernateStartUp.getSessionFactory().openSession()) {
                 progressBar1.setValue(250);
-                var ibans = session.createQuery("select op.bankAccountIban from OperationEntity op order by op.eburyAccount.id").getResultList();
+                var ibans = session.createQuery("select ac.bankAccount.id from EburyAccountEntity ac order by ac.id").getResultList();
                 var apellidos = session.createQuery("select op.owner.lastName1 from EburyAccountEntity op order by op.id").getResultList();
                 var nombres = session.createQuery("select ac.owner.name from EburyAccountEntity ac order by ac.id").getResultList();
                 var direcciones = session.createQuery("select ac.owner.direccion from EburyAccountEntity ac order by ac.id").getResultList();
