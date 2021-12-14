@@ -508,9 +508,6 @@ public class Informe extends JPanel implements Frame {
         protected void done() {
             try {
                 jsonPreviewArea.setText(get());
-                if(get().equals(null)){
-                    JOptionPane.showMessageDialog(informe, "No hay información que corresponda con los filtros.");
-                }
             } catch (InterruptedException | ExecutionException e) {
                 var m = e.getMessage();
                 JOptionPane.showMessageDialog(informe, m, m, JOptionPane.ERROR_MESSAGE);
