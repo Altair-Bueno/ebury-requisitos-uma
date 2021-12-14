@@ -439,14 +439,14 @@ public class Informe extends JPanel implements Frame {
         private String producto() {
             var numProd = numeroProductoTextField.getText();
             var statusIndex = tipoComboBox.getSelectedIndex();
-            var statusCuenta = "";
-            switch (statusIndex) {
-                case 0 -> statusCuenta = "";
-                case 1 -> statusCuenta = "Active";
-                case 2 -> statusCuenta = "Inactive";
-                case 3 -> statusCuenta = "Blocked";
-                case 4 -> statusCuenta = "Closed";
-            }
+            var statusCuenta = switch (statusIndex) {
+                case 0 -> "";
+                case 1 -> "Active";
+                case 2 -> "Inactive";
+                case 3 -> "Blocked";
+                case 4 -> "Closed";
+                default -> throw new IllegalStateException("Unexpected value: " + statusIndex);
+            };
 
 
             try (Session session = HibernateStartUp.getSessionFactory().openSession()) {
