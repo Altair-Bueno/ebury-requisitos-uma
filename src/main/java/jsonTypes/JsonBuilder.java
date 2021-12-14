@@ -23,17 +23,3 @@ public class JsonBuilder {
 
 
 }
-
-class GsonTest {
-
-    public static void main(String[] args) {
-
-        System.out.println(new JsonBuilder()
-                .add("key1", "value1")
-                .add("key2", "value2")
-                .add("key3", new JsonBuilder()
-                        .add("innerKey", "value3"))
-                .toJson());
-    }
-
-}

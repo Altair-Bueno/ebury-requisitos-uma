@@ -362,11 +362,11 @@ public class Informe extends JPanel implements Frame {
                     // JSON Builder
                     var jsoncliente = new JsonBuilder();
 
-                    if(!aplicado || dirsclien.size()>0){
+                    if (!aplicado || dirsclien.size() > 0) {
                         // Products JSON Builder
                         var jsonaccount = new JsonBuilder();
 
-                        for(int p = 0; p<prodsclien.size(); p++){
+                        for (int p = 0; p < prodsclien.size(); p++) {
                             var pr = prodsclien.get(p);
                             jsonaccount.add("productNumber", pr.getBankAccount().getIban());
                             jsonaccount.add("status", pr.getStatus());
@@ -376,34 +376,37 @@ public class Informe extends JPanel implements Frame {
                         var jsonname = new JsonBuilder();
 
                         jsonname.add("firstName", cl.getName());
-                        if(cl.getLastName1() != null) jsonname.add("lastName1", cl.getLastName1());
-                        if(cl.getLastName2() != null) jsonname.add("lastName2", cl.getLastName2());
+                        if (cl.getLastName1() != null)
+                            jsonname.add("lastName1", cl.getLastName1());
+                        if (cl.getLastName2() != null)
+                            jsonname.add("lastName2", cl.getLastName2());
 
                         // Addresses JSON Builder
                         var jsonaddresses = new JsonBuilder();
-                        if(dirsclien.size()>0){
+                        if (dirsclien.size() > 0) {
                             var cont = 1;
-                            for(AddressEntity d : dirsclien){
+                            for (AddressEntity d : dirsclien) {
                                 var jsonaddress = new JsonBuilder();
                                 var vacio = true;
-                                if(d.getCity() != null) {
+                                if (d.getCity() != null) {
                                     jsonaddress.add("city", d.getCity());
                                     vacio = false;
                                 }
-                                if(d.getStreet() != null){
+                                if (d.getStreet() != null) {
                                     jsonaddress.add("street", d.getStreet());
                                     vacio = false;
                                 }
-                                if(d.getPostalCode() != null){
+                                if (d.getPostalCode() != null) {
                                     jsonaddress.add("postalCode", d.getPostalCode());
                                     vacio = false;
                                 }
-                                if(d.getCountry() != null) {
+                                if (d.getCountry() != null) {
                                     jsonaddress.add("country", d.getCountry());
                                     vacio = false;
                                 }
 
-                                if(!vacio) jsonaddresses.add("address" + cont, jsonaddress);
+                                if (!vacio)
+                                    jsonaddresses.add("address" + cont, jsonaddress);
                                 cont++;
                             }
                         }
@@ -411,9 +414,11 @@ public class Informe extends JPanel implements Frame {
                         // Client JSON Builder
                         jsoncliente.add("products", jsonaccount);
                         jsoncliente.add("activeCustomer", String.valueOf((cl.getStatus().equals("Active"))));
-                        if(cl.getBirthDate() != null) jsoncliente.add("dateOfBirth", cl.getBirthDate().toString());
+                        if (cl.getBirthDate() != null)
+                            jsoncliente.add("dateOfBirth", cl.getBirthDate().toString());
                         jsoncliente.add("name", jsonname);
-                        if(dirsclien.size()>0) jsoncliente = jsoncliente.add("addresses", jsonaddresses);
+                        if (dirsclien.size() > 0)
+                            jsoncliente = jsoncliente.add("addresses", jsonaddresses);
 
                         // Final JSON Builder
                         jsonres.add("Individual" + cl.getId(), jsoncliente);
