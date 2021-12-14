@@ -336,10 +336,10 @@ public class Informe extends JPanel implements Frame {
                 var tablemodel = new DefaultTableModel(new String[]{"IBAN", "Depósito", "Apertura", "Disolución", "Nombre", "Fecha Nacimiento/Creación", "Beneficiario"}, 0);
                 progressBar1.setMaximum(result.size());
                 for (int i = 0; i < result.size(); i++) {
-                    //var fiveYearsAgo = new Date();
-                    //fiveYearsAgo = new Date(fiveYearsAgo.getTime() - FIVE_YEARS);
+                    var fiveYearsAgo = new Date();
+                    fiveYearsAgo = new Date(fiveYearsAgo.getTime() - FIVE_YEARS);
                     //TODO Condición de los cinco años
-                    if (true) {
+                    if (fiveYearsAgo.getTime() <= ((Date)result.get(i)[2]).getTime()) {
                         tablemodel.addRow(new Object[]{
                                 result.get(i)[0]==null?"":result.get(i)[0],
                                 result.get(i)[1]==null?"":result.get(i)[1],
@@ -423,10 +423,10 @@ public class Informe extends JPanel implements Frame {
                 var tablemodel = new DefaultTableModel(new String[]{"IBAN", "Depósito", "Apertura", "Disolución", "Nombre", "Fecha Nacimiento/Creación", "Beneficiario"}, 0);
                 progressBar1.setMaximum(result.size());
                 for (int i = 0; i < result.size(); i++) {
-                    //var fiveYearsAgo = new Date();
-                    //fiveYearsAgo = new Date(fiveYearsAgo.getTime() - FIVE_YEARS);
+                    var weekAgo = new Date();
+                    weekAgo = new Date(weekAgo.getTime() - ONE_WEEK);
                     //TODO Condición de los cinco años
-                    if (true) {
+                    if (weekAgo.getTime() <= ((Date)result.get(i)[2]).getTime()) {
                         tablemodel.addRow(new Object[]{
                                 result.get(i)[0]==null?"":result.get(i)[0],
                                 result.get(i)[1]==null?"":result.get(i)[1],
