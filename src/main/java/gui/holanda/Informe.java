@@ -370,7 +370,7 @@ public class Informe extends JPanel implements Frame {
                 if(aux.isEmpty()) {
                     JOptionPane.showMessageDialog(informe, "No hay información que corresponda con los filtros.");
                     return "";
-                }else {
+                }else {//
                     // --------------------------------------------- //
                     var list = new ArrayList<Client>();
 
