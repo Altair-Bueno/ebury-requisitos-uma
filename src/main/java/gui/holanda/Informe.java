@@ -469,10 +469,8 @@ public class Informe extends JPanel implements Frame {
                     listaCuentas = (List<EburyAccountEntity>) session.createQuery("FROM EburyAccountEntity WHERE bankAccount = '" + numProd + "' AND status = '" + statusCuenta + "'").list();
                 }
 
-                Gson parser = new Gson();
-                Gson gson = new GsonBuilder().setPrettyPrinting().create();
-
-                StringJoiner sj = new StringJoiner(",", "{\"products\":[", "]}");
+                // StringJoiner sj = new StringJoiner(",", "{\"products\":[", "]}");
+                var list = new ArrayList<Product>();
                 for (EburyAccountEntity ac : listaCuentas) {
                     var listAddress = new ArrayList<Address>();
                     listAddress.add(new Address(
@@ -500,10 +498,12 @@ public class Informe extends JPanel implements Frame {
                             ac.getRegisterdate() == null ? null : ac.getRegisterdate().toString(),
                             ac.getClosedate() == null ? null : ac.getClosedate().toString()
                     );
-                    sj.add(parser.toJson(p));
+                    list.add(p);
+                    //sj.add(parser.toJson(p));
                 }
-                JsonElement je = JsonParser.parseString(sj.toString());
-                return gson.toJson(je);
+                Gson gson = new GsonBuilder().setPrettyPrinting().create();
+                var products = new Products(list);
+                return gson.toJson(products);
             } catch (Exception e) {
                 e.printStackTrace();
                 JOptionPane.showMessageDialog(informe, "No hay información para mostrar o ha habido algún error.");
