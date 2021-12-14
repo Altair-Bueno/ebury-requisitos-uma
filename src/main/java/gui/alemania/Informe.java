@@ -341,13 +341,13 @@ public class Informe extends JPanel implements Frame {
                     //TODO Condición de los cinco años
                     if (fiveYearsAgo.getTime() <= ((Date)result.get(i)[2]).getTime()) {
                         tablemodel.addRow(new Object[]{
-                                result.get(i)[0]==null?"":result.get(i)[0],
-                                result.get(i)[1]==null?"":result.get(i)[1],
-                                result.get(i)[2]==null?"":result.get(i)[2],
-                                result.get(i)[3]==null?"":result.get(i)[3],
-                                result.get(i)[4]==null?"":result.get(i)[4],
-                                result.get(i)[5]==null?"":result.get(i)[5],
-                                result.get(i)[6]==null?"":result.get(i)[6],
+                                result.get(i)[0]==null?"noexistente":result.get(i)[0],
+                                result.get(i)[1]==null?"noexistente":result.get(i)[1],
+                                result.get(i)[2]==null?"noexistente":result.get(i)[2],
+                                result.get(i)[3]==null?"noexistente":result.get(i)[3],
+                                result.get(i)[4]==null?"noexistente":result.get(i)[4],
+                                result.get(i)[5]==null?"noexistente":result.get(i)[5],
+                                result.get(i)[6]==null?"noexistente":result.get(i)[6]
                         });
                     }
                     progressBar1.setValue(i);
@@ -428,13 +428,13 @@ public class Informe extends JPanel implements Frame {
                     //TODO Condición de los cinco años
                     if (weekAgo.getTime() <= ((Date)result.get(i)[2]).getTime()) {
                         tablemodel.addRow(new Object[]{
-                                result.get(i)[0]==null?"":result.get(i)[0],
-                                result.get(i)[1]==null?"":result.get(i)[1],
-                                result.get(i)[2]==null?"":result.get(i)[2],
-                                result.get(i)[3]==null?"":result.get(i)[3],
-                                result.get(i)[4]==null?"":result.get(i)[4],
-                                result.get(i)[5]==null?"":result.get(i)[5],
-                                result.get(i)[6]==null?"":result.get(i)[6],
+                                result.get(i)[0]==null?"noexistente":result.get(i)[0],
+                                result.get(i)[1]==null?"noexistente":result.get(i)[1],
+                                result.get(i)[2]==null?"noexistente":result.get(i)[2],
+                                result.get(i)[3]==null?"noexistente":result.get(i)[3],
+                                result.get(i)[4]==null?"noexistente":result.get(i)[4],
+                                result.get(i)[5]==null?"noexistente":result.get(i)[5],
+                                result.get(i)[6]==null?"noexistente":result.get(i)[6]
                         });
                     }
                     progressBar1.setValue(i);
