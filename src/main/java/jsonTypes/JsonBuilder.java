@@ -1,7 +1,5 @@
 package jsonTypes;
 
-import java.util.HashMap;
-
 import com.google.gson.JsonObject;
 
 public class JsonBuilder {

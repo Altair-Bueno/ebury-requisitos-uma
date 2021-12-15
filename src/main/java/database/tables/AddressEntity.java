@@ -102,7 +102,7 @@ public class AddressEntity {
 
     @Override
     public String toString() {
-        return  street + " " +
+        return street + " " +
                 postalCode + " " +
                 city + ", " +
                 country;

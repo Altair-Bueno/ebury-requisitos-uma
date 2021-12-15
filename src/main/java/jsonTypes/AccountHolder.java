@@ -10,6 +10,13 @@ public class AccountHolder implements Serializable {
     Name name;
     List<Address> address;
 
+    public AccountHolder(Boolean activeCustomer, String accountType, Name name, List<Address> address) {
+        this.activeCustomer = activeCustomer;
+        this.accountType = accountType;
+        this.name = name;
+        this.address = address;
+    }
+
     public Boolean getActiveCustomer() {
         return activeCustomer;
     }
@@ -39,13 +46,6 @@ public class AccountHolder implements Serializable {
     }
 
     public void setAdress(List<Address> address) {
-        this.address = address;
-    }
-
-    public AccountHolder(Boolean activeCustomer, String accountType, Name name, List<Address> address) {
-        this.activeCustomer = activeCustomer;
-        this.accountType = accountType;
-        this.name = name;
         this.address = address;
     }
 }

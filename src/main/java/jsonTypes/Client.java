@@ -17,9 +17,11 @@ public class Client {
         this.address = address;
     }
 
-    public List<ProductClient> getProducts(){return products;}
+    public List<ProductClient> getProducts() {
+        return products;
+    }
 
-    public void setProducts(List<ProductClient> products){
+    public void setProducts(List<ProductClient> products) {
         this.products = products;
     }
 
@@ -31,7 +33,7 @@ public class Client {
         this.activeCustomer = activeCustomer;
     }
 
-    public String getDateOfBirth(){
+    public String getDateOfBirth() {
         return dateOfBirth;
     }
 

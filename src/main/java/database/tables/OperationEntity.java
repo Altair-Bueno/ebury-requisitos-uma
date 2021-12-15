@@ -10,17 +10,17 @@ import java.util.Objects;
 public class OperationEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
+    @ManyToOne
+    @JoinColumn(name = "EburyAccount_id")
+    public EburyAccountEntity eburyAccount;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
     @Column(name = "id")
     private int id;
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     @Column(name = "BankAccount_IBAN")
     private String bankAccountIban;
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Id
-    @ManyToOne
-    @JoinColumn(name = "EburyAccount_id")
-    public EburyAccountEntity eburyAccount;
     @Basic
     @Column(name = "date")
     private Date date;

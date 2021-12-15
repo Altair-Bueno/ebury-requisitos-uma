@@ -1,7 +1,5 @@
 package jsonTypes;
 
-import java.util.List;
-
 public class ProductClient {
     String productType;
     String productNumber;
