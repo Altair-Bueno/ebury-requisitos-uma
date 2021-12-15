@@ -18,8 +18,11 @@ import gui.Frame;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
+import java.awt.event.ComponentAdapter;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -101,6 +104,8 @@ public class Informe extends JPanel implements Frame {
                 tercerNombreTextField.setText("");
             }
         });
+        filterTabbedPane.addChangeListener(e ->
+                exportarButton.setEnabled(filterTabbedPane.getSelectedIndex() != 2));
     }
 
     private void lockUI() {
@@ -346,12 +351,12 @@ public class Informe extends JPanel implements Frame {
                 List<ClientEntity> clienfil = (List<ClientEntity>) session.createQuery(queryclient).list();
                 List<ClientEntity> aux = new ArrayList<>(), aux2 = new ArrayList<>(), aux3 = new ArrayList<>();
 
-                var nombref = campos[0].getText()==null?"":campos[0].getText().toUpperCase(Locale.ROOT);
-                var last1f = campos[1].getText()==null?"":campos[1].getText().toUpperCase(Locale.ROOT);
-                var last2f = campos[2].getText()==null?"":campos[2].getText().toUpperCase(Locale.ROOT);
-                var ciudadf = campos[3].getText()==null?"":campos[3].getText().toUpperCase(Locale.ROOT);
-                var callef = campos[4].getText()==null?"":campos[4].getText().toUpperCase(Locale.ROOT);
-                var cpf = campos[5].getText()==null?"":campos[5].getText().toUpperCase(Locale.ROOT);
+                var nombref = campos[0].getText() == null ? "" : campos[0].getText().toUpperCase(Locale.ROOT);
+                var last1f = campos[1].getText() == null ? "" : campos[1].getText().toUpperCase(Locale.ROOT);
+                var last2f = campos[2].getText() == null ? "" : campos[2].getText().toUpperCase(Locale.ROOT);
+                var ciudadf = campos[3].getText() == null ? "" : campos[3].getText().toUpperCase(Locale.ROOT);
+                var callef = campos[4].getText() == null ? "" : campos[4].getText().toUpperCase(Locale.ROOT);
+                var cpf = campos[5].getText() == null ? "" : campos[5].getText().toUpperCase(Locale.ROOT);
 
                 var filtronombre = !nombref.equals("");
                 var filtroapellido1 = !last1f.equals("");
@@ -360,23 +365,23 @@ public class Informe extends JPanel implements Frame {
                 var filtrocalle = !callef.equals("");
                 var filtrocp = !cpf.equals("");
 
-                if(!(filtronombre || filtroapellido1 || filtroapellido2 || filtrociudad || filtrocalle || filtrocp)) {
+                if (!(filtronombre || filtroapellido1 || filtroapellido2 || filtrociudad || filtrocalle || filtrocp)) {
                     aux.addAll(clienfil);
                 } else {
-                    for(ClientEntity cl : clienfil){
+                    for (ClientEntity cl : clienfil) {
                         boolean add = false;
 
-                        var nombrecl = cl.getName()==null?"":cl.getName().toUpperCase(Locale.ROOT);
+                        var nombrecl = cl.getName() == null ? "" : cl.getName().toUpperCase(Locale.ROOT);
                         //add = filtronombre && nombrecl.contains(nombref);
-                        var last1cl = cl.getLastName1()==null?"":cl.getLastName1().toUpperCase(Locale.ROOT);
+                        var last1cl = cl.getLastName1() == null ? "" : cl.getLastName1().toUpperCase(Locale.ROOT);
                         //add = filtroapellido1 && last1cl.contains(last1f);
-                        var last2cl = cl.getLastName2()==null?"":cl.getLastName2().toUpperCase(Locale.ROOT);
+                        var last2cl = cl.getLastName2() == null ? "" : cl.getLastName2().toUpperCase(Locale.ROOT);
                         //add = filtroapellido2 && last2cl.contains(last2f);
-                        if(filtronombre ^ filtroapellido1 ^ filtroapellido2) {
+                        if (filtronombre ^ filtroapellido1 ^ filtroapellido2) {
                             add = nombrecl.contains(nombref) ^ last1cl.contains(last1f) ^ last2cl.contains(last2f);
                         }
 
-                        for(AddressEntity a : cl.getDireccion()) {
+                        for (AddressEntity a : cl.getDireccion()) {
                             var ciudadc = a.getCity().toUpperCase(Locale.ROOT);
                             //add = filtrociudad && ciudadc.contains(ciudadf);
                             var callec = a.getStreet().toUpperCase(Locale.ROOT);
@@ -384,18 +389,18 @@ public class Informe extends JPanel implements Frame {
                             var cpc = a.getPostalCode().toUpperCase(Locale.ROOT);
                             //add = filtrocp && cpc.contains(cpf);
 
-                            if(filtrociudad ^ filtrocalle ^ filtrocp) {
+                            if (filtrociudad ^ filtrocalle ^ filtrocp) {
                                 add = ciudadc.contains(ciudadf) ^ callec.contains(callef) ^ cpc.contains(cpf);
                                 System.out.println(ciudadc + ": " + add);
                             }
-                            if(add) {
+                            if (add) {
                                 aux.add(cl);
                             }
                         }
                     }
                 }
 
-                if(aux.isEmpty()) {
+                if (aux.isEmpty()) {
                     JOptionPane.showMessageDialog(informe, "No hay información que corresponda con los filtros.");
                     return "";
                 } else {//
@@ -484,10 +489,10 @@ public class Informe extends JPanel implements Frame {
                 if (!statusCuenta.equals("") && !numProd.equals("")) { //Se filtra por tipo de cuenta y numero de IBAN
                     listaCuentas = (List<EburyAccountEntity>) session.createQuery("FROM EburyAccountEntity WHERE bankAccount = '" + numProd + "' AND status = '" + statusCuenta + "'").list();
                 }
-                if(listaCuentas.isEmpty()) {
+                if (listaCuentas.isEmpty()) {
                     JOptionPane.showMessageDialog(informe, "No hay información que corresponda con los filtros.");
                     return "";
-                }else {
+                } else {
 
                     var list = new ArrayList<Product>();
                     for (EburyAccountEntity ac : listaCuentas) {

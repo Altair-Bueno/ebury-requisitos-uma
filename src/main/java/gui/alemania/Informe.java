@@ -313,7 +313,7 @@ public class Informe extends JPanel implements Frame {
                 var fechasNacimiento = session.createQuery("select ac.owner.birthDate from EburyAccountEntity ac order by ac.id").getResultList();
                 var aperturas = session.createQuery("select ac.registerdate from EburyAccountEntity ac order by ac.id").getResultList();
                 var result = new LinkedList<Object[]>();
-                for(int i = 0; i< ibans.size(); i++) {
+                for (int i = 0; i < ibans.size(); i++) {
                     var aux = new Object[]{ibans.get(i), apellidos.get(i), nombres.get(i), direcciones.get(i), nifs.get(i), fechasNacimiento.get(i), aperturas.get(i)};
                     result.add(aux);
                 }
@@ -339,14 +339,14 @@ public class Informe extends JPanel implements Frame {
                     var fiveYearsAgo = new Date();
                     fiveYearsAgo = new Date(fiveYearsAgo.getTime() - FIVE_YEARS);
                     //TODO Condición de los cinco años
-                    if (fiveYearsAgo.getTime() <= ((Date)result.get(i)[6]).getTime()) {
+                    if (fiveYearsAgo.getTime() <= ((Date) result.get(i)[6]).getTime()) {
                         tablemodel.addRow(new Object[]{
-                                result.get(i)[0]==null?"noexistente":result.get(i)[0],
-                                result.get(i)[1]==null?"noexistente":result.get(i)[1],
-                                result.get(i)[2]==null?"noexistente":result.get(i)[2],
-                                result.get(i)[3]==null?"noexistente":result.get(i)[3],
-                                result.get(i)[4]==null?"noexistente":result.get(i)[4],
-                                result.get(i)[5]==null?"noexistente":result.get(i)[5]
+                                result.get(i)[0] == null ? "noexistente" : result.get(i)[0],
+                                result.get(i)[1] == null ? "noexistente" : result.get(i)[1],
+                                result.get(i)[2] == null ? "noexistente" : result.get(i)[2],
+                                result.get(i)[3] == null ? "noexistente" : result.get(i)[3],
+                                result.get(i)[4] == null ? "noexistente" : result.get(i)[4],
+                                result.get(i)[5] == null ? "noexistente" : result.get(i)[5]
                         });
                     }
                     progressBar1.setValue(i);
@@ -401,7 +401,7 @@ public class Informe extends JPanel implements Frame {
                 var fechasNacimiento = session.createQuery("select ac.owner.birthDate from EburyAccountEntity ac order by ac.id").getResultList();
                 var aperturas = session.createQuery("select ac.registerdate from EburyAccountEntity ac order by ac.id").getResultList();
                 var result = new LinkedList<Object[]>();
-                for(int i = 0; i< ibans.size(); i++) {
+                for (int i = 0; i < ibans.size(); i++) {
                     var aux = new Object[]{ibans.get(i), apellidos.get(i), nombres.get(i), direcciones.get(i), nifs.get(i), fechasNacimiento.get(i), aperturas.get(i)};
                     result.add(aux);
                 }
@@ -424,14 +424,14 @@ public class Informe extends JPanel implements Frame {
                     var weekAgo = new Date();
                     weekAgo = new Date(weekAgo.getTime() - ONE_WEEK);
                     //TODO Condición de los cinco años
-                    if (weekAgo.getTime() <= ((Date)result.get(i)[6]).getTime()) {
+                    if (weekAgo.getTime() <= ((Date) result.get(i)[6]).getTime()) {
                         tablemodel.addRow(new Object[]{
-                                result.get(i)[0]==null?"noexistente":result.get(i)[0],
-                                result.get(i)[1]==null?"noexistente":result.get(i)[1],
-                                result.get(i)[2]==null?"noexistente":result.get(i)[2],
-                                result.get(i)[3]==null?"noexistente":result.get(i)[3],
-                                result.get(i)[4]==null?"noexistente":result.get(i)[4],
-                                result.get(i)[5]==null?"noexistente":result.get(i)[5]
+                                result.get(i)[0] == null ? "noexistente" : result.get(i)[0],
+                                result.get(i)[1] == null ? "noexistente" : result.get(i)[1],
+                                result.get(i)[2] == null ? "noexistente" : result.get(i)[2],
+                                result.get(i)[3] == null ? "noexistente" : result.get(i)[3],
+                                result.get(i)[4] == null ? "noexistente" : result.get(i)[4],
+                                result.get(i)[5] == null ? "noexistente" : result.get(i)[5]
                         });
                     }
                     progressBar1.setValue(i);
