@@ -9,6 +9,15 @@
         </property>
         <property name="connection.driver_class">com.mysql.cj.jdbc.Driver
         </property>
+        <!-- JDBC connection pool (use the built-in) -->
+        <property name="connection.pool_size">5</property>
+        <!-- SQL dialect -->
+        <property name="dialect">org.hibernate.dialect.MySQLDialect</property>
+        <!-- Enable Hibernate's automatic session context management -->
+        <property name="current_session_context_class">thread</property>
+        <!-- Enable the Hikari connection pool-->
+        <property name="hibernate.connection.provider_class">org.hibernate.hikaricp.internal.HikariCPConnectionProvider</property>
+
         <mapping class="database.tables.AddressEntity"/>
         <mapping class="database.tables.AssociatedStaffEntity"/>
         <mapping class="database.tables.BankAccountEntity"/>
@@ -18,6 +27,8 @@
         <mapping class="database.tables.OperationEntity"/>
         <mapping class="database.tables.RelationEntity"/>
         <mapping class="database.tables.RelationHasEburyAccountEntity"/>
+
+
         <!-- <property name="connection.username"/> -->
         <!-- <property name="connection.password"/> -->
 
