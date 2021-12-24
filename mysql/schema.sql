@@ -1,3 +1,6 @@
+create schema grupo10DB;
+use grupo10DB;
+
 create table Address
 (
     ID          int auto_increment,
