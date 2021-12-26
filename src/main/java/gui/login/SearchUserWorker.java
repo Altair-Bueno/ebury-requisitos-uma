@@ -41,11 +41,10 @@ class SearchUserWorker extends SwingWorker<LoginEntity, Void> {
     protected void done() {
         try {
             var result = super.get();
-            var panel = switch (result.getRol()) {
-                case "Regler" -> new Informe();
-                case "Regelgever" -> new gui.holanda.Informe();
-                case "User" -> new Main(result);
-                default -> throw new IllegalArgumentException();
+            var panel = switch (result.getRol()){
+                case Regler -> new gui.alemania.Informe();
+                case Regelgever -> new gui.holanda.Informe();
+                case User -> new gui.user.Main(result);
             };
             var frame = new JFrame(panel.getTitleBarName());
             frame.setMenuBar(panel.getMenuBar());

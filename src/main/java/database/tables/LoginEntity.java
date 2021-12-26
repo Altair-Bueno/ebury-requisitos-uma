@@ -1,5 +1,7 @@
 package database.tables;
 
+import database.types.Rol;
+
 import javax.persistence.*;
 import java.util.Objects;
 
@@ -15,7 +17,8 @@ public class LoginEntity {
     private String password;
     @Basic
     @Column(name = "rol")
-    private String rol;
+    @Enumerated(EnumType.STRING)
+    private Rol rol;
     @ManyToOne
     @JoinColumn(name = "AS_FK")
     private AssociatedStaffEntity asFk;
@@ -36,11 +39,11 @@ public class LoginEntity {
         this.password = password;
     }
 
-    public String getRol() {
+    public Rol getRol() {
         return rol;
     }
 
-    public void setRol(String rol) {
+    public void setRol(Rol rol) {
         this.rol = rol;
     }
 
