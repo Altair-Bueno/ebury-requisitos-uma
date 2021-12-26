@@ -6,6 +6,7 @@ import database.HibernateStartUp;
 import database.tables.AddressEntity;
 import database.tables.ClientEntity;
 import database.tables.EburyAccountEntity;
+import database.types.Status;
 import jsonTypes.*;
 import org.hibernate.Session;
 
@@ -149,7 +150,7 @@ class GenerarWorker extends SwingWorker<String, Void> {
                     // Nombre
                     list.add(new Client(
                             productos,
-                            cl.getStatus().equals("Active"),
+                            cl.getStatus().equals(Status.Active),
                             (cl.getBirthDate() == null ? "" : cl.getBirthDate().toString()),
                             new Name(cl.getName(), cl.getLastName1()),
                             addresses
@@ -220,7 +221,7 @@ class GenerarWorker extends SwingWorker<String, Void> {
 
                     var listAccountHolder = new ArrayList<AccountHolder>();
                     listAccountHolder.add(new AccountHolder(
-                            ac.getStatus().equals("Active"),
+                            ac.getStatus().equals(Status.Active),
                             "Individual",
                             new Name(
                                     ac.getOwner().getName(),

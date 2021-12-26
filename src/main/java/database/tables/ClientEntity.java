@@ -1,5 +1,7 @@
 package database.tables;
 
+import database.types.Status;
+
 import javax.persistence.*;
 import java.sql.Date;
 import java.util.List;
@@ -14,7 +16,8 @@ public class ClientEntity {
     private int id;
     @Basic
     @Column(name = "status")
-    private String status;
+    @Enumerated(EnumType.STRING)
+    private Status status;
     @Basic
     @Column(name = "NIF")
     private String nif;
@@ -48,11 +51,11 @@ public class ClientEntity {
         this.id = id;
     }
 
-    public String getStatus() {
+    public Status getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(Status status) {
         this.status = status;
     }
 

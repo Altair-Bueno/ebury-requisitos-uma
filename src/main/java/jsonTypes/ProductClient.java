@@ -1,11 +1,13 @@
 package jsonTypes;
 
+import database.types.Status;
+
 public class ProductClient {
     String productType;
     String productNumber;
-    String status;
+    Status status;
 
-    public ProductClient(String productType, String productNumber, String status) {
+    public ProductClient(String productType, String productNumber, Status status) {
         this.productType = productType;
         this.productNumber = productNumber;
         this.status = status;
@@ -27,11 +29,11 @@ public class ProductClient {
         this.productNumber = productNumber;
     }
 
-    public String getStatus() {
+    public Status getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(Status status) {
         this.status = status;
     }
 

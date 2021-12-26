@@ -1,5 +1,7 @@
 package database.tables;
 
+import database.types.Status;
+
 import javax.persistence.*;
 import java.sql.Date;
 import java.util.Objects;
@@ -19,7 +21,8 @@ public class EburyAccountEntity {
     private ClientEntity owner;
     @Basic
     @Column(name = "status")
-    private String status;
+    @Enumerated(EnumType.STRING)
+    private Status status;
     @Basic
     @Column(name = "accounttype")
     private String accounttype;
@@ -58,11 +61,11 @@ public class EburyAccountEntity {
         this.owner = owner;
     }
 
-    public String getStatus() {
+    public Status getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(Status status) {
         this.status = status;
     }
 

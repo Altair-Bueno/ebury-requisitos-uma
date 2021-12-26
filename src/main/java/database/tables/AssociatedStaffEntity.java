@@ -1,5 +1,7 @@
 package database.tables;
 
+import database.types.Status;
+
 import javax.persistence.*;
 import java.util.List;
 import java.util.Objects;
@@ -22,7 +24,8 @@ public class AssociatedStaffEntity {
     private String lastName2;
     @Basic
     @Column(name = "state")
-    private String state;
+    @Enumerated(EnumType.STRING)
+    private Status state;
     @OneToMany
     @JoinColumn(name = "AS_FK", insertable = false, updatable = false)
     private List<LoginEntity> loginasstaff;
@@ -59,11 +62,11 @@ public class AssociatedStaffEntity {
         this.lastName2 = lastName2;
     }
 
-    public String getState() {
+    public Status getState() {
         return state;
     }
 
-    public void setState(String state) {
+    public void setState(Status state) {
         this.state = state;
     }
 
