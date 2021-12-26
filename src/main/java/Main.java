@@ -1,5 +1,5 @@
 import com.formdev.flatlaf.FlatIntelliJLaf;
-import gui.Login;
+import gui.login.Login;
 
 import javax.swing.*;
 
