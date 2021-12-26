@@ -16,9 +16,9 @@ public class LoginEntity {
     @Basic
     @Column(name = "rol")
     private String rol;
-    @Basic
-    @Column(name = "AS_FK")
-    private String asFk;
+    @ManyToOne
+    @JoinColumn(name = "AS_FK")
+    private AssociatedStaffEntity asFk;
 
     public String getUser() {
         return user;
@@ -44,11 +44,11 @@ public class LoginEntity {
         this.rol = rol;
     }
 
-    public String getAsFk() {
+    public AssociatedStaffEntity getAsFk() {
         return asFk;
     }
 
-    public void setAsFk(String asFk) {
+    public void setAsFk(AssociatedStaffEntity asFk) {
         this.asFk = asFk;
     }
 

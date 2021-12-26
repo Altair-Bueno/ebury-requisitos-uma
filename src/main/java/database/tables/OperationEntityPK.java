@@ -1,39 +1,38 @@
 package database.tables;
 
-import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Objects;
 
 public class OperationEntityPK implements Serializable {
-    @Column(name = "id")
+    @Id
+    @ManyToOne
+    @JoinColumn(name = "EburyAccount_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private EburyAccountEntity eburyid;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
-    @Column(name = "BankAccount_IBAN")
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private String bankAccountIban;
+    @ManyToOne
+    @JoinColumn(name = "BankAccount_IBAN")
+    private BankAccountEntity bankAccountIban;
     @Column(name = "EburyAccount_id")
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int eburyAccount;
 
-    public int getId() {
-        return id;
+    public EburyAccountEntity getEburyid() {
+        return eburyid;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setEburyid(EburyAccountEntity id) {
+        this.eburyid = id;
     }
 
-    public String getBankAccountIban() {
+    public BankAccountEntity getBankAccountIban() {
         return bankAccountIban;
     }
 
-    public void setBankAccountIban(String bankAccountIban) {
+    public void setBankAccountIban(BankAccountEntity bankAccountIban) {
         this.bankAccountIban = bankAccountIban;
     }
 
@@ -50,11 +49,11 @@ public class OperationEntityPK implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         OperationEntityPK that = (OperationEntityPK) o;
-        return id == that.id && eburyAccount == (that.eburyAccount) && Objects.equals(bankAccountIban, that.bankAccountIban);
+        return eburyid == that.eburyid && eburyAccount == (that.eburyAccount) && Objects.equals(bankAccountIban, that.bankAccountIban);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, bankAccountIban, eburyAccount);
+        return Objects.hash(eburyid, bankAccountIban, eburyAccount);
     }
 }

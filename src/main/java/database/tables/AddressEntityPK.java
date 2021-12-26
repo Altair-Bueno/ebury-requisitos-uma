@@ -1,9 +1,6 @@
 package database.tables;
 
-import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Objects;
 
@@ -12,10 +9,11 @@ public class AddressEntityPK implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    @Column(name = "Client_ID")
+    @ManyToOne
+    @JoinColumn(name = "Client_ID")
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int clientId;
+    private ClientEntity clientId;
 
     public int getId() {
         return id;
@@ -25,11 +23,11 @@ public class AddressEntityPK implements Serializable {
         this.id = id;
     }
 
-    public int getClientId() {
+    public ClientEntity getClientId() {
         return clientId;
     }
 
-    public void setClientId(int clientId) {
+    public void setClientId(ClientEntity clientId) {
         this.clientId = clientId;
     }
 

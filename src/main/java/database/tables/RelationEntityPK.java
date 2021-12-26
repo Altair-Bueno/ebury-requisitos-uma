@@ -1,35 +1,36 @@
 package database.tables;
 
-import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import jsonTypes.Client;
+
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Objects;
 
 public class RelationEntityPK implements Serializable {
-    @Column(name = "AssociatedStaff_DNI")
-    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private String associatedStaffDni;
-    @Column(name = "Client_ID")
     @Id
+    @ManyToOne
+    @JoinColumn(name = "AssociatedStaff_DNI")
+    private AssociatedStaffEntity associatedStaffDni;
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int clientId;
+    @Id
+    @ManyToOne
+    @JoinColumn(name = "Client_ID")
+    private ClientEntity clientId;
 
-    public String getAssociatedStaffDni() {
+    public AssociatedStaffEntity getAssociatedStaffDni() {
         return associatedStaffDni;
     }
 
-    public void setAssociatedStaffDni(String associatedStaffDni) {
+    public void setAssociatedStaffDni(AssociatedStaffEntity associatedStaffDni) {
         this.associatedStaffDni = associatedStaffDni;
     }
 
-    public int getClientId() {
+    public ClientEntity getClientId() {
         return clientId;
     }
 
-    public void setClientId(int clientId) {
+    public void setClientId(ClientEntity clientId) {
         this.clientId = clientId;
     }
 

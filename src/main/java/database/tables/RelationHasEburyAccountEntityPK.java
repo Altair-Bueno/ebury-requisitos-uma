@@ -1,47 +1,47 @@
 package database.tables;
 
-import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Objects;
 
 public class RelationHasEburyAccountEntityPK implements Serializable {
-    @Column(name = "Relation_AssociatedStaff_DNI")
-    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private String relationAssociatedStaffDni;
-    @Column(name = "Relation_Client_ID")
     @Id
+    @ManyToOne
+    @JoinColumn(name = "Relation_AssociatedStaff_DNI")
+    private AssociatedStaffEntity relationAssociatedStaffDni;
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int relationClientId;
-    @Column(name = "EburyAccount_id")
     @Id
+    @ManyToOne
+    @JoinColumn(name = "Relation_Client_ID")
+    private ClientEntity relationClientId;
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int eburyAccountId;
+    @Id
+    @ManyToOne
+    @JoinColumn(name = "EburyAccount_id")
+    private EburyAccountEntity eburyAccountId;
 
-    public String getRelationAssociatedStaffDni() {
+    public AssociatedStaffEntity getRelationAssociatedStaffDni() {
         return relationAssociatedStaffDni;
     }
 
-    public void setRelationAssociatedStaffDni(String relationAssociatedStaffDni) {
+    public void setRelationAssociatedStaffDni(AssociatedStaffEntity relationAssociatedStaffDni) {
         this.relationAssociatedStaffDni = relationAssociatedStaffDni;
     }
 
-    public int getRelationClientId() {
+    public ClientEntity getRelationClientId() {
         return relationClientId;
     }
 
-    public void setRelationClientId(int relationClientId) {
+    public void setRelationClientId(ClientEntity relationClientId) {
         this.relationClientId = relationClientId;
     }
 
-    public int getEburyAccountId() {
+    public EburyAccountEntity getEburyAccountId() {
         return eburyAccountId;
     }
 
-    public void setEburyAccountId(int eburyAccountId) {
+    public void setEburyAccountId(EburyAccountEntity eburyAccountId) {
         this.eburyAccountId = eburyAccountId;
     }
 

@@ -1,5 +1,7 @@
 package database.tables;
 
+import jsonTypes.Client;
+
 import javax.persistence.*;
 import java.sql.Date;
 import java.util.Objects;
@@ -10,12 +12,14 @@ import java.util.Objects;
 public class RelationEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
-    @Column(name = "AssociatedStaff_DNI")
-    private String associatedStaffDni;
+    @ManyToOne
+    @JoinColumn(name = "AssociatedStaff_DNI")
+    private AssociatedStaffEntity associatedStaffDni;
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
-    @Column(name = "Client_ID")
-    private int clientId;
+    @ManyToOne
+    @JoinColumn(name = "Client_ID")
+    private ClientEntity clientId;
     @Basic
     @Column(name = "start")
     private Date start;
@@ -23,19 +27,19 @@ public class RelationEntity {
     @Column(name = "end")
     private Date end;
 
-    public String getAssociatedStaffDni() {
+    public AssociatedStaffEntity getAssociatedStaffDni() {
         return associatedStaffDni;
     }
 
-    public void setAssociatedStaffDni(String associatedStaffDni) {
+    public void setAssociatedStaffDni(AssociatedStaffEntity associatedStaffDni) {
         this.associatedStaffDni = associatedStaffDni;
     }
 
-    public int getClientId() {
+    public ClientEntity getClientId() {
         return clientId;
     }
 
-    public void setClientId(int clientId) {
+    public void setClientId(ClientEntity clientId) {
         this.clientId = clientId;
     }
 
