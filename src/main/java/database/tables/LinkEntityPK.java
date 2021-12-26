@@ -4,7 +4,7 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Objects;
 
-public class RelationHasEburyAccountEntityPK implements Serializable {
+public class LinkEntityPK implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     @ManyToOne
@@ -49,7 +49,7 @@ public class RelationHasEburyAccountEntityPK implements Serializable {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        RelationHasEburyAccountEntityPK that = (RelationHasEburyAccountEntityPK) o;
+        LinkEntityPK that = (LinkEntityPK) o;
         return relationClientId == that.relationClientId && eburyAccountId == that.eburyAccountId && Objects.equals(relationAssociatedStaffDni, that.relationAssociatedStaffDni);
     }
 

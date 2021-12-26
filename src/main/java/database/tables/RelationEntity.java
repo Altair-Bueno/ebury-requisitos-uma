@@ -26,6 +26,9 @@ public class RelationEntity {
     @Basic
     @Column(name = "end")
     private Date end;
+    @Basic
+    @Column(name = "authorised")
+    private boolean authorised;
 
     public AssociatedStaffEntity getAssociatedStaffDni() {
         return associatedStaffDni;
@@ -59,16 +62,24 @@ public class RelationEntity {
         this.end = end;
     }
 
+    public boolean isAuthorised() {
+        return authorised;
+    }
+
+    public void setAuthorised(boolean authorised) {
+        this.authorised = authorised;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (!(o instanceof RelationEntity)) return false;
         RelationEntity that = (RelationEntity) o;
-        return clientId == that.clientId && Objects.equals(associatedStaffDni, that.associatedStaffDni) && Objects.equals(start, that.start) && Objects.equals(end, that.end);
+        return authorised == that.authorised && Objects.equals(associatedStaffDni, that.associatedStaffDni) && Objects.equals(clientId, that.clientId) && Objects.equals(start, that.start) && Objects.equals(end, that.end);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(associatedStaffDni, clientId, start, end);
+        return Objects.hash(associatedStaffDni, clientId, start, end, authorised);
     }
 }
