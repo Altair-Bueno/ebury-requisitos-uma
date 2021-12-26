@@ -1,10 +1,12 @@
 package database.tables;
 
 import javax.persistence.*;
-import java.io.Serializable;
 import java.util.Objects;
 
-public class RelationHasEburyAccountEntityPK implements Serializable {
+@Entity
+@Table(name = "Link", schema = "grupo10DB", catalog = "")
+@IdClass(LinkEntityPK.class)
+public class LinkEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     @ManyToOne
@@ -20,14 +22,9 @@ public class RelationHasEburyAccountEntityPK implements Serializable {
     @ManyToOne
     @JoinColumn(name = "EburyAccount_id")
     private EburyAccountEntity eburyAccountId;
-
-    public RelationHasEburyAccountEntityPK(){
-    }
-
-    public RelationHasEburyAccountEntityPK(AssociatedStaffEntity relationAssociatedStaffDni, ClientEntity relationClientId){
-        this.relationAssociatedStaffDni = relationAssociatedStaffDni;
-        this.relationClientId = relationClientId;
-    }
+    @Basic
+    @Column(name = "authorised")
+    private boolean authorised;
 
     public AssociatedStaffEntity getRelationAssociatedStaffDni() {
         return relationAssociatedStaffDni;
@@ -53,16 +50,24 @@ public class RelationHasEburyAccountEntityPK implements Serializable {
         this.eburyAccountId = eburyAccountId;
     }
 
+    public boolean isAuthorised() {
+        return authorised;
+    }
+
+    public void setAuthorised(boolean authorised) {
+        this.authorised = authorised;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        RelationHasEburyAccountEntityPK that = (RelationHasEburyAccountEntityPK) o;
-        return relationClientId == that.relationClientId && eburyAccountId == that.eburyAccountId && Objects.equals(relationAssociatedStaffDni, that.relationAssociatedStaffDni);
+        if (!(o instanceof LinkEntity)) return false;
+        LinkEntity that = (LinkEntity) o;
+        return authorised == that.authorised && Objects.equals(relationAssociatedStaffDni, that.relationAssociatedStaffDni) && Objects.equals(relationClientId, that.relationClientId) && Objects.equals(eburyAccountId, that.eburyAccountId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(relationAssociatedStaffDni, relationClientId, eburyAccountId);
+        return Objects.hash(relationAssociatedStaffDni, relationClientId, eburyAccountId, authorised);
     }
 }

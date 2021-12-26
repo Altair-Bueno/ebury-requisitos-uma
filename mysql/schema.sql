@@ -150,7 +150,7 @@ create index fk_Relation_AssociatedStaff1_idx
 create index fk_Relation_Client1_idx
     on Relation (Client_ID);
 
-create table Relation_has_EburyAccount
+create table Link
 (
     Relation_AssociatedStaff_DNI varchar(50) not null,
     Relation_Client_ID           int         not null,
@@ -165,9 +165,9 @@ create table Relation_has_EburyAccount
 );
 
 create index fk_Relation_has_EburyAccount_EburyAccount1_idx
-    on Relation_has_EburyAccount (EburyAccount_id);
+    on Link (EburyAccount_id);
 
 create index fk_Relation_has_EburyAccount_Relation1_idx
-    on Relation_has_EburyAccount (Relation_AssociatedStaff_DNI,
+    on Link (Relation_AssociatedStaff_DNI,
                                   Relation_Client_ID);
 

@@ -26,7 +26,7 @@
         <mapping class="database.tables.LoginEntity"/>
         <mapping class="database.tables.OperationEntity"/>
         <mapping class="database.tables.RelationEntity"/>
-        <mapping class="database.tables.RelationHasEburyAccountEntity"/>
+        <mapping class="database.tables.LinkEntity"/>
 
 
         <!-- <property name="connection.username"/> -->

@@ -1,14 +1,10 @@
 package database.tables;
 
-import jsonTypes.Client;
-
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Objects;
 
-@Entity
-@Table(name = "Relation_has_EburyAccount", schema = "grupo10DB", catalog = "")
-@IdClass(RelationHasEburyAccountEntityPK.class)
-public class RelationHasEburyAccountEntity {
+public class LinkEntityPK implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     @ManyToOne
@@ -24,6 +20,14 @@ public class RelationHasEburyAccountEntity {
     @ManyToOne
     @JoinColumn(name = "EburyAccount_id")
     private EburyAccountEntity eburyAccountId;
+
+    public RelationHasEburyAccountEntityPK(){
+    }
+
+    public RelationHasEburyAccountEntityPK(AssociatedStaffEntity relationAssociatedStaffDni, ClientEntity relationClientId){
+        this.relationAssociatedStaffDni = relationAssociatedStaffDni;
+        this.relationClientId = relationClientId;
+    }
 
     public AssociatedStaffEntity getRelationAssociatedStaffDni() {
         return relationAssociatedStaffDni;
@@ -53,7 +57,7 @@ public class RelationHasEburyAccountEntity {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        RelationHasEburyAccountEntity that = (RelationHasEburyAccountEntity) o;
+        LinkEntityPK that = (LinkEntityPK) o;
         return relationClientId == that.relationClientId && eburyAccountId == that.eburyAccountId && Objects.equals(relationAssociatedStaffDni, that.relationAssociatedStaffDni);
     }
 
