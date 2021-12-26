@@ -9,24 +9,12 @@ public class OperationEntityPK implements Serializable {
     @ManyToOne
     @JoinColumn(name = "EburyAccount_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private EburyAccountEntity eburyid;
+    private EburyAccountEntity eburyAccount;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @ManyToOne
     @JoinColumn(name = "BankAccount_IBAN")
     private BankAccountEntity bankAccountIban;
-    @Column(name = "EburyAccount_id")
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int eburyAccount;
-
-    public EburyAccountEntity getEburyid() {
-        return eburyid;
-    }
-
-    public void setEburyid(EburyAccountEntity id) {
-        this.eburyid = id;
-    }
 
     public BankAccountEntity getBankAccountIban() {
         return bankAccountIban;
@@ -36,11 +24,11 @@ public class OperationEntityPK implements Serializable {
         this.bankAccountIban = bankAccountIban;
     }
 
-    public int getEburyAccount() {
+    public EburyAccountEntity getEburyAccount() {
         return eburyAccount;
     }
 
-    public void setEburyAccount(int eburyAccount) {
+    public void setEburyAccount(EburyAccountEntity eburyAccount) {
         this.eburyAccount = eburyAccount;
     }
 
@@ -49,11 +37,11 @@ public class OperationEntityPK implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         OperationEntityPK that = (OperationEntityPK) o;
-        return eburyid == that.eburyid && eburyAccount == (that.eburyAccount) && Objects.equals(bankAccountIban, that.bankAccountIban);
+        return eburyAccount == (that.eburyAccount) && Objects.equals(bankAccountIban, that.bankAccountIban);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(eburyid, bankAccountIban, eburyAccount);
+        return Objects.hash(bankAccountIban, eburyAccount);
     }
 }

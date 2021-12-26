@@ -21,6 +21,14 @@ public class RelationHasEburyAccountEntityPK implements Serializable {
     @JoinColumn(name = "EburyAccount_id")
     private EburyAccountEntity eburyAccountId;
 
+    public RelationHasEburyAccountEntityPK(){
+    }
+
+    public RelationHasEburyAccountEntityPK(AssociatedStaffEntity relationAssociatedStaffDni, ClientEntity relationClientId){
+        this.relationAssociatedStaffDni = relationAssociatedStaffDni;
+        this.relationClientId = relationClientId;
+    }
+
     public AssociatedStaffEntity getRelationAssociatedStaffDni() {
         return relationAssociatedStaffDni;
     }
