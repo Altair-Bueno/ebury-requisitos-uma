@@ -1,5 +1,7 @@
 package database.tables;
 
+import jsonTypes.Client;
+
 import javax.persistence.*;
 import java.util.Objects;
 
@@ -13,8 +15,9 @@ public class AddressEntity {
     private int id;
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
-    @Column(name = "Client_ID")
-    private int clientId;
+    @ManyToOne
+    @JoinColumn(name = "Client_ID")
+    private ClientEntity clientId;
     @Basic
     @Column(name = "street")
     private String street;
@@ -39,11 +42,11 @@ public class AddressEntity {
         this.id = id;
     }
 
-    public int getClientId() {
+    public ClientEntity getClientId() {
         return clientId;
     }
 
-    public void setClientId(int clientId) {
+    public void setClientId(ClientEntity clientId) {
         this.clientId = clientId;
     }
 

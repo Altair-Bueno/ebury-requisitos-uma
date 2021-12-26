@@ -1,5 +1,7 @@
 package database.tables;
 
+import jsonTypes.Client;
+
 import javax.persistence.*;
 import java.util.Objects;
 
@@ -9,38 +11,41 @@ import java.util.Objects;
 public class RelationHasEburyAccountEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
-    @Column(name = "Relation_AssociatedStaff_DNI")
-    private String relationAssociatedStaffDni;
+    @ManyToOne
+    @JoinColumn(name = "Relation_AssociatedStaff_DNI")
+    private AssociatedStaffEntity relationAssociatedStaffDni;
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
-    @Column(name = "Relation_Client_ID")
-    private int relationClientId;
+    @ManyToOne
+    @JoinColumn(name = "Relation_Client_ID")
+    private ClientEntity relationClientId;
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
-    @Column(name = "EburyAccount_id")
-    private int eburyAccountId;
+    @ManyToOne
+    @JoinColumn(name = "EburyAccount_id")
+    private EburyAccountEntity eburyAccountId;
 
-    public String getRelationAssociatedStaffDni() {
+    public AssociatedStaffEntity getRelationAssociatedStaffDni() {
         return relationAssociatedStaffDni;
     }
 
-    public void setRelationAssociatedStaffDni(String relationAssociatedStaffDni) {
+    public void setRelationAssociatedStaffDni(AssociatedStaffEntity relationAssociatedStaffDni) {
         this.relationAssociatedStaffDni = relationAssociatedStaffDni;
     }
 
-    public int getRelationClientId() {
+    public ClientEntity getRelationClientId() {
         return relationClientId;
     }
 
-    public void setRelationClientId(int relationClientId) {
+    public void setRelationClientId(ClientEntity relationClientId) {
         this.relationClientId = relationClientId;
     }
 
-    public int getEburyAccountId() {
+    public EburyAccountEntity getEburyAccountId() {
         return eburyAccountId;
     }
 
-    public void setEburyAccountId(int eburyAccountId) {
+    public void setEburyAccountId(EburyAccountEntity eburyAccountId) {
         this.eburyAccountId = eburyAccountId;
     }
 

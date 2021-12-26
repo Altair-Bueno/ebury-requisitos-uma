@@ -19,8 +19,9 @@ public class OperationEntity {
     private int id;
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
-    @Column(name = "BankAccount_IBAN")
-    private String bankAccountIban;
+    @ManyToOne
+    @JoinColumn(name = "BankAccount_IBAN")
+    private BankAccountEntity bankAccountIban;
     @Basic
     @Column(name = "date")
     private Date date;
@@ -45,11 +46,11 @@ public class OperationEntity {
         this.id = id;
     }
 
-    public String getBankAccountIban() {
+    public BankAccountEntity getBankAccountIban() {
         return bankAccountIban;
     }
 
-    public void setBankAccountIban(String bankAccountIban) {
+    public void setBankAccountIban(BankAccountEntity bankAccountIban) {
         this.bankAccountIban = bankAccountIban;
     }
 
