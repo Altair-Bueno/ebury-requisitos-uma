@@ -21,10 +21,10 @@ public class LinkEntityPK implements Serializable {
     @JoinColumn(name = "EburyAccount_id")
     private EburyAccountEntity eburyAccountId;
 
-    public RelationHasEburyAccountEntityPK(){
+    public LinkEntityPK(){
     }
 
-    public RelationHasEburyAccountEntityPK(AssociatedStaffEntity relationAssociatedStaffDni, ClientEntity relationClientId){
+    public LinkEntityPK(AssociatedStaffEntity relationAssociatedStaffDni, ClientEntity relationClientId){
         this.relationAssociatedStaffDni = relationAssociatedStaffDni;
         this.relationClientId = relationClientId;
     }
