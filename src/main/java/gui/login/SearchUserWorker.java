@@ -27,10 +27,10 @@ class SearchUserWorker extends SwingWorker<LoginEntity, Void> {
         login.loginButton.setEnabled(false);
         login.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
         try (Session session = HibernateStartUp.getSessionFactory().openSession()) {
-            return (LoginEntity) session
-                    .createQuery("FROM LoginEntity WHERE user = '" + username + "' AND password = '" + password + "'")
-                    .list()
-                    .get(0);
+            var querry = session.createQuery("from LoginEntity where user = :u and password = :p");
+            querry.setParameter("u",username);
+            querry.setParameter("p",password);
+            return (LoginEntity) querry.getSingleResult();
         } catch (Exception e) {
             e.printStackTrace();
         }
