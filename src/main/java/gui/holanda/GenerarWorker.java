@@ -11,10 +11,10 @@ import jsonTypes.*;
 import org.hibernate.Session;
 
 import javax.swing.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 import java.util.concurrent.ExecutionException;
+import java.util.function.Predicate;
+import java.util.stream.Stream;
 
 class GenerarWorker extends SwingWorker<String, Void> {
     Informe informe;
@@ -37,217 +37,145 @@ class GenerarWorker extends SwingWorker<String, Void> {
 
     private String healthcheck() {
         try (Session session = HibernateStartUp.getSessionFactory().openSession()) {
-            session.createQuery("FROM EburyAccountEntity");
+            var result = session
+                    .createQuery("FROM EburyAccountEntity")
+                    .getResultList();
+            assert result != null;
         } catch (Exception e) {
             return "STATUS: ERROR.";
         }
         return "STATUS: CONNECTION OK.";
     }
-
     private String cliente() {
-        String queryclient;
-        Boolean filtrocliente = false;
-
-        queryclient = "FROM ClientEntity ";
-
-        JTextField[] campos = new JTextField[]{
-                informe.primerNombreTextField,
-                informe.segundoNombreTextField,
-                informe.tercerNombreTextField,
-                informe.ciudadTextField,
-                informe.calleTextField,
-                informe.postalTextField
+        var availableFilters = new String [] {
+                informe.primerNombreTextField.getText(),
+                informe.segundoNombreTextField.getText(),
+                informe.tercerNombreTextField.getText(),
+                informe.ciudadTextField.getText(),
+                informe.calleTextField.getText(),
+                informe.postalTextField.getText(),
         };
+        var list = new ArrayList<Predicate<String>>();
+        for (var availableFilter : availableFilters)
+            list.add(
+                    availableFilter.equals("")?
+                    (a -> true):
+                    (a-> a.contains(availableFilter))
+            );
 
-        try (Session session = HibernateStartUp.getSessionFactory().openSession()) {
-
-            List<ClientEntity> clienfil = (List<ClientEntity>) session.createQuery(queryclient).list();
-            List<ClientEntity> aux = new ArrayList<>(), aux2 = new ArrayList<>(), aux3 = new ArrayList<>();
-
-            var nombref = campos[0].getText() == null ? "" : campos[0].getText().toUpperCase(Locale.ROOT);
-            var last1f = campos[1].getText() == null ? "" : campos[1].getText().toUpperCase(Locale.ROOT);
-            var last2f = campos[2].getText() == null ? "" : campos[2].getText().toUpperCase(Locale.ROOT);
-            var ciudadf = campos[3].getText() == null ? "" : campos[3].getText().toUpperCase(Locale.ROOT);
-            var callef = campos[4].getText() == null ? "" : campos[4].getText().toUpperCase(Locale.ROOT);
-            var cpf = campos[5].getText() == null ? "" : campos[5].getText().toUpperCase(Locale.ROOT);
-
-            var filtronombre = !nombref.equals("");
-            var filtroapellido1 = !last1f.equals("");
-            var filtroapellido2 = !last2f.equals("");
-            var filtrociudad = !ciudadf.equals("");
-            var filtrocalle = !callef.equals("");
-            var filtrocp = !cpf.equals("");
-
-            if (!(filtronombre || filtroapellido1 || filtroapellido2 || filtrociudad || filtrocalle || filtrocp)) {
-                aux.addAll(clienfil);
-            } else {
-                for (ClientEntity cl : clienfil) {
-                    boolean add = false;
-
-                    var nombrecl = cl.getName() == null ? "" : cl.getName().toUpperCase(Locale.ROOT);
-                    //add = filtronombre && nombrecl.contains(nombref);
-                    var last1cl = cl.getLastName1() == null ? "" : cl.getLastName1().toUpperCase(Locale.ROOT);
-                    //add = filtroapellido1 && last1cl.contains(last1f);
-                    var last2cl = cl.getLastName2() == null ? "" : cl.getLastName2().toUpperCase(Locale.ROOT);
-                    //add = filtroapellido2 && last2cl.contains(last2f);
-                    if (filtronombre ^ filtroapellido1 ^ filtroapellido2) {
-                        add = nombrecl.contains(nombref) ^ last1cl.contains(last1f) ^ last2cl.contains(last2f);
-                    }
-
-                    for (AddressEntity a : cl.getDireccion()) {
-                        var ciudadc = a.getCity().toUpperCase(Locale.ROOT);
-                        //add = filtrociudad && ciudadc.contains(ciudadf);
-                        var callec = a.getStreet().toUpperCase(Locale.ROOT);
-                        //add = filtrocalle && callec.contains(callef);
-                        var cpc = a.getPostalCode().toUpperCase(Locale.ROOT);
-                        //add = filtrocp && cpc.contains(cpf);
-
-                        if (filtrociudad ^ filtrocalle ^ filtrocp) {
-                            add = ciudadc.contains(ciudadf) ^ callec.contains(callef) ^ cpc.contains(cpf);
-                            System.out.println(ciudadc + ": " + add);
-                        }
-                        if (add) {
-                            aux.add(cl);
-                        }
-                    }
-                }
-            }
-
-            if (aux.isEmpty()) {
-                JOptionPane.showMessageDialog(informe, "No hay información que corresponda con los filtros.");
-                return "";
-            } else {//
-                // --------------------------------------------- //
-                var list = new ArrayList<Client>();
-
-                for (ClientEntity cl : aux) {
-                    // Cuentas del cliente
-                    List<EburyAccountEntity> prodclient = (List<EburyAccountEntity>) session.createQuery("FROM EburyAccountEntity WHERE owner = " + cl.getId()).list();
-
-                    List<ProductClient> productos = new ArrayList<>();
-                    for (EburyAccountEntity ea : prodclient) {
-                        var producto = new ProductClient(
-                                ea.getAccounttype(),
-                                ea.getBankAccount().getIban(),
-                                ea.getStatus());
-                        productos.add(producto);
-                    }
-
-                    // Direcciones del cliente
-                    List<AddressEntity> dirclien = (List<AddressEntity>) session.createQuery("FROM AddressEntity WHERE clientId = " + cl.getId()).list();
-
-                    List<Address> addresses = new ArrayList<>();
-                    for (AddressEntity ae : dirclien) {
-                        var address = new Address(
-                                ae.getCity(),
-                                ae.getStreet(),
-                                ae.getNumber(),
-                                ae.getPostalCode(),
-                                ae.getCountry());
-                        addresses.add(address);
-                    }
-
-                    // Nombre
-                    list.add(new Client(
-                            productos,
-                            cl.getStatus().equals(Status.Active),
-                            (cl.getBirthDate() == null ? "" : cl.getBirthDate().toString()),
-                            new Name(cl.getName(), cl.getLastName1()),
-                            addresses
-                    ));
-
-                }
+        try (var session = HibernateStartUp.getSessionFactory().openSession()) {
+                var clientEntityStream = (Stream<ClientEntity>) session.createQuery("from ClientEntity")
+                        .getResultList()
+                        .stream();
+                var data = clientEntityStream
+                        // Primer nombre
+                        .filter(a -> list.get(0).test(a.getName()))
+                        // Segundo nombre
+                        .filter(a -> list.get(1).test(a.getLastName1()))
+                        // Tercer nombre
+                        .filter(a -> list.get(2).test(a.getLastName2()))
+                        // Ciudad calle y postal
+                        .filter(a -> {
+                            var direcciones = a.getDireccion();
+                            var max = direcciones
+                                    .stream()
+                                    .max(Comparator.comparingInt(AddressEntity::getId))
+                                    .get();
+                            return list.get(3).test(max.getCity()) &&
+                                    list.get(4).test(max.getStreet()) &&
+                                    list.get(5).test(max.getPostalCode());
+                        })
+                        .map(clientEntity -> clientEntityToClient(clientEntity,session))
+                        .toList();
 
                 Gson gson = new GsonBuilder().setPrettyPrinting().create();
-                var clients = new Clients(list);
+                var clients = new Clients(data);
                 return gson.toJson(clients);
-            }
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-        return null;
+        return "ERROR";
     }
 
+    private Client clientEntityToClient(ClientEntity clientData,Session session) {
+        var querry = session.createQuery("from EburyAccountEntity where owner = :owner");
+        querry.setParameter("owner",clientData);
+        var querryStream = (Stream<EburyAccountEntity>)querry.stream();
+        var products = querryStream
+                .map(account ->
+                        new ProductClient(account.getAccounttype(),
+                                account.getBankAccount().getIban(),
+                                account.getStatus())
+                ).toList();
+
+        Boolean activeCustomer = clientData.getStatus() == Status.Active;
+        String dateOfBirth =clientData.getBirthDate() == null ? null : clientData.getBirthDate().toString();
+        Name name = new Name(clientData.getName(),clientData.getLastName1());
+        List<Address> address = addressEntityToAddress(clientData.getDireccion());
+        return new Client(products,activeCustomer,dateOfBirth,name,address);
+    }
+
+    private List<Address> addressEntityToAddress(List<AddressEntity> addressEntities) {
+        return addressEntities
+                .stream()
+                .map(d -> new Address(
+                        d.getCity(),
+                        d.getStreet(),
+                        d.getNumber(),
+                        d.getPostalCode(),
+                        d.getCountry()
+                ))
+                .toList();
+    }
 
     private String producto() {
-        var numProd = informe.numeroProductoTextField.getText();
-        var statusIndex = informe.tipoComboBox.getSelectedIndex();
-        var statusCuenta = switch (statusIndex) {
-            case 0 -> "";
-            case 1 -> "Active";
-            case 2 -> "Inactive";
-            case 3 -> "Blocked";
-            case 4 -> "Closed";
-            default -> throw new IllegalStateException("Unexpected value: " + statusIndex);
+        var textoNumProducto = informe.numeroProductoTextField.getText();
+        Predicate<String> filtroNumProducto = textoNumProducto.equals("") ?
+                (a -> true):
+                (a -> a.contains(textoNumProducto));
+        var indexStatus = informe.tipoComboBox.getSelectedIndex();
+        var selectedStatus = switch (indexStatus) {
+            case 1 -> Status.Active;
+            case 2 -> Status.Inactive;
+            case 3 -> Status.Blocked;
+            case 4 -> Status.Closed;
+            default -> null;
         };
+        Predicate<Status> filtroStatus = indexStatus == 0 ?
+                (a -> true):
+                (a -> a == selectedStatus);
 
-
-        try (Session session = HibernateStartUp.getSessionFactory().openSession()) {
-            StringBuilder result = new StringBuilder();
-            List<EburyAccountEntity> listaCuentas = null;
-            if (statusCuenta.equals("") && numProd.equals("")) { //No se ha aplicado ningún filtro:
-                listaCuentas = (List<EburyAccountEntity>) session.createQuery("FROM EburyAccountEntity").list();
-            }
-
-            if (!statusCuenta.equals("") && numProd.equals("")) { //Se filtra por tipo de cuenta:
-                listaCuentas = (List<EburyAccountEntity>) session.createQuery("FROM EburyAccountEntity WHERE status = '" + statusCuenta + "'").list();
-            }
-
-            if (statusCuenta.equals("") && !numProd.equals("")) { //Se filtra por número de IBAN
-                listaCuentas = (List<EburyAccountEntity>) session.createQuery("FROM EburyAccountEntity WHERE bankAccount = '" + numProd + "'").list();
-
-            }
-
-            if (!statusCuenta.equals("") && !numProd.equals("")) { //Se filtra por tipo de cuenta y numero de IBAN
-                listaCuentas = (List<EburyAccountEntity>) session.createQuery("FROM EburyAccountEntity WHERE bankAccount = '" + numProd + "' AND status = '" + statusCuenta + "'").list();
-            }
-            if (listaCuentas.isEmpty()) {
-                JOptionPane.showMessageDialog(informe, "No hay información que corresponda con los filtros.");
-                return "";
-            } else {
-
-                var list = new ArrayList<Product>();
-                for (EburyAccountEntity ac : listaCuentas) {
-                    var listAddress = new ArrayList<Address>();
-                    for (AddressEntity dir : ac.getOwner().getDireccion()) {
-                        listAddress.add(new Address(
-                                dir.getCity(),
-                                dir.getStreet(),
-                                dir.getNumber(),
-                                dir.getPostalCode(),
-                                dir.getCountry()));
-                    }
-
-                    var listAccountHolder = new ArrayList<AccountHolder>();
-                    listAccountHolder.add(new AccountHolder(
-                            ac.getStatus().equals(Status.Active),
-                            "Individual",
-                            new Name(
-                                    ac.getOwner().getName(),
-                                    ac.getOwner().getLastName1()
-                            ),
-                            listAddress
-                    ));
-                    Product p = new Product(
-                            listAccountHolder,
-                            ac.getAccounttype(),
-                            ac.getBankAccount().getIban(),
-                            ac.getStatus(),
-                            ac.getRegisterdate() == null ? null : ac.getRegisterdate().toString(),
-                            ac.getClosedate() == null ? null : ac.getClosedate().toString()
-                    );
-                    list.add(p);
-                }
-                Gson gson = new GsonBuilder().setPrettyPrinting().create();
-                var products = new Products(list);
-                return gson.toJson(products);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            JOptionPane.showMessageDialog(informe, "No hay información para mostrar o ha habido algún error.");
-            return "";
+        try (var session = HibernateStartUp.getSessionFactory().openSession()) {
+            var sessionStream = (Stream<EburyAccountEntity>) session.createQuery("from EburyAccountEntity")
+                    .getResultList()
+                    .stream();
+            var list = sessionStream
+                    .filter(a -> filtroNumProducto.test(a.getBankAccount().getIban()))
+                    .filter(a -> filtroStatus.test(a.getStatus()))
+                    .map(a -> eburyAccountToProduct(a))
+                    .toList();
+            Gson gson = new GsonBuilder().setPrettyPrinting().create();
+            var products = new Products(list);
+            return gson.toJson(products);
         }
+    }
+
+    private Product eburyAccountToProduct(EburyAccountEntity eburyAccount){
+        List<AccountHolder> listAccountHolder = new ArrayList<>();
+        listAccountHolder.add(new AccountHolder(
+                eburyAccount.getOwner().getStatus() == Status.Active,
+                "Individual",
+                new Name(eburyAccount.getOwner().getName(),eburyAccount.getOwner().getLastName1()),
+                addressEntityToAddress(eburyAccount.getOwner().getDireccion())
+        ));
+        return new Product(
+                listAccountHolder,
+                eburyAccount.getAccounttype(),
+                eburyAccount.getBankAccount().getIban(),
+                eburyAccount.getStatus(),
+                eburyAccount.getRegisterdate() == null ? null : eburyAccount.getRegisterdate().toString(),
+                eburyAccount.getClosedate() == null ? null : eburyAccount.getClosedate().toString()
+        );
     }
 
     @Override

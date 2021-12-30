@@ -98,8 +98,9 @@ public class Informe extends JPanel implements Frame {
             postalTextField.setText("");
             tercerNombreTextField.setText("");
         });
-        filterTabbedPane.addChangeListener(e ->
-                exportarButton.setEnabled(filterTabbedPane.getSelectedIndex() != 2));
+        filterTabbedPane.addChangeListener(
+                e -> exportarButton.setEnabled(filterTabbedPane.getSelectedIndex() != 2)
+        );
     }
 
     void lockUI() {
@@ -134,7 +135,6 @@ public class Informe extends JPanel implements Frame {
 
     @Override
     public String getTitleBarName() {
-        // TODO
         return "Informe Holanda";
     }
 
