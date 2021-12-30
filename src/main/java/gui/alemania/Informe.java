@@ -133,6 +133,7 @@ public class Informe extends JPanel implements Frame {
         progressBar1.setValue(progressBar1.getMaximum());
 
     }
+
     private void resizeColumnWidth(JTable table) {
         final TableColumnModel columnModel = table.getColumnModel();
         for (int column = 0; column < table.getColumnCount(); column++) {

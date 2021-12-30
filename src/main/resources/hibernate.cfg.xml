@@ -16,7 +16,9 @@
         <!-- Enable Hibernate's automatic session context management -->
         <property name="current_session_context_class">thread</property>
         <!-- Enable the Hikari connection pool-->
-        <property name="hibernate.connection.provider_class">org.hibernate.hikaricp.internal.HikariCPConnectionProvider</property>
+        <property name="hibernate.connection.provider_class">
+            org.hibernate.hikaricp.internal.HikariCPConnectionProvider
+        </property>
 
         <mapping class="database.tables.AddressEntity"/>
         <mapping class="database.tables.AssociatedStaffEntity"/>

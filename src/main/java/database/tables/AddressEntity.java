@@ -1,7 +1,5 @@
 package database.tables;
 
-import jsonTypes.Client;
-
 import javax.persistence.*;
 import java.util.Objects;
 

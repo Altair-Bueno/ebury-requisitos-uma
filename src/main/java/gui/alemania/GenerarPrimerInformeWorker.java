@@ -5,13 +5,10 @@ import database.tables.AddressEntity;
 import database.tables.EburyAccountEntity;
 
 import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableCellRenderer;
-import javax.swing.table.TableColumnModel;
-import java.awt.*;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 class GenerarPrimerInformeWorker extends SwingWorker<List<Object[]>, Void> {
     Informe informe;
@@ -46,7 +43,7 @@ class GenerarPrimerInformeWorker extends SwingWorker<List<Object[]>, Void> {
                                 .get();
                         var nif = eburyAccount.getOwner().getNif();
                         var fechaNacimiento = eburyAccount.getOwner().getBirthDate();
-                        var aux = new Object[] {
+                        var aux = new Object[]{
                                 iban,
                                 apellidos,
                                 nombre,
@@ -56,7 +53,7 @@ class GenerarPrimerInformeWorker extends SwingWorker<List<Object[]>, Void> {
                         };
                         // Change null to "noexistente"
                         return Arrays.stream(aux)
-                                .map(a -> a == null ? "noexistente":a)
+                                .map(a -> a == null ? "noexistente" : a)
                                 .toArray();
                     })
                     .toList();

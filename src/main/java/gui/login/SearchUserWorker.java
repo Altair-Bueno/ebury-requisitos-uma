@@ -26,8 +26,8 @@ class SearchUserWorker extends SwingWorker<LoginEntity, Void> {
         login.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
         try (Session session = HibernateStartUp.getSessionFactory().openSession()) {
             var query = session.createQuery("from LoginEntity where user = :u and password = :p");
-            query.setParameter("u",username);
-            query.setParameter("p",password);
+            query.setParameter("u", username);
+            query.setParameter("p", password);
             return (LoginEntity) query.getSingleResult();
         } catch (Exception e) {
             e.printStackTrace();
@@ -39,7 +39,7 @@ class SearchUserWorker extends SwingWorker<LoginEntity, Void> {
     protected void done() {
         try {
             var result = super.get();
-            var panel = switch (result.getRol()){
+            var panel = switch (result.getRol()) {
                 case Regler -> new gui.alemania.Informe();
                 case Regelgever -> new gui.holanda.Informe();
                 case User -> new gui.user.Main(result);

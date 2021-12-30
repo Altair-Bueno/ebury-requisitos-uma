@@ -1,30 +1,14 @@
 package gui.holanda;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
-import database.HibernateStartUp;
-import database.tables.AddressEntity;
-import database.tables.ClientEntity;
-import database.tables.EburyAccountEntity;
 import gui.Frame;
-import jsonTypes.*;
-import org.hibernate.Session;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-import java.util.concurrent.ExecutionException;
 
 public class Informe extends JPanel implements Frame {
     JPanel root;
@@ -86,11 +70,11 @@ public class Informe extends JPanel implements Frame {
         ciudadTextField.addActionListener(actionListener);
         calleTextField.addActionListener(actionListener);
         postalTextField.addActionListener(actionListener);
-        limpiarProductoButton.addActionListener(e-> {
+        limpiarProductoButton.addActionListener(e -> {
             numeroProductoTextField.setText("");
             tipoComboBox.setSelectedIndex(0);
         });
-        limpiarClienteButton.addActionListener(e-> {
+        limpiarClienteButton.addActionListener(e -> {
             primerNombreTextField.setText("");
             segundoNombreTextField.setText("");
             ciudadTextField.setText("");

@@ -169,5 +169,5 @@ create index fk_Relation_has_EburyAccount_EburyAccount1_idx
 
 create index fk_Relation_has_EburyAccount_Relation1_idx
     on Link (Relation_AssociatedStaff_DNI,
-                                  Relation_Client_ID);
+             Relation_Client_ID);
 

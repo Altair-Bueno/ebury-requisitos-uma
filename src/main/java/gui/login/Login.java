@@ -3,12 +3,7 @@ package gui.login;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
-import database.HibernateStartUp;
-import database.tables.LoginEntity;
 import gui.Frame;
-import gui.alemania.Informe;
-import gui.user.Main;
-import org.hibernate.Session;
 
 import javax.swing.*;
 import java.awt.*;
