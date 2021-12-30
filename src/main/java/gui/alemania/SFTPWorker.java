@@ -10,14 +10,14 @@ class SFTPWorker extends GuardarCSVWorker {
     String ip;
     String username;
     String pass;
-    String dest;
+    String destination;
 
-    public SFTPWorker(Informe informe, File temp, String ip, String username, String pass, String dest) {
+    public SFTPWorker(Informe informe, File temp, String ip, String username, String pass, String destination) {
         super(informe, temp);
         this.ip = ip;
         this.username = username;
         this.pass = pass;
-        this.dest = dest;
+        this.destination = destination;
     }
 
     @Override
@@ -39,7 +39,7 @@ class SFTPWorker extends GuardarCSVWorker {
             session.connect();
             var channel = (ChannelSftp) session.openChannel("sftp");
             channel.connect();
-            channel.put(file.getAbsolutePath(), dest);
+            channel.put(file.getAbsolutePath(), destination);
             channel.exit();
             var m = "Archivo enviado";
             JOptionPane.showMessageDialog(informe, m, m, JOptionPane.INFORMATION_MESSAGE);

@@ -30,7 +30,6 @@ class GuardarCSVWorker extends SwingWorker<Void, Void> {
         var model = informe.csvPreviewTable.getModel();
         informe.progressBar1.setMaximum(model.getRowCount());
         try (var csv = new FileWriter(file)) {
-            //TODO añade un montón de columnas que no deberían estar
             for (int i = 0; i < model.getColumnCount() - 1; i++) {
                 csv.write(model.getColumnName(i) + ",");
             }
@@ -42,7 +41,11 @@ class GuardarCSVWorker extends SwingWorker<Void, Void> {
                     var safeValue = value.replace(",", "");
                     csv.write(safeValue + ",");
                 }
-                csv.write(model.getValueAt(i, model.getColumnCount() - 1).toString().replace(',', Character.MIN_VALUE));
+                csv.write(model
+                        .getValueAt(i, model.getColumnCount() - 1)
+                        .toString()
+                        .replace(",", "")
+                );
                 informe.progressBar1.setValue(i);
                 csv.write("\n");
             }

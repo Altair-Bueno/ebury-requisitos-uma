@@ -3,9 +3,6 @@ package gui.alemania;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
-import com.jcraft.jsch.ChannelSftp;
-import com.jcraft.jsch.JSch;
-import database.HibernateStartUp;
 import gui.Frame;
 
 import javax.swing.*;
@@ -14,14 +11,9 @@ import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumnModel;
 import java.awt.*;
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 public class Informe extends JPanel implements Frame {
     final Long FIVE_YEARS = Long.parseLong("157784760000");
@@ -56,44 +48,40 @@ public class Informe extends JPanel implements Frame {
                 save.execute();
             }
         });
-        informeSemanalButton.addActionListener(e -> {
-            var g = new GenerarInformeSemanalWorker(this);
-            g.execute();
-        });
-        primerInformeButton.addActionListener(e -> {
-            var g = new GenerarPrimerInformeWorker(this);
-            g.execute();
-        });
+        informeSemanalButton.addActionListener(
+                e -> new GenerarInformeSemanalWorker(this).execute()
+        );
+        primerInformeButton.addActionListener(
+                e -> new GenerarPrimerInformeWorker(this).execute()
+        );
         enviarSFTPButton.addActionListener(e -> {
             var ip = new JTextField();
             var username = new JTextField();
-            var pass = new JPasswordField();
-            var dest = new JTextField();
-            dest.setText("/");
+            var password = new JPasswordField();
+            var destination = new JTextField();
+            destination.setText("/");
             var components = new JComponent[]{
                     new JLabel("Host"),
                     ip,
                     new JLabel("Username"),
                     username,
                     new JLabel("Password"),
-                    pass,
+                    password,
                     new JLabel("Destino"),
-                    dest
+                    destination
             };
             var res = JOptionPane.showConfirmDialog(this, components, "Enviar por SFTP", JOptionPane.PLAIN_MESSAGE);
             if (res == JOptionPane.OK_OPTION) {
-                Path temp = null;
                 try {
-                    temp = Files.createTempFile(new Date().toString(), ".csv");
+                    var temporalFile = Files.createTempFile(new Date().toString(), ".csv");
                     var worker = new SFTPWorker(this,
-                            temp.toFile(),
+                            temporalFile.toFile(),
                             ip.getText(),
                             username.getText(),
-                            String.valueOf(pass.getPassword()),
-                            dest.getText());
+                            String.valueOf(password.getPassword()),
+                            destination.getText());
                     worker.execute();
                 } catch (IOException ex) {
-                    ex.printStackTrace();
                     var m = ex.getMessage();
                     JOptionPane.showMessageDialog(this, m, m, JOptionPane.ERROR_MESSAGE);
                 }
@@ -118,6 +106,46 @@ public class Informe extends JPanel implements Frame {
         this.informeSemanalButton.setEnabled(true);
         this.primerInformeButton.setEnabled(true);
         this.exportarButton.setEnabled(true);
+    }
+
+    void setData(java.util.List<Object[]> data) {
+        csvPreviewTable.removeAll();
+        var tablemodel = new DefaultTableModel(
+                new String[]{
+                        "IBAN",
+                        "Apellido",
+                        "Nombre",
+                        "Direcciones",
+                        "NIF/CIF",
+                        "Fecha Nacimiento/Creación"
+                },
+                0
+        );
+        progressBar1.setMaximum(data.size());
+        var count = 0;
+        for (var entry : data) {
+            tablemodel.addRow(entry);
+            progressBar1.setValue(count);
+            count++;
+        }
+        csvPreviewTable.setModel(tablemodel);
+        resizeColumnWidth(csvPreviewTable);
+        progressBar1.setValue(progressBar1.getMaximum());
+
+    }
+    private void resizeColumnWidth(JTable table) {
+        final TableColumnModel columnModel = table.getColumnModel();
+        for (int column = 0; column < table.getColumnCount(); column++) {
+            int width = 15; // Min width
+            for (int row = 0; row < table.getRowCount(); row++) {
+                TableCellRenderer renderer = table.getCellRenderer(row, column);
+                Component comp = table.prepareRenderer(renderer, row, column);
+                width = Math.max(comp.getPreferredSize().width + 1, width);
+            }
+            if (width > 300)
+                width = 300;
+            columnModel.getColumn(column).setPreferredWidth(width);
+        }
     }
 
     @Override
