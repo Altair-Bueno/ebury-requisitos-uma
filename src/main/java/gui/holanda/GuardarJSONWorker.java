@@ -15,7 +15,7 @@ class GuardarJSONWorker extends SwingWorker<Void, Void> {
     }
 
     @Override
-    protected Void doInBackground() throws Exception {
+    protected Void doInBackground() {
         informe.lockUI();
         var frame = new JFrame("Save");
         var progress = new JProgressBar();

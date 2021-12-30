@@ -26,7 +26,7 @@ class GenerarWorker extends SwingWorker<String, Void> {
     }
 
     @Override
-    protected String doInBackground() throws Exception {
+    protected String doInBackground() {
         informe.jsonPreviewArea.setText("Cargando información...");
         informe.lockUI();
         return switch (informe.filterTabbedPane.getSelectedIndex()) {
@@ -67,6 +67,7 @@ class GenerarWorker extends SwingWorker<String, Void> {
             );
 
         try (var session = HibernateStartUp.getSessionFactory().openSession()) {
+            @SuppressWarnings("unchecked")
             var clientEntityStream = (Stream<ClientEntity>) session.createQuery("from ClientEntity")
                     .getResultList()
                     .stream();
@@ -103,6 +104,7 @@ class GenerarWorker extends SwingWorker<String, Void> {
     private Client clientEntityToClient(ClientEntity clientData, Session session) {
         var querry = session.createQuery("from EburyAccountEntity where owner = :owner");
         querry.setParameter("owner", clientData);
+        @SuppressWarnings("unchecked")
         var querryStream = (Stream<EburyAccountEntity>) querry.stream();
         var products = querryStream
                 .map(account ->
@@ -149,13 +151,14 @@ class GenerarWorker extends SwingWorker<String, Void> {
                 (a -> a == selectedStatus);
 
         try (var session = HibernateStartUp.getSessionFactory().openSession()) {
+            @SuppressWarnings("unchecked")
             var sessionStream = (Stream<EburyAccountEntity>) session.createQuery("from EburyAccountEntity")
                     .getResultList()
                     .stream();
             var list = sessionStream
                     .filter(a -> filtroNumProducto.test(a.getBankAccount().getIban()))
                     .filter(a -> filtroStatus.test(a.getStatus()))
-                    .map(a -> eburyAccountToProduct(a))
+                    .map(this::eburyAccountToProduct)
                     .toList();
             Gson gson = new GsonBuilder().setPrettyPrinting().create();
             var products = new Products(list);

@@ -19,7 +19,7 @@ class SearchUserWorker extends SwingWorker<LoginEntity, Void> {
     }
 
     @Override
-    protected LoginEntity doInBackground() throws Exception {
+    protected LoginEntity doInBackground() {
         login.usernameField.setEnabled(false);
         login.passwordField.setEnabled(false);
         login.loginButton.setEnabled(false);

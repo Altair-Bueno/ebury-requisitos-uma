@@ -41,4 +41,8 @@ public class HibernateStartUp {
         }
     }
 
+    @Override
+    protected void finalize() throws Throwable {
+        shutdown();
+    }
 }

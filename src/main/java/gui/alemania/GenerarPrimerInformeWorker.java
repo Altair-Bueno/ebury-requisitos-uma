@@ -18,11 +18,12 @@ class GenerarPrimerInformeWorker extends SwingWorker<List<Object[]>, Void> {
     }
 
     @Override
-    protected List<Object[]> doInBackground() throws Exception {
+    protected List<Object[]> doInBackground() {
         informe.progressBar1.setValue(30);
         informe.lockUI();
         try (var session = HibernateStartUp.getSessionFactory().openSession()) {
             var fiveYearsAgo = new Date(new Date().getTime() - informe.FIVE_YEARS);
+            @SuppressWarnings("unchecked")
             var eburyAccounts = (List<EburyAccountEntity>) session.
                     createQuery("from EburyAccountEntity")
                     .getResultList();
@@ -57,32 +58,6 @@ class GenerarPrimerInformeWorker extends SwingWorker<List<Object[]>, Void> {
                                 .toArray();
                     })
                     .toList();
-/*
-            // TODO direcciones puede haber varias. Este método no tiene en
-            // cuenta eso
-            informe.progressBar1.setValue(250);
-            var ibans = session.createQuery("select ac.bankAccount.id from EburyAccountEntity ac order by ac.id").getResultList();
-            var apellidos = session.createQuery("select op.owner.lastName1 from EburyAccountEntity op order by op.id").getResultList();
-            var nombres = session.createQuery("select ac.owner.name from EburyAccountEntity ac order by ac.id").getResultList();
-            var direcciones = session.createQuery("select ac.owner.direccion from EburyAccountEntity ac order by ac.id").getResultList();
-            var nifs = session.createQuery("select ac.owner.nif from EburyAccountEntity ac order by ac.id").getResultList();
-            var fechasNacimiento = session.createQuery("select ac.owner.birthDate from EburyAccountEntity ac order by ac.id").getResultList();
-            var aperturas = session.createQuery("select ac.registerdate from EburyAccountEntity ac order by ac.id").getResultList();
-            var result = new LinkedList<Object[]>();
-            for (int i = 0; i < ibans.size(); i++) {
-                var aux = new Object[]{
-                        ibans.get(i),
-                        apellidos.get(i),
-                        nombres.get(i),
-                        direcciones.get(i),
-                        nifs.get(i),
-                        fechasNacimiento.get(i),
-                        aperturas.get(i)
-                };
-                result.add(aux);
-            }
-            return result;
-*/
         }
     }
 

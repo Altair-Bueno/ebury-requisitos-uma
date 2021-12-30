@@ -61,7 +61,7 @@
         <dependency>
             <groupId>com.formdev</groupId>
             <artifactId>flatlaf</artifactId>
-            <version>1.6.4</version>
+            <version>1.6.5</version>
         </dependency>
         <dependency>
             <groupId>com.google.code.gson</groupId>
@@ -77,7 +77,7 @@
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-core</artifactId>
-            <version>5.6.1.Final</version>
+            <version>5.6.3.Final</version>
         </dependency>
         <dependency>
             <groupId>mysql</groupId>
@@ -87,7 +87,7 @@
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-hikaricp</artifactId>
-            <version>5.6.2.Final</version>
+            <version>5.6.3.Final</version>
         </dependency>
 
         <!--IntelliJ UI-->
