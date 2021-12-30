@@ -2,8 +2,6 @@ package gui.login;
 
 import database.HibernateStartUp;
 import database.tables.LoginEntity;
-import gui.alemania.Informe;
-import gui.user.Main;
 import org.hibernate.Session;
 
 import javax.swing.*;
@@ -27,10 +25,10 @@ class SearchUserWorker extends SwingWorker<LoginEntity, Void> {
         login.loginButton.setEnabled(false);
         login.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
         try (Session session = HibernateStartUp.getSessionFactory().openSession()) {
-            var querry = session.createQuery("from LoginEntity where user = :u and password = :p");
-            querry.setParameter("u",username);
-            querry.setParameter("p",password);
-            return (LoginEntity) querry.getSingleResult();
+            var query = session.createQuery("from LoginEntity where user = :u and password = :p");
+            query.setParameter("u",username);
+            query.setParameter("p",password);
+            return (LoginEntity) query.getSingleResult();
         } catch (Exception e) {
             e.printStackTrace();
         }
