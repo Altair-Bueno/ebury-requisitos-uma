@@ -10,6 +10,7 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Stream;
 
 class GenerarInformeSemanalWorker extends SwingWorker<List<Object[]>, Void> {
     Informe informe;
@@ -25,11 +26,10 @@ class GenerarInformeSemanalWorker extends SwingWorker<List<Object[]>, Void> {
         try (var session = HibernateStartUp.getSessionFactory().openSession()) {
             var oneWeek = new Date(new Date().getTime() - informe.ONE_WEEK);
             @SuppressWarnings("unchecked")
-            var eburyAccounts = (List<EburyAccountEntity>) session.
-                    createQuery("from EburyAccountEntity")
-                    .getResultList();
+            var eburyAccounts = (Stream<EburyAccountEntity>) session.
+                    createQuery("from EburyAccountEntity").stream();
             return eburyAccounts
-                    .stream()
+                    .parallel()
                     // Only last 5 years
                     .filter(a -> oneWeek.getTime() <= a.getRegisterdate().getTime())
                     // Only active

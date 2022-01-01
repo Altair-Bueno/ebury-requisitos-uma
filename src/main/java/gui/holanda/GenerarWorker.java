@@ -63,15 +63,15 @@ class GenerarWorker extends SwingWorker<String, Void> {
             list.add(
                     availableFilter.equals("") ?
                             (a -> true) :
-                            (a -> a.contains(availableFilter))
+                            (a -> a != null && a.contains(availableFilter))
             );
 
         try (var session = HibernateStartUp.getSessionFactory().openSession()) {
             @SuppressWarnings("unchecked")
             var clientEntityStream = (Stream<ClientEntity>) session.createQuery("from ClientEntity")
-                    .getResultList()
                     .stream();
             var data = clientEntityStream
+                    .parallel()
                     // Primer nombre
                     .filter(a -> list.get(0).test(a.getName()))
                     // Segundo nombre
@@ -137,7 +137,7 @@ class GenerarWorker extends SwingWorker<String, Void> {
         var textoNumProducto = informe.numeroProductoTextField.getText();
         Predicate<String> filtroNumProducto = textoNumProducto.equals("") ?
                 (a -> true) :
-                (a -> a.contains(textoNumProducto));
+                (a -> a != null && a.contains(textoNumProducto));
         var indexStatus = informe.tipoComboBox.getSelectedIndex();
         var selectedStatus = switch (indexStatus) {
             case 1 -> Status.Active;
@@ -153,9 +153,9 @@ class GenerarWorker extends SwingWorker<String, Void> {
         try (var session = HibernateStartUp.getSessionFactory().openSession()) {
             @SuppressWarnings("unchecked")
             var sessionStream = (Stream<EburyAccountEntity>) session.createQuery("from EburyAccountEntity")
-                    .getResultList()
                     .stream();
             var list = sessionStream
+                    .parallel()
                     .filter(a -> filtroNumProducto.test(a.getBankAccount().getIban()))
                     .filter(a -> filtroStatus.test(a.getStatus()))
                     .map(this::eburyAccountToProduct)

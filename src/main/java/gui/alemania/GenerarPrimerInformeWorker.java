@@ -9,6 +9,7 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Stream;
 
 class GenerarPrimerInformeWorker extends SwingWorker<List<Object[]>, Void> {
     Informe informe;
@@ -24,11 +25,11 @@ class GenerarPrimerInformeWorker extends SwingWorker<List<Object[]>, Void> {
         try (var session = HibernateStartUp.getSessionFactory().openSession()) {
             var fiveYearsAgo = new Date(new Date().getTime() - informe.FIVE_YEARS);
             @SuppressWarnings("unchecked")
-            var eburyAccounts = (List<EburyAccountEntity>) session.
+            var eburyAccounts = (Stream<EburyAccountEntity>) session.
                     createQuery("from EburyAccountEntity")
-                    .getResultList();
+                    .stream();
             return eburyAccounts
-                    .stream()
+                    .parallel()
                     // Only last 5 years
                     .filter(a -> fiveYearsAgo.getTime() <= a.getRegisterdate().getTime())
                     // Get each row
