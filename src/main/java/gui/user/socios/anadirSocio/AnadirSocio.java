@@ -1,4 +1,4 @@
-package gui.user.modificarSocios.anadirSocio;
+package gui.user.socios.anadirSocio;
 
 import com.intellij.uiDesigner.core.GridLayoutManager;
 
