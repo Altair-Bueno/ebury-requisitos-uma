@@ -2,6 +2,7 @@ package gui.login;
 
 import database.HibernateStartUp;
 import database.tables.LoginEntity;
+import gui.user.MainPanel;
 import org.hibernate.Session;
 
 import javax.swing.*;
@@ -42,7 +43,7 @@ class SearchUserWorker extends SwingWorker<LoginEntity, Void> {
             var panel = switch (result.getRol()) {
                 case Regler -> new gui.alemania.Informe();
                 case Regelgever -> new gui.holanda.Informe();
-                case User -> new gui.user.Main(result);
+                case User -> new MainPanel(result);
             };
             var frame = new JFrame(panel.getTitleBarName());
             frame.setMenuBar(panel.getMenuBar());
