@@ -22,9 +22,11 @@ public class LinkEntity {
     @ManyToOne
     @JoinColumn(name = "EburyAccount_id")
     private EburyAccountEntity eburyAccountId;
+    /*
     @Basic
     @Column(name = "authorised")
     private boolean authorised;
+    */
 
     public AssociatedStaffEntity getRelationAssociatedStaffDni() {
         return relationAssociatedStaffDni;
@@ -50,24 +52,16 @@ public class LinkEntity {
         this.eburyAccountId = eburyAccountId;
     }
 
-    public boolean isAuthorised() {
-        return authorised;
-    }
-
-    public void setAuthorised(boolean authorised) {
-        this.authorised = authorised;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof LinkEntity)) return false;
         LinkEntity that = (LinkEntity) o;
-        return authorised == that.authorised && Objects.equals(relationAssociatedStaffDni, that.relationAssociatedStaffDni) && Objects.equals(relationClientId, that.relationClientId) && Objects.equals(eburyAccountId, that.eburyAccountId);
+        return Objects.equals(relationAssociatedStaffDni, that.relationAssociatedStaffDni) && Objects.equals(relationClientId, that.relationClientId) && Objects.equals(eburyAccountId, that.eburyAccountId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(relationAssociatedStaffDni, relationClientId, eburyAccountId, authorised);
+        return Objects.hash(relationAssociatedStaffDni, relationClientId, eburyAccountId);
     }
 }
