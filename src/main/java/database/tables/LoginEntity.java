@@ -23,6 +23,13 @@ public class LoginEntity {
     @JoinColumn(name = "AS_FK")
     private AssociatedStaffEntity asFk;
 
+    public LoginEntity(String user, String password, Rol rol, AssociatedStaffEntity asFk) {
+        this.user = user;
+        this.password = password;
+        this.rol = rol;
+        this.asFk = asFk;
+    }
+
     public String getUser() {
         return user;
     }

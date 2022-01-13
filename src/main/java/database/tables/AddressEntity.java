@@ -7,9 +7,9 @@ import java.util.Objects;
 @Table(name = "Address", schema = "grupo10DB", catalog = "")
 @IdClass(AddressEntityPK.class)
 public class AddressEntity {
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
-    @Column(name = "ID")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "ID", updatable = false, nullable = false)
     private int id;
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
@@ -31,6 +31,20 @@ public class AddressEntity {
     @Basic
     @Column(name = "country")
     private String country;
+
+    public AddressEntity(ClientEntity clientId, String street, String number, String city, String postalCode, String country) {
+        //this.id = 0;
+        this.clientId = clientId;
+        this.street = street;
+        this.number = number;
+        this.city = city;
+        this.postalCode = postalCode;
+        this.country = country;
+    }
+
+    public AddressEntity() {
+
+    }
 
     public int getId() {
         return id;

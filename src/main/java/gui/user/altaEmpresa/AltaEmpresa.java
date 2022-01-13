@@ -1,41 +1,37 @@
-package gui.user.altaCliente;
+package gui.user.altaEmpresa;
 
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import gui.Frame;
 
-import java.awt.event.ActionListener;
-
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionListener;
+import java.util.Arrays;
 
-public class AltaCliente extends JPanel implements Frame {
+public class AltaEmpresa extends JPanel implements Frame {
     JPanel root; //OK
-    JTextField tNIF; //OK -- OBLIGATORIO
+    JTextField tCIF; //OK -- OBLIGATORIO
     JPasswordField tPassword; //OK -- OBLIGATORIO
     JPasswordField tRepPassword; //OK -- OBLIGATORIO
     JTextField tNombre; // OK -- OBLIGATORIO
-    JTextField tSegundoNombre;
-    JTextField tPrimerAp; // OK -- OBLIGATORIO
-    JTextField tSegundoAp;
-    JTextField tCiudad; // OK
+    JTextField tCiudad; // OK -- Obligator
     JTextField tCalle; //OK
     JTextField tNumero; //OK
     JTextField tCP; //OK
     JTextField tPais; //OK
-    JTextField tFechaNac;
+    JCheckBox cbDirActual;
     JButton cancelarButton;
     JButton aceptarButton;
     JPanel VSPACER;
+    JPanel VSPACER2;
     JPanel HSPACER;
     JPanel HSPACER2;
     JTextField tPPO; //OK
-    JTextField tRegion; //OK
-    JCheckBox cbDirActual;
-
+    JTextField tRegion; //OK+
     private boolean ok = true;
 
-    public AltaCliente() {
+    public AltaEmpresa() {
         add(root);
 
         ActionListener cancelar = (e) -> {
@@ -45,38 +41,35 @@ public class AltaCliente extends JPanel implements Frame {
 
         ActionListener aceptar = (e) -> {
             ok = true;
-            if (tNIF.getText().isBlank() || tNombre.getText().isBlank() || tPrimerAp.getText().isBlank() || tPassword.getText().isBlank() || tRepPassword.getText().isBlank()) {
+            if (tCIF.getText().isBlank() || tPassword.getText().isBlank() || tRepPassword.getText().isBlank() || tNombre.getText().isBlank()) {
                 var m = "Rellene los campos obligatorios de la empresa.";
                 JOptionPane.showMessageDialog(this, m, m, JOptionPane.WARNING_MESSAGE);
                 ok = false;
             }
-
             if (tCalle.getText().isBlank() || tNumero.getText().isBlank() || tPPO.getText().isBlank() || tCiudad.getText().isBlank() || tCP.getText().isBlank() || tPais.getText().isBlank()) {
                 var m = "Rellene los campos obligatorios de la dirección.";
                 JOptionPane.showMessageDialog(this, m, m, JOptionPane.WARNING_MESSAGE);
                 ok = false;
             }
             if (!Arrays.equals(tPassword.getPassword(), tRepPassword.getPassword())) {
-                var m = "Las contraseñas no coinciden";
+                var m = "Las contraseñas no coinciden.";
                 JOptionPane.showMessageDialog(this, m, m, JOptionPane.WARNING_MESSAGE);
                 ok = false;
             }
 
             if (ok) {
-                var clienteWorker = new AltaClienteWorker(this);
-                clienteWorker.execute();
+                var empresaWorker = new AltaEmpresaWorker(this);
+                empresaWorker.execute();
             }
-
         };
 
         cancelarButton.addActionListener(cancelar);
         aceptarButton.addActionListener(aceptar);
     }
 
-
     @Override
     public String getTitleBarName() {
-        return "Registro Persona Física";
+        return "Registro Empresa";
     }
 
     @Override
@@ -103,7 +96,7 @@ public class AltaCliente extends JPanel implements Frame {
         root = new JPanel();
         root.setLayout(new GridLayoutManager(12, 8, new Insets(0, 0, 0, 0), -1, -1));
         final JLabel label1 = new JLabel();
-        label1.setText("Sobre el usuario:");
+        label1.setText("Sobre la empresa:");
         root.add(label1, new GridConstraints(1, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final JLabel label2 = new JLabel();
         label2.setText("Dirección");
@@ -135,12 +128,6 @@ public class AltaCliente extends JPanel implements Frame {
         HSPACER2 = new JPanel();
         HSPACER2.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
         root.add(HSPACER2, new GridConstraints(11, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
-        aceptarButton = new JButton();
-        aceptarButton.setText("Aceptar");
-        root.add(aceptarButton, new GridConstraints(10, 5, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        cancelarButton = new JButton();
-        cancelarButton.setText("Cancelar");
-        root.add(cancelarButton, new GridConstraints(10, 6, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final JLabel label6 = new JLabel();
         label6.setText("País*");
         root.add(label6, new GridConstraints(7, 3, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
@@ -164,51 +151,42 @@ public class AltaCliente extends JPanel implements Frame {
         root.add(label9, new GridConstraints(8, 3, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         tRegion = new JTextField();
         root.add(tRegion, new GridConstraints(8, 4, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
-        final JPanel panel1 = new JPanel();
-        panel1.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
-        root.add(panel1, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+        aceptarButton = new JButton();
+        aceptarButton.setText("Aceptar");
+        root.add(aceptarButton, new GridConstraints(10, 5, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        cancelarButton = new JButton();
+        cancelarButton.setText("Cancelar");
+        root.add(cancelarButton, new GridConstraints(10, 6, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final JLabel label10 = new JLabel();
-        label10.setText("NIF*");
-        root.add(label10, new GridConstraints(2, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        tNIF = new JTextField();
-        tNIF.setText("");
-        root.add(tNIF, new GridConstraints(2, 2, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
+        label10.setText("Direccion Actual");
+        root.add(label10, new GridConstraints(9, 3, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        cbDirActual = new JCheckBox();
+        cbDirActual.setText("");
+        root.add(cbDirActual, new GridConstraints(9, 4, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        VSPACER2 = new JPanel();
+        VSPACER2.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
+        root.add(VSPACER2, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
         final JLabel label11 = new JLabel();
-        label11.setText("Contraseña*");
-        root.add(label11, new GridConstraints(3, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        label11.setText("CIF*");
+        root.add(label11, new GridConstraints(2, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        tCIF = new JTextField();
+        tCIF.setText("");
+        root.add(tCIF, new GridConstraints(2, 2, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
         tPassword = new JPasswordField();
         root.add(tPassword, new GridConstraints(3, 2, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
+        final JLabel label12 = new JLabel();
+        label12.setText("Contraseña*");
+        root.add(label12, new GridConstraints(3, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        final JLabel label13 = new JLabel();
+        label13.setText("Repetir Contraseña*");
+        root.add(label13, new GridConstraints(4, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         tRepPassword = new JPasswordField();
         root.add(tRepPassword, new GridConstraints(4, 2, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
-        final JLabel label12 = new JLabel();
-        label12.setText("Repetir Contraseña*");
-        root.add(label12, new GridConstraints(4, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        final JLabel label13 = new JLabel();
-        label13.setText("Fecha Nacimiento");
-        root.add(label13, new GridConstraints(5, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        tFechaNac = new JTextField();
-        tFechaNac.setText("MM-DD-YY");
-        root.add(tFechaNac, new GridConstraints(5, 2, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
         tNombre = new JTextField();
-        root.add(tNombre, new GridConstraints(6, 2, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
+        root.add(tNombre, new GridConstraints(5, 2, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
         final JLabel label14 = new JLabel();
-        label14.setText("Nombre*");
-        root.add(label14, new GridConstraints(6, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        final JLabel label15 = new JLabel();
-        label15.setText("Segundo Nombre");
-        root.add(label15, new GridConstraints(7, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        tSegundoNombre = new JTextField();
-        root.add(tSegundoNombre, new GridConstraints(7, 2, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
-        final JLabel label16 = new JLabel();
-        label16.setText("Primer Apellido*");
-        root.add(label16, new GridConstraints(8, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        final JLabel label17 = new JLabel();
-        label17.setText("Segundo Apellido");
-        root.add(label17, new GridConstraints(9, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        tPrimerAp = new JTextField();
-        root.add(tPrimerAp, new GridConstraints(8, 2, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
-        tSegundoAp = new JTextField();
-        root.add(tSegundoAp, new GridConstraints(9, 2, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
+        label14.setText("Nombre de la Empresa*");
+        root.add(label14, new GridConstraints(5, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
     }
 
     /**
@@ -217,6 +195,5 @@ public class AltaCliente extends JPanel implements Frame {
     public JComponent $$$getRootComponent$$$() {
         return root;
     }
-
 
 }

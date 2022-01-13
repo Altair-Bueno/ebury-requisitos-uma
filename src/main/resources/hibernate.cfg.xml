@@ -19,6 +19,7 @@
         <property name="hibernate.connection.provider_class">
             org.hibernate.hikaricp.internal.HikariCPConnectionProvider
         </property>
+        <property name="hibernate.show_sql">true</property>
 
         <mapping class="database.tables.AddressEntity"/>
         <mapping class="database.tables.AssociatedStaffEntity"/>

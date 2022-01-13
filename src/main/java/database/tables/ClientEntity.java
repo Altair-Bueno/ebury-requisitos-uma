@@ -4,15 +4,16 @@ import database.types.Status;
 
 import javax.persistence.*;
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 @Entity
 @Table(name = "Client", schema = "grupo10DB", catalog = "")
 public class ClientEntity {
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
-    @Column(name = "ID")
+    @GeneratedValue(strategy=GenerationType.AUTO)
+    @Column(name = "ID", updatable = false, nullable = false)
     private int id;
     @Basic
     @Column(name = "status")
@@ -42,6 +43,36 @@ public class ClientEntity {
     @OneToMany
     @JoinColumn(name = "Client_ID", insertable = false, updatable = false)
     private List<AddressEntity> direccion;
+
+    public ClientEntity(Status status, String nif, String name, String lastName1, String lastName2, Date birthDate, Date registerDate, List<AddressEntity> direccion) {
+        this.id = 0;
+        this.status = status;
+        this.nif = nif;
+        this.name = name;
+        this.lastName1 = lastName1;
+        this.lastName2 = lastName2;
+        this.birthDate = birthDate;
+        this.registerDate = registerDate;
+        this.endDate = null;
+        this.direccion = direccion;
+    }
+
+    public ClientEntity(Status status, String nif, String name, Date registerDate, List<AddressEntity> direccion) {
+        this.id = 0;
+        this.status = status;
+        this.nif = nif;
+        this.name = name;
+        this.lastName1 = "";
+        this.lastName2 = "";
+        this.birthDate = null;
+        this.registerDate = registerDate;
+        this.endDate = null;
+        this.direccion = direccion;
+    }
+
+    public ClientEntity() {
+
+    }
 
     public int getId() {
         return id;

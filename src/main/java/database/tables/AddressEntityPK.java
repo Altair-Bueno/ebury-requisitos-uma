@@ -4,15 +4,13 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Objects;
 
+
 public class AddressEntityPK implements Serializable {
-    @Column(name = "ID")
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+
     @ManyToOne
     @JoinColumn(name = "Client_ID")
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private ClientEntity clientId;
 
     public int getId() {

@@ -4,9 +4,11 @@ import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
 import gui.Frame;
+import gui.user.selTipoCliente.SelTipoCliente;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class Login extends JPanel implements Frame {
@@ -17,6 +19,7 @@ public class Login extends JPanel implements Frame {
     JLabel label2;
     JLabel image;
     JButton loginButton;
+    JButton signUpButton;
 
     public Login() {
         add(root);
@@ -26,9 +29,22 @@ public class Login extends JPanel implements Frame {
             var search = new SearchUserWorker(username, password, this);
             search.execute();
         };
+        ActionListener signUp = (e) -> {
+            var panel = new SelTipoCliente();
+            var frame = new JFrame(panel.getTitleBarName());
+            frame.setMenuBar(panel.getMenuBar());
+            frame.add(panel);
+            frame.pack();
+            frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+            frame.setLocationRelativeTo(null);
+            frame.setSize(frame.getSize());
+            frame.setVisible(true);
+        };
         loginButton.addActionListener(loginListener);
+        signUpButton.addActionListener(signUp);
         usernameField.addActionListener(loginListener);
         passwordField.addActionListener(loginListener);
+
     }
 
     @Override
@@ -72,13 +88,19 @@ public class Login extends JPanel implements Frame {
         image.setIcon(new ImageIcon(getClass().getResource("/EburyLogo.png")));
         image.setText("");
         root.add(image, new GridConstraints(0, 1, 1, 2, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        loginButton = new JButton();
-        loginButton.setText("Login");
-        root.add(loginButton, new GridConstraints(3, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final Spacer spacer1 = new Spacer();
         root.add(spacer1, new GridConstraints(0, 3, 4, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
         final Spacer spacer2 = new Spacer();
         root.add(spacer2, new GridConstraints(0, 0, 4, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
+        final JPanel panel1 = new JPanel();
+        panel1.setLayout(new GridLayoutManager(1, 2, new Insets(0, 0, 0, 0), -1, -1));
+        root.add(panel1, new GridConstraints(3, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, true));
+        signUpButton = new JButton();
+        signUpButton.setText("Sign Up");
+        panel1.add(signUpButton, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        loginButton = new JButton();
+        loginButton.setText("Login");
+        panel1.add(loginButton, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
     }
 
     /**
