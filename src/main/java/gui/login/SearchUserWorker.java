@@ -77,6 +77,7 @@ class SearchUserWorker extends SwingWorker<LoginEntity, Void> {
             login.usernameField.setEnabled(true);
             login.passwordField.setEnabled(true);
             login.loginButton.setEnabled(true);
+            login.signUpButton.setEnabled(false);
             login.setCursor(Cursor.getDefaultCursor());
         }
     }

@@ -33,7 +33,6 @@ public class Login extends JPanel implements Frame {
             var panel = new SelTipoCliente();
             var frame = getAppFrame();
 
-
             frame.setTitle(panel.getTitleBarName());
             frame.setMenuBar(panel.getMenuBar());
 
@@ -53,7 +52,7 @@ public class Login extends JPanel implements Frame {
 
     }
 
-    public JFrame getAppFrame(){
+    public JFrame getAppFrame() {
         return (JFrame) this.getTopLevelAncestor();
     }
 
