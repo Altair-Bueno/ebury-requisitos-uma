@@ -49,13 +49,12 @@ public class AltaEmpresaWorker extends SwingWorker<Boolean, Void> {
                     empresa.tPassword.getText(),
                     Rol.User,
                     null);
-            var addressList = new ArrayList<AddressEntity>();
             var date = new java.util.Date();
             var client = new ClientEntity(
                     Status.Active,empresa.tCIF.getText(),
                     empresa.tNombre.getText(),
-                    new java.sql.Date(date.getTime()),
-                    addressList);
+                    new java.sql.Date(date.getTime())
+            );
             var address = new AddressEntity(
                     client,
                     empresa.tCalle.getText(),
@@ -64,11 +63,8 @@ public class AltaEmpresaWorker extends SwingWorker<Boolean, Void> {
                     empresa.tCP.getText(),
                     empresa.tRegion.getText());
 
-            addressList.add(address);
-            client.setDireccion(addressList);
-
-            session.persist(address);
             session.persist(client);
+            session.persist(address);
             session.persist(login);
 
             transaction.commit();

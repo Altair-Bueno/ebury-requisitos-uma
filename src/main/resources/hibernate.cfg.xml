@@ -4,24 +4,27 @@
         "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
 <hibernate-configuration>
     <session-factory>
-        <!-- DB schema will be updated if needed -->
-        <property name="hibernate.hbm2ddl.auto">update</property>
         <property name="connection.url">
             jdbc:mysql://grupo10:6A9WnAAEaNcuYQfe@eburyrequisitos.cobadwnzalab.eu-central-1.rds.amazonaws.com:3306/grupo10DB
         </property>
+
         <property name="connection.driver_class">com.mysql.cj.jdbc.Driver
         </property>
         <!-- JDBC connection pool (use the built-in) -->
-<!--        <property name="connection.pool_size">5</property>-->
+        <property name="connection.pool_size">5</property>
         <!-- SQL dialect -->
-        <property name="dialect">org.hibernate.dialect.MySQLDialect</property>
+        <property name="dialect">org.hibernate.dialect.MySQL8Dialect</property>
         <!-- Enable Hibernate's automatic session context management -->
         <property name="current_session_context_class">thread</property>
         <!-- Enable the Hikari connection pool-->
         <property name="hibernate.connection.provider_class">
             org.hibernate.hikaricp.internal.HikariCPConnectionProvider
         </property>
-        <property name="hibernate.show_sql">true</property>
+        <!-- See SQL statements -->
+        <property name="show_sql">true</property>
+        <!-- DB schema will be updated if needed -->
+        <property name="hibernate.hbm2ddl.auto">update</property>
+
 
         <mapping class="database.tables.AddressEntity"/>
         <mapping class="database.tables.AssociatedStaffEntity"/>

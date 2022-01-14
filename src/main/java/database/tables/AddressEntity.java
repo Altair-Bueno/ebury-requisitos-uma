@@ -8,10 +8,10 @@ import java.util.Objects;
 @IdClass(AddressEntityPK.class)
 public class AddressEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Column(name = "ID", updatable = false, nullable = false)
     private int id;
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Id
     @ManyToOne
     @JoinColumn(name = "Client_ID")

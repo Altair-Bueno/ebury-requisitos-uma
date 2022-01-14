@@ -5,17 +5,17 @@ import java.io.Serializable;
 import java.util.Objects;
 
 public class LinkEntityPK implements Serializable {
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Id
     @ManyToOne
     @JoinColumn(name = "Relation_AssociatedStaff_DNI")
     private AssociatedStaffEntity relationAssociatedStaffDni;
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Id
     @ManyToOne
     @JoinColumn(name = "Relation_Client_ID")
     private ClientEntity relationClientId;
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Id
     @ManyToOne
     @JoinColumn(name = "EburyAccount_id")

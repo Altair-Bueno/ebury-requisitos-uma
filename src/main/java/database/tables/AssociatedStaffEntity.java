@@ -1,6 +1,8 @@
 package database.tables;
 
+import database.HibernateStartUp;
 import database.types.Status;
+import org.hibernate.Session;
 
 import javax.persistence.*;
 import java.util.List;
@@ -9,7 +11,7 @@ import java.util.Objects;
 @Entity
 @Table(name = "AssociatedStaff", schema = "grupo10DB", catalog = "")
 public class AssociatedStaffEntity {
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Id
     @Column(name = "DNI")
     private String dni;
@@ -26,9 +28,6 @@ public class AssociatedStaffEntity {
     @Column(name = "state")
     @Enumerated(EnumType.STRING)
     private Status state;
-    @OneToMany
-    @JoinColumn(name = "AS_FK", insertable = false, updatable = false)
-    private List<LoginEntity> loginasstaff;
 
     public String getDni() {
         return dni;
@@ -70,14 +69,16 @@ public class AssociatedStaffEntity {
         this.state = state;
     }
 
+    @SuppressWarnings("unchecked")
     public List<LoginEntity> getLoginasstaff() {
-        return loginasstaff;
+        try(Session session = HibernateStartUp.getSessionFactory().openSession()) {
+            var query = session.createQuery("from LoginEntity where asFk = :associated");
+            query.setParameter("associated",this);
+            return (List<LoginEntity>) query.getResultList();
+        } catch (Exception ex) {
+            return null;
+        }
     }
-
-    public void setLoginasstaff(List<LoginEntity> loginasstaff) {
-        this.loginasstaff = loginasstaff;
-    }
-
     public String fullName() {
         return name + " " + lastName1 + " " + lastName2;
     }

@@ -47,7 +47,6 @@ public class AltaClienteWorker extends SwingWorker<Boolean, Void> {
             var parsed = format.parse(cliente.tFechaNac.getText());
             var date = new java.util.Date();
             var login = new LoginEntity(cliente.tNIF.getText(), cliente.tPassword.getText(), Rol.User, null);
-            var addresslist = new ArrayList<AddressEntity>();
             var client = new ClientEntity(
                     Status.Active,
                     cliente.tNIF.getText(),
@@ -55,8 +54,7 @@ public class AltaClienteWorker extends SwingWorker<Boolean, Void> {
                     cliente.tPrimerAp.getText(),
                     cliente.tSegundoAp.getText(),
                     new java.sql.Date(parsed.getTime()),
-                    new java.sql.Date(date.getTime()),
-                    addresslist
+                    new java.sql.Date(date.getTime())
             );
 
             var address = new AddressEntity(
@@ -65,13 +63,10 @@ public class AltaClienteWorker extends SwingWorker<Boolean, Void> {
                     cliente.tNumero.getText(),
                     cliente.tCiudad.getText(),
                     cliente.tCP.getText(),
-                    cliente.tPais.getText());
-
-            addresslist.add(address);
-            client.setDireccion(addresslist);
-
-            session.save(address);
+                    cliente.tPais.getText()
+            );
             session.save(client);
+            session.save(address);
             session.save(login);
 
             //session.persist(address);
@@ -81,9 +76,6 @@ public class AltaClienteWorker extends SwingWorker<Boolean, Void> {
             transaction.commit();
             session.close();
         }
-
-
-
         return true;
     }
 

@@ -8,16 +8,16 @@ import java.util.Objects;
 @Table(name = "Operation", schema = "grupo10DB", catalog = "")
 @IdClass(OperationEntityPK.class)
 public class OperationEntity {
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Id
     @ManyToOne
     @JoinColumn(name = "EburyAccount_id")
     public EburyAccountEntity eburyAccount;
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Id
     @Column(name = "id")
     private int id;
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Id
     @ManyToOne
     @JoinColumn(name = "BankAccount_IBAN")

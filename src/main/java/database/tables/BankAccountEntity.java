@@ -6,7 +6,7 @@ import java.util.Objects;
 @Entity
 @Table(name = "BankAccount", schema = "grupo10DB", catalog = "")
 public class BankAccountEntity {
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Id
     @Column(name = "IBAN")
     private String iban;

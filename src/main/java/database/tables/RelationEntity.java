@@ -8,12 +8,12 @@ import java.util.Objects;
 @Table(name = "Relation", schema = "grupo10DB", catalog = "")
 @IdClass(RelationEntityPK.class)
 public class RelationEntity {
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Id
     @ManyToOne
     @JoinColumn(name = "AssociatedStaff_DNI")
     private AssociatedStaffEntity associatedStaffDni;
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Id
     @ManyToOne
     @JoinColumn(name = "Client_ID")

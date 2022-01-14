@@ -9,7 +9,7 @@ import java.util.Objects;
 @Entity
 @Table(name = "EburyAccount", schema = "grupo10DB", catalog = "")
 public class EburyAccountEntity {
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Id
     @Column(name = "id")
     private int id;

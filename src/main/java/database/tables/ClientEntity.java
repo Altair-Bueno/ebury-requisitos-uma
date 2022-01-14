@@ -1,10 +1,12 @@
 package database.tables;
 
+import database.HibernateStartUp;
 import database.types.Status;
+import org.hibernate.Hibernate;
+import org.hibernate.Session;
 
 import javax.persistence.*;
 import java.sql.Date;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -40,11 +42,8 @@ public class ClientEntity {
     @Basic
     @Column(name = "end_date")
     private Date endDate;
-    @OneToMany
-    @JoinColumn(name = "Client_ID", insertable = false, updatable = false)
-    private List<AddressEntity> direccion;
 
-    public ClientEntity(Status status, String nif, String name, String lastName1, String lastName2, Date birthDate, Date registerDate, List<AddressEntity> direccion) {
+    public ClientEntity(Status status, String nif, String name, String lastName1, String lastName2, Date birthDate, Date registerDate) {
         this.id = 0;
         this.status = status;
         this.nif = nif;
@@ -54,10 +53,9 @@ public class ClientEntity {
         this.birthDate = birthDate;
         this.registerDate = registerDate;
         this.endDate = null;
-        this.direccion = direccion;
     }
 
-    public ClientEntity(Status status, String nif, String name, Date registerDate, List<AddressEntity> direccion) {
+    public ClientEntity(Status status, String nif, String name, Date registerDate) {
         this.id = 0;
         this.status = status;
         this.nif = nif;
@@ -67,7 +65,6 @@ public class ClientEntity {
         this.birthDate = null;
         this.registerDate = registerDate;
         this.endDate = null;
-        this.direccion = direccion;
     }
 
     public ClientEntity() {
@@ -146,12 +143,15 @@ public class ClientEntity {
         this.endDate = endDate;
     }
 
+    @SuppressWarnings("unchecked")
     public List<AddressEntity> getDireccion() {
-        return direccion;
-    }
-
-    public void setDireccion(List<AddressEntity> direccion) {
-        this.direccion = direccion;
+        try(Session session = HibernateStartUp.getSessionFactory().openSession()) {
+            var query = session.createQuery("from AddressEntity where clientId = :client");
+            query.setParameter("client",this);
+            return (List<AddressEntity>) query.getResultList();
+        } catch (Exception ex) {
+            return null;
+        }
     }
 
     public String fullName() {
@@ -163,11 +163,11 @@ public class ClientEntity {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ClientEntity that = (ClientEntity) o;
-        return id == that.id && Objects.equals(status, that.status) && Objects.equals(nif, that.nif) && Objects.equals(name, that.name) && Objects.equals(lastName1, that.lastName1) && Objects.equals(lastName2, that.lastName2) && Objects.equals(birthDate, that.birthDate) && Objects.equals(registerDate, that.registerDate) && Objects.equals(endDate, that.endDate) && Objects.equals(direccion, that.direccion);
+        return id == that.id && Objects.equals(status, that.status) && Objects.equals(nif, that.nif) && Objects.equals(name, that.name) && Objects.equals(lastName1, that.lastName1) && Objects.equals(lastName2, that.lastName2) && Objects.equals(birthDate, that.birthDate) && Objects.equals(registerDate, that.registerDate) && Objects.equals(endDate, that.endDate) ;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, status, nif, name, lastName1, lastName2, birthDate, registerDate, endDate, direccion);
+        return Objects.hash(id, status, nif, name, lastName1, lastName2, birthDate, registerDate, endDate);
     }
 }

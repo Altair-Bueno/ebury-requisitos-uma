@@ -8,10 +8,10 @@ public class OperationEntityPK implements Serializable {
     @Id
     @ManyToOne
     @JoinColumn(name = "EburyAccount_id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private EburyAccountEntity eburyAccount;
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @ManyToOne
     @JoinColumn(name = "BankAccount_IBAN")
     private BankAccountEntity bankAccountIban;
