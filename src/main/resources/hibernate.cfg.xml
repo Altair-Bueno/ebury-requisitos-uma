@@ -4,6 +4,8 @@
         "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
 <hibernate-configuration>
     <session-factory>
+        <!-- DB schema will be updated if needed -->
+        <property name="hibernate.hbm2ddl.auto">update</property>
         <property name="connection.url">
             jdbc:mysql://grupo10:6A9WnAAEaNcuYQfe@eburyrequisitos.cobadwnzalab.eu-central-1.rds.amazonaws.com:3306/grupo10DB
         </property>
@@ -34,8 +36,5 @@
 
         <!-- <property name="connection.username"/> -->
         <!-- <property name="connection.password"/> -->
-
-        <!-- DB schema will be updated if needed -->
-        <!-- <property name="hibernate.hbm2ddl.auto">update</property> -->
     </session-factory>
 </hibernate-configuration>
