@@ -63,6 +63,7 @@ public class Informe extends JPanel implements Frame {
                     new JLabel("Destino"),
                     destination
             };
+
             var res = JOptionPane.showConfirmDialog(this, components, "Enviar por SFTP", JOptionPane.PLAIN_MESSAGE);
             if (res == JOptionPane.OK_OPTION) {
                 try {

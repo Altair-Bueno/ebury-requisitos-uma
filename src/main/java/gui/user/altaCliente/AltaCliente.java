@@ -8,6 +8,7 @@ import java.awt.event.ActionListener;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.Arrays;
 
 public class AltaCliente extends JPanel implements Frame {
     JPanel root; //OK

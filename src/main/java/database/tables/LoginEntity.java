@@ -30,6 +30,10 @@ public class LoginEntity {
         this.asFk = asFk;
     }
 
+    public LoginEntity() {
+
+    }
+
     public String getUser() {
         return user;
     }

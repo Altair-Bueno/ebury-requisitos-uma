@@ -15,8 +15,7 @@ public class Main {
         FlatIntelliJLaf.setup();
     }
 
-    public static void main(String[] args) {
-        setUp();
+    public static void loadGUI(){
         var login = new Login();
         var frame = new JFrame(login.getTitleBarName());
         frame.setMenuBar(login.getMenuBar());
@@ -26,5 +25,10 @@ public class Main {
         frame.setLocationRelativeTo(null);
         frame.setResizable(false);
         frame.setVisible(true);
+    }
+
+    public static void main(String[] args) {
+        setUp();
+        loadGUI();
     }
 }

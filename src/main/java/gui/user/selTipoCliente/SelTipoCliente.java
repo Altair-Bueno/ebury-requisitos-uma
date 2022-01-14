@@ -3,18 +3,22 @@ package gui.user.selTipoCliente;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import gui.Frame;
+import gui.login.Login;
 import gui.user.altaCliente.AltaCliente;
 import gui.user.altaEmpresa.AltaEmpresa;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class SelTipoCliente extends JPanel implements Frame {
     private JButton PersFisButton;
     private JButton EmpresaButton;
     private JPanel root;
+    private JPanel HSPACER;
+    private JPanel Botones;
+    private JPanel Atras;
+    private JButton atrasButton;
 
     public SelTipoCliente() {
         add(root);
@@ -42,8 +46,26 @@ public class SelTipoCliente extends JPanel implements Frame {
             frame.setVisible(true);
         };
 
+        ActionListener atras = (e) -> {
+            var panel = new Login();
+            var frame = (JFrame) this.getTopLevelAncestor();
+
+            frame.setTitle(panel.getTitleBarName());
+            frame.setMenuBar(panel.getMenuBar());
+
+            frame.remove(this);
+            frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+            frame.setLocationRelativeTo(null);
+            frame.setSize(frame.getSize());
+
+            frame.add(panel);
+            frame.pack();
+            frame.setVisible(true);
+        };
+
         PersFisButton.addActionListener(persfisica);
         EmpresaButton.addActionListener(empresa);
+        atrasButton.addActionListener(atras);
 
     }
 

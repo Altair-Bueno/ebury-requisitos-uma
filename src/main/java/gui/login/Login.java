@@ -31,13 +31,19 @@ public class Login extends JPanel implements Frame {
         };
         ActionListener signUp = (e) -> {
             var panel = new SelTipoCliente();
-            var frame = new JFrame(panel.getTitleBarName());
+            var frame = getAppFrame();
+
+
+            frame.setTitle(panel.getTitleBarName());
             frame.setMenuBar(panel.getMenuBar());
-            frame.add(panel);
-            frame.pack();
+
+            frame.remove(this);
             frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
             frame.setLocationRelativeTo(null);
             frame.setSize(frame.getSize());
+
+            frame.add(panel);
+            frame.pack();
             frame.setVisible(true);
         };
         loginButton.addActionListener(loginListener);
@@ -45,6 +51,10 @@ public class Login extends JPanel implements Frame {
         usernameField.addActionListener(loginListener);
         passwordField.addActionListener(loginListener);
 
+    }
+
+    public JFrame getAppFrame(){
+        return (JFrame) this.getTopLevelAncestor();
     }
 
     @Override
