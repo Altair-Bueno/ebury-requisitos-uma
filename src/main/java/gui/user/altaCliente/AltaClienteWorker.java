@@ -17,7 +17,7 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.concurrent.ExecutionException;
 
-public class AltaClienteWorker extends SwingWorker<Boolean, Void> {
+public class AltaClienteWorker extends SwingWorker<Void, Void> {
     private AltaCliente cliente;
 
     public AltaClienteWorker(AltaCliente ac){
@@ -38,7 +38,7 @@ public class AltaClienteWorker extends SwingWorker<Boolean, Void> {
     }
 
     @Override
-    protected Boolean doInBackground() throws Exception {
+    protected Void doInBackground() throws Exception {
         setPanelEnabled(cliente, false);
         cliente.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 
@@ -84,14 +84,15 @@ public class AltaClienteWorker extends SwingWorker<Boolean, Void> {
             session.close();
 
             var m = "Registro completado con éxito.";
-            JOptionPane.showMessageDialog(this.cliente, m, m, JOptionPane.INFORMATION_MESSAGE);
-            return true;
+            if(JOptionPane.showOptionDialog(null, m, "Éxito.", JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, null, null) == JOptionPane.OK_OPTION){
+                cliente.back2Login();
+            }
         } catch (Exception e){
             var m = "Ha ocurrido un error en la operación de registro. Inténtelo de nuevo.";
             JOptionPane.showMessageDialog(this.cliente, m, m, JOptionPane.ERROR_MESSAGE);
-            return false;
         }
 
+        return null;
     }
 
     @Override

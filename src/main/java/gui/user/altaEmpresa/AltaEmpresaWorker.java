@@ -16,7 +16,7 @@ import java.util.ArrayList;
 
 import database.tables.ClientEntity;
 
-public class AltaEmpresaWorker extends SwingWorker<Boolean, Void> {
+public class AltaEmpresaWorker extends SwingWorker<Void, Void> {
     AltaEmpresa empresa;
 
 
@@ -38,7 +38,7 @@ public class AltaEmpresaWorker extends SwingWorker<Boolean, Void> {
     }
 
     @Override
-    protected Boolean doInBackground() throws Exception {
+    protected Void doInBackground() throws Exception {
         setPanelEnabled(empresa, false);
         empresa.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 
@@ -61,7 +61,8 @@ public class AltaEmpresaWorker extends SwingWorker<Boolean, Void> {
                     empresa.tNumero.getText(),
                     empresa.tCiudad.getText(),
                     empresa.tCP.getText(),
-                    empresa.tRegion.getText());
+                    empresa.countries.get(empresa.cPais.getSelectedItem().toString())
+            );
 
             session.persist(client);
             session.persist(address);
@@ -71,13 +72,15 @@ public class AltaEmpresaWorker extends SwingWorker<Boolean, Void> {
             session.close();
 
             var m = "Registro completado con éxito.";
-            JOptionPane.showMessageDialog(this.empresa, m, m, JOptionPane.WARNING_MESSAGE);
-            return true;
+            if(JOptionPane.showOptionDialog(null, m, "Éxito.", JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, null, null) == JOptionPane.OK_OPTION){
+                empresa.back2Login();
+            }
         } catch (Exception ex){
             var m = "Ha ocurrido un error en la operación de registro. Inténtelo de nuevo.";
             JOptionPane.showMessageDialog(this.empresa, m, m, JOptionPane.WARNING_MESSAGE);
-            return false;
         }
+
+        return null;
     }
 
     @Override

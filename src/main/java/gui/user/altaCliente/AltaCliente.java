@@ -66,19 +66,7 @@ public class AltaCliente extends JPanel implements Frame {
         add(root);
 
         ActionListener cancelar = (e) -> {
-            var panel = new Login();
-            var frame = getAppFrame();
-            frame.setTitle(panel.getTitleBarName());
-            frame.setMenuBar(panel.getMenuBar());
-
-            frame.remove(this);
-            frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-            frame.setLocationRelativeTo(null);
-            frame.setSize(frame.getSize());
-
-            frame.add(panel);
-            frame.pack();
-            frame.setVisible(true);
+            back2Login();
         };
 
         ActionListener aceptar = (e) -> {
@@ -115,6 +103,22 @@ public class AltaCliente extends JPanel implements Frame {
         aceptarButton.addActionListener(aceptar);
         fMM.addActionListener(monthChange);
         fYYYY.addChangeListener(e -> change());
+    }
+
+    void back2Login() {
+        var panel = new Login();
+        var frame = getAppFrame();
+        frame.setTitle(panel.getTitleBarName());
+        frame.setMenuBar(panel.getMenuBar());
+
+        frame.remove(this);
+        frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+        frame.setLocationRelativeTo(null);
+        frame.setSize(frame.getSize());
+
+        frame.add(panel);
+        frame.pack();
+        frame.setVisible(true);
     }
 
     private void change() {

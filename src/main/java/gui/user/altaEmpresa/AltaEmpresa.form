@@ -3,7 +3,7 @@
   <grid id="27dc6" binding="root" layout-manager="GridLayoutManager" row-count="12" column-count="8" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
     <margin top="0" left="0" bottom="0" right="0"/>
     <constraints>
-      <xy x="20" y="20" width="868" height="387"/>
+      <xy x="20" y="20" width="894" height="387"/>
     </constraints>
     <properties/>
     <border type="none"/>
@@ -111,16 +111,6 @@
         </constraints>
         <properties>
           <text value="País*"/>
-        </properties>
-      </component>
-      <component id="73845" class="javax.swing.JTextField" binding="tPais">
-        <constraints>
-          <grid row="7" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
-            <preferred-size width="150" height="-1"/>
-          </grid>
-        </constraints>
-        <properties>
-          <toolTipText value=""/>
         </properties>
       </component>
       <component id="788b8" class="javax.swing.JLabel">
@@ -281,6 +271,12 @@
         <properties>
           <text value="Nombre de la Empresa*"/>
         </properties>
+      </component>
+      <component id="167ab" class="javax.swing.JComboBox" binding="cPais" custom-create="true">
+        <constraints>
+          <grid row="7" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties/>
       </component>
     </children>
   </grid>
