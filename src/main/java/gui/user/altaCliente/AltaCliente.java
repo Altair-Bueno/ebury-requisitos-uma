@@ -9,15 +9,16 @@ import gui.login.Login;
 import java.awt.event.ActionListener;
 
 import javax.swing.*;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import javax.swing.plaf.FontUIResource;
 import javax.swing.text.DefaultFormatter;
 import javax.swing.text.StyleContext;
 import java.awt.*;
-import java.awt.event.ComponentAdapter;
 import java.util.*;
 import java.util.List;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
+
+import static java.util.Locale.getISOCountries;
 
 public class AltaCliente extends JPanel implements Frame {
     JPanel root; //OK
@@ -32,7 +33,7 @@ public class AltaCliente extends JPanel implements Frame {
     JTextField tCalle; //OK
     JTextField tNumero; //OK
     JTextField tCP; //OK
-    JTextField tPais; //OK
+    JComboBox cPais;
     JButton cancelarButton;
     JButton aceptarButton;
     JPanel VSPACER;
@@ -45,14 +46,22 @@ public class AltaCliente extends JPanel implements Frame {
     JComboBox fMM;
     JSpinner fYYYY;
 
+
     private SpinnerModel dayModel31 = new SpinnerNumberModel(1, 1, 31, 1); //default value,lower bound,upper bound,increment by
     private SpinnerModel dayModel30 = new SpinnerNumberModel(1, 1, 30, 1);
     private SpinnerModel dayModel28 = new SpinnerNumberModel(1, 1, 28, 1);
     private SpinnerModel dayModel29 = new SpinnerNumberModel(1, 1, 29, 1);
     private List<String> months31 = new ArrayList(Arrays.asList("Enero", "Marzo", "Mayo", "Julio", "Agosto", "Octubre", "Diciembre"));
     private List<String> months30 = new ArrayList<>(Arrays.asList("Abril", "Junio", "Septiembre", "Noviembre"));
+    Map<String, String> countries = new HashMap<>();
 
     public AltaCliente() {
+        countries.put("-", "");
+        for (String iso : Locale.getISOCountries()) {
+            Locale l = new Locale("es", iso);
+            countries.put(l.getDisplayCountry(l), iso);
+        }
+
         $$$setupUI$$$();
         add(root);
 
@@ -80,7 +89,7 @@ public class AltaCliente extends JPanel implements Frame {
                 ok = false;
             }
 
-            if (tCalle.getText().isBlank() || tNumero.getText().isBlank() || tPPO.getText().isBlank() || tCiudad.getText().isBlank() || tCP.getText().isBlank() || tPais.getText().isBlank()) {
+            if (tCalle.getText().isBlank() || tNumero.getText().isBlank() || tPPO.getText().isBlank() || tCiudad.getText().isBlank() || tCP.getText().isBlank() || cPais.getSelectedItem().toString().equals("-")) {
                 var m = "Rellene los campos obligatorios de la dirección.";
                 JOptionPane.showMessageDialog(this, m, m, JOptionPane.WARNING_MESSAGE);
                 ok = false;
@@ -193,9 +202,6 @@ public class AltaCliente extends JPanel implements Frame {
         final JLabel label6 = new JLabel();
         label6.setText("País*");
         root.add(label6, new GridConstraints(7, 3, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        tPais = new JTextField();
-        tPais.setToolTipText("");
-        root.add(tPais, new GridConstraints(7, 4, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
         final JLabel label7 = new JLabel();
         label7.setText("Código Postal*");
         root.add(label7, new GridConstraints(6, 3, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
@@ -301,6 +307,7 @@ public class AltaCliente extends JPanel implements Frame {
         fMM.setModel(defaultComboBoxModel1);
         fechaN.add(fMM, new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         fechaN.add(fYYYY, new GridConstraints(0, 4, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(40, -1), null, 0, false));
+        root.add(cPais, new GridConstraints(7, 4, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
     }
 
     /**
@@ -346,6 +353,12 @@ public class AltaCliente extends JPanel implements Frame {
         DefaultFormatter formatter = (DefaultFormatter) field.getFormatter();
         formatter.setCommitsOnValidEdit(true);
 
+        var keys = new TreeSet<>(countries.keySet());
+        var c = new ArrayList<String>();
+        for (String key : keys) {
+            c.add(key);
+        }
+        cPais = new JComboBox(c.toArray());
 
     }
 }

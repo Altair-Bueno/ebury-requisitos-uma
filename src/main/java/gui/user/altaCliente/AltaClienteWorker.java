@@ -46,15 +46,16 @@ public class AltaClienteWorker extends SwingWorker<Boolean, Void> {
             var transaction = session.beginTransaction();
 
             var format = new SimpleDateFormat("dd-MM-yyyy");
-            var d = new SimpleDateFormat("MMMM", new Locale("es", "ES")).parse(cliente.fMM.getSelectedItem().toString());
+            var inputFormat = new SimpleDateFormat("MMMM", new Locale("es", "ES"));
             Calendar cal = Calendar.getInstance();
-            cal.setTime(d);
+            cal.setTime(inputFormat.parse(cliente.fMM.getSelectedItem().toString()));
+            SimpleDateFormat outputFormat = new SimpleDateFormat("MM");
             var parsed = format.parse(
                     String.format("%02d", Integer.parseInt(cliente.fDD.getValue().toString()))
-                    + "-" + cal.get(Calendar.MONTH)
+                    + "-" + outputFormat.format(cal.getTime())
                     + "-" + cliente.fYYYY.getValue().toString()
-
             );
+
             var date = new java.util.Date();
             var login = new LoginEntity(cliente.tNIF.getText(), cliente.tPassword.getText(), Rol.User, null);
             var client = new ClientEntity(
@@ -73,15 +74,11 @@ public class AltaClienteWorker extends SwingWorker<Boolean, Void> {
                     cliente.tNumero.getText(),
                     cliente.tCiudad.getText(),
                     cliente.tCP.getText(),
-                    cliente.tPais.getText()
+                    cliente.countries.get(cliente.cPais.getSelectedItem().toString())
             );
             session.save(client);
             session.save(address);
             session.save(login);
-
-            //session.persist(address);
-            //session.persist(client);
-            //session.persist(login);
 
             transaction.commit();
             session.close();

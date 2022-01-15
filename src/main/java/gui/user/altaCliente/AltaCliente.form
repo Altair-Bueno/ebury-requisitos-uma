@@ -129,16 +129,6 @@
           <text value="País*"/>
         </properties>
       </component>
-      <component id="73845" class="javax.swing.JTextField" binding="tPais">
-        <constraints>
-          <grid row="7" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
-            <preferred-size width="150" height="-1"/>
-          </grid>
-        </constraints>
-        <properties>
-          <toolTipText value=""/>
-        </properties>
-      </component>
       <component id="788b8" class="javax.swing.JLabel">
         <constraints>
           <grid row="6" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
@@ -417,6 +407,12 @@
           </component>
         </children>
       </grid>
+      <component id="86673" class="javax.swing.JComboBox" binding="cPais" custom-create="true">
+        <constraints>
+          <grid row="7" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties/>
+      </component>
     </children>
   </grid>
 </form>
