@@ -16,10 +16,8 @@ public class SelTipoCliente extends JPanel implements Frame {
     private JButton PersFisButton;
     private JButton EmpresaButton;
     private JPanel root;
-    private JPanel HSPACER;
     private JPanel Botones;
-    private JPanel Atras;
-    private JButton atrasButton;
+    private JPanel Texto;
 
     public SelTipoCliente() {
         add(root);
@@ -47,26 +45,8 @@ public class SelTipoCliente extends JPanel implements Frame {
             frame.setVisible(true);
         };
 
-        ActionListener atras = (e) -> {
-            var panel = new Login();
-            var frame = (JFrame) this.getTopLevelAncestor();
-
-            frame.setTitle(panel.getTitleBarName());
-            frame.setMenuBar(panel.getMenuBar());
-
-            frame.remove(this);
-            frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-            frame.setLocationRelativeTo(null);
-            frame.setSize(frame.getSize());
-
-            frame.add(panel);
-            frame.pack();
-            frame.setVisible(true);
-        };
-
         PersFisButton.addActionListener(persfisica);
         EmpresaButton.addActionListener(empresa);
-        atrasButton.addActionListener(atras);
 
     }
 
@@ -96,28 +76,27 @@ public class SelTipoCliente extends JPanel implements Frame {
      */
     private void $$$setupUI$$$() {
         root = new JPanel();
-        root.setLayout(new GridLayoutManager(2, 3, new Insets(0, 0, 0, 0), -1, -1));
+        root.setLayout(new GridLayoutManager(3, 2, new Insets(0, 0, 0, 0), -1, -1));
         root.setPreferredSize(new Dimension(400, 200));
         Botones = new JPanel();
-        Botones.setLayout(new GridLayoutManager(2, 2, new Insets(0, 0, 0, 0), -1, -1));
-        root.add(Botones, new GridConstraints(0, 1, 2, 2, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+        Botones.setLayout(new GridLayoutManager(1, 2, new Insets(0, 0, 0, 0), -1, -1));
+        root.add(Botones, new GridConstraints(1, 0, 2, 2, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, new Dimension(-1, 100), null, 0, false));
         PersFisButton = new JButton();
         PersFisButton.setText("PERSONA FÍSICA");
-        Botones.add(PersFisButton, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
+        Botones.add(PersFisButton, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
         EmpresaButton = new JButton();
         EmpresaButton.setText("EMPRESA");
-        Botones.add(EmpresaButton, new GridConstraints(1, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        HSPACER = new JPanel();
-        HSPACER.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
-        Botones.add(HSPACER, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
-        Atras = new JPanel();
-        Atras.setLayout(new GridLayoutManager(2, 1, new Insets(0, 0, 0, 0), -1, -1));
-        root.add(Atras, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, new Dimension(2, -1), null, 0, false));
-        atrasButton = new JButton();
-        atrasButton.setText("Atras");
-        Atras.add(atrasButton, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        Botones.add(EmpresaButton, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        Texto = new JPanel();
+        Texto.setLayout(new GridLayoutManager(2, 1, new Insets(0, 0, 0, 0), -1, -1));
+        root.add(Texto, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, new Dimension(-1, 100), null, 0, false));
+        final JLabel label1 = new JLabel();
+        label1.setHorizontalAlignment(0);
+        label1.setHorizontalTextPosition(0);
+        label1.setText("<html>Seleccione si quiere crear una cuenta para una persona física o para una empresa</html>");
+        Texto.add(label1, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, null, new Dimension(300, -1), null, 0, false));
         final Spacer spacer1 = new Spacer();
-        Atras.add(spacer1, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
+        Texto.add(spacer1, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
     }
 
     /**
