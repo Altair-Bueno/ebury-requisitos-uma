@@ -12,7 +12,9 @@ import javax.swing.*;
 import java.awt.*;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 import java.util.concurrent.ExecutionException;
 
 public class AltaClienteWorker extends SwingWorker<Boolean, Void> {
@@ -44,7 +46,15 @@ public class AltaClienteWorker extends SwingWorker<Boolean, Void> {
             var transaction = session.beginTransaction();
 
             var format = new SimpleDateFormat("dd-MM-yyyy");
-            var parsed = format.parse(cliente.tFechaNac.getText());
+            var d = new SimpleDateFormat("MMMM", new Locale("es", "ES")).parse(cliente.fMM.getSelectedItem().toString());
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(d);
+            var parsed = format.parse(
+                    String.format("%02d", Integer.parseInt(cliente.fDD.getValue().toString()))
+                    + "-" + cal.get(Calendar.MONTH)
+                    + "-" + cliente.fYYYY.getValue().toString()
+
+            );
             var date = new java.util.Date();
             var login = new LoginEntity(cliente.tNIF.getText(), cliente.tPassword.getText(), Rol.User, null);
             var client = new ClientEntity(
@@ -75,8 +85,16 @@ public class AltaClienteWorker extends SwingWorker<Boolean, Void> {
 
             transaction.commit();
             session.close();
+
+            var m = "Registro completado con éxito.";
+            JOptionPane.showMessageDialog(this.cliente, m, m, JOptionPane.INFORMATION_MESSAGE);
+            return true;
+        } catch (Exception e){
+            var m = "Ha ocurrido un error en la operación de registro. Inténtelo de nuevo.";
+            JOptionPane.showMessageDialog(this.cliente, m, m, JOptionPane.ERROR_MESSAGE);
+            return false;
         }
-        return true;
+
     }
 
     @Override
@@ -87,8 +105,10 @@ public class AltaClienteWorker extends SwingWorker<Boolean, Void> {
             e.printStackTrace();
         } catch (ExecutionException e) {
             e.printStackTrace();
+        } finally {
+            setPanelEnabled(cliente, true);
+            cliente.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
         }
-        setPanelEnabled(cliente, true);
-        cliente.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+
     }
 }

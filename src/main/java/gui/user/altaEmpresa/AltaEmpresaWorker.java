@@ -69,10 +69,15 @@ public class AltaEmpresaWorker extends SwingWorker<Boolean, Void> {
 
             transaction.commit();
             session.close();
+
+            var m = "Registro completado con éxito.";
+            JOptionPane.showMessageDialog(this.empresa, m, m, JOptionPane.WARNING_MESSAGE);
+            return true;
         } catch (Exception ex){
+            var m = "Ha ocurrido un error en la operación de registro. Inténtelo de nuevo.";
+            JOptionPane.showMessageDialog(this.empresa, m, m, JOptionPane.WARNING_MESSAGE);
             return false;
         }
-        return true;
     }
 
     @Override

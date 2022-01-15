@@ -3,6 +3,7 @@ package gui.user.altaEmpresa;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import gui.Frame;
+import gui.login.Login;
 
 import javax.swing.*;
 import java.awt.*;
@@ -35,8 +36,19 @@ public class AltaEmpresa extends JPanel implements Frame {
         add(root);
 
         ActionListener cancelar = (e) -> {
-            var frame = (JFrame) this.getTopLevelAncestor();
-            frame.dispose();
+            var panel = new Login();
+            var frame = getAppFrame();
+            frame.setTitle(panel.getTitleBarName());
+            frame.setMenuBar(panel.getMenuBar());
+
+            frame.remove(this);
+            frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+            frame.setLocationRelativeTo(null);
+            frame.setSize(frame.getSize());
+
+            frame.add(panel);
+            frame.pack();
+            frame.setVisible(true);
         };
 
         ActionListener aceptar = (e) -> {
@@ -53,7 +65,7 @@ public class AltaEmpresa extends JPanel implements Frame {
             }
             if (!Arrays.equals(tPassword.getPassword(), tRepPassword.getPassword())) {
                 var m = "Las contraseñas no coinciden.";
-                JOptionPane.showMessageDialog(this, m, m, JOptionPane.WARNING_MESSAGE);
+                JOptionPane.showMessageDialog(this, m, m, JOptionPane.ERROR_MESSAGE);
                 ok = false;
             }
 
@@ -65,6 +77,10 @@ public class AltaEmpresa extends JPanel implements Frame {
 
         cancelarButton.addActionListener(cancelar);
         aceptarButton.addActionListener(aceptar);
+    }
+
+    private JFrame getAppFrame() {
+        return (JFrame) this.getTopLevelAncestor();
     }
 
     @Override

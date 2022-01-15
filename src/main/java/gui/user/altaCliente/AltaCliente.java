@@ -4,6 +4,7 @@ import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
 import gui.Frame;
+import gui.login.Login;
 
 import java.awt.event.ActionListener;
 
@@ -32,7 +33,6 @@ public class AltaCliente extends JPanel implements Frame {
     JTextField tNumero; //OK
     JTextField tCP; //OK
     JTextField tPais; //OK
-    JTextField tFechaNac;
     JButton cancelarButton;
     JButton aceptarButton;
     JPanel VSPACER;
@@ -43,7 +43,7 @@ public class AltaCliente extends JPanel implements Frame {
     private JPanel fechaN;
     JSpinner fDD;
     JComboBox fMM;
-    private JSpinner fYYYY;
+    JSpinner fYYYY;
 
     private SpinnerModel dayModel31 = new SpinnerNumberModel(1, 1, 31, 1); //default value,lower bound,upper bound,increment by
     private SpinnerModel dayModel30 = new SpinnerNumberModel(1, 1, 30, 1);
@@ -57,8 +57,19 @@ public class AltaCliente extends JPanel implements Frame {
         add(root);
 
         ActionListener cancelar = (e) -> {
-            var frame = (JFrame) this.getTopLevelAncestor();
-            frame.dispose();
+            var panel = new Login();
+            var frame = getAppFrame();
+            frame.setTitle(panel.getTitleBarName());
+            frame.setMenuBar(panel.getMenuBar());
+
+            frame.remove(this);
+            frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+            frame.setLocationRelativeTo(null);
+            frame.setSize(frame.getSize());
+
+            frame.add(panel);
+            frame.pack();
+            frame.setVisible(true);
         };
 
         ActionListener aceptar = (e) -> {
@@ -94,14 +105,7 @@ public class AltaCliente extends JPanel implements Frame {
         cancelarButton.addActionListener(cancelar);
         aceptarButton.addActionListener(aceptar);
         fMM.addActionListener(monthChange);
-
-        fYYYY.addChangeListener(new ChangeListener() {
-
-            @Override
-            public void stateChanged(ChangeEvent e) {
-                change();
-            }
-        });
+        fYYYY.addChangeListener(e -> change());
     }
 
     private void change() {
@@ -121,6 +125,9 @@ public class AltaCliente extends JPanel implements Frame {
         }
     }
 
+    private JFrame getAppFrame() {
+        return (JFrame) this.getTopLevelAncestor();
+    }
 
     @Override
     public String getTitleBarName() {

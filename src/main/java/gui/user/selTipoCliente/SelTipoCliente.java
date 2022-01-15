@@ -23,31 +23,43 @@ public class SelTipoCliente extends JPanel implements Frame {
         add(root);
         ActionListener persfisica = (e) -> {
             var panel = new AltaCliente();
-            var frame = new JFrame(panel.getTitleBarName());
+            var frame = getAppFrame();
+            frame.setTitle(panel.getTitleBarName());
             frame.setMenuBar(panel.getMenuBar());
-            frame.add(panel);
-            frame.pack();
+
+            frame.remove(this);
             frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
             frame.setLocationRelativeTo(null);
             frame.setSize(frame.getSize());
+
+            frame.add(panel);
+            frame.pack();
             frame.setVisible(true);
         };
 
         ActionListener empresa = (e) -> {
             var panel = new AltaEmpresa();
-            var frame = new JFrame(panel.getTitleBarName());
+            var frame = getAppFrame();
+            frame.setTitle(panel.getTitleBarName());
             frame.setMenuBar(panel.getMenuBar());
-            frame.add(panel);
-            frame.pack();
+
+            frame.remove(this);
             frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
             frame.setLocationRelativeTo(null);
             frame.setSize(frame.getSize());
+
+            frame.add(panel);
+            frame.pack();
             frame.setVisible(true);
         };
 
         PersFisButton.addActionListener(persfisica);
         EmpresaButton.addActionListener(empresa);
 
+    }
+
+    private JFrame getAppFrame() {
+        return (JFrame) this.getTopLevelAncestor();
     }
 
     @Override

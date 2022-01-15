@@ -52,7 +52,7 @@ public class Login extends JPanel implements Frame {
 
     }
 
-    public JFrame getAppFrame() {
+    JFrame getAppFrame() {
         return (JFrame) this.getTopLevelAncestor();
     }
 
