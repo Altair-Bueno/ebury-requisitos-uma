@@ -93,7 +93,7 @@ public class AltaEmpresa extends JPanel implements Frame {
         frame.setVisible(true);
     }
 
-    private JFrame getAppFrame() {
+    JFrame getAppFrame() {
         return (JFrame) this.getTopLevelAncestor();
     }
 

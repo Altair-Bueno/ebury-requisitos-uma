@@ -6,6 +6,8 @@ import database.tables.ClientEntity;
 import database.tables.LoginEntity;
 import database.types.Rol;
 import database.types.Status;
+import gui.login.Login;
+import gui.user.altaAsociadoEmpresa.altaAsociadoEmpresa;
 import org.hibernate.Session;
 
 import javax.swing.*;
@@ -73,11 +75,24 @@ public class AltaEmpresaWorker extends SwingWorker<Void, Void> {
 
             var m = "Registro completado con éxito.";
             if(JOptionPane.showOptionDialog(null, m, "Éxito.", JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, null, null) == JOptionPane.OK_OPTION){
-                empresa.back2Login();
+                var panel = new altaAsociadoEmpresa(empresa);
+                var frame = empresa.getAppFrame();
+                frame.setTitle(panel.getTitleBarName());
+                frame.setMenuBar(panel.getMenuBar());
+
+                frame.remove(empresa);
+                frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+                frame.setLocationRelativeTo(null);
+                frame.setSize(frame.getSize());
+
+                frame.add(panel);
+                frame.pack();
+                frame.setVisible(true);
             }
         } catch (Exception ex){
             var m = "Ha ocurrido un error en la operación de registro. Inténtelo de nuevo.";
             JOptionPane.showMessageDialog(this.empresa, m, m, JOptionPane.WARNING_MESSAGE);
+            ex.printStackTrace();
         }
 
         return null;
