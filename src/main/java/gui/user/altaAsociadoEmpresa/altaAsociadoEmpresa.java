@@ -127,6 +127,24 @@ public class altaAsociadoEmpresa extends JPanel implements Frame {
 
         fMM.addActionListener(monthChange);
         fYYYY.addChangeListener(e -> change());
+        cancelarButton.addActionListener(e -> {
+            tNIF.setText("");
+            primerNom.setText("");
+            primerAp.setText("");
+            segundoNom.setText("");
+            segundoAp.setText("");
+            lTipo.setSelectedIndex(0);
+            calle.setText("");
+            num.setText("");
+            ppo.setText("");
+            ciudad.setText("");
+            cPais.setSelectedItem("");
+            cbDirActual.setSelected(false);
+            region.setText("");
+            cp.setText("");
+            pwd.setText("");
+            repwd.setText("");
+        });
         añadirButton.addActionListener(addAS);
         borrarButton.addActionListener(delAS);
     }
@@ -138,7 +156,10 @@ public class altaAsociadoEmpresa extends JPanel implements Frame {
 
         tablaAsociados.setModel(model);
         try (Session session = HibernateStartUp.getSessionFactory().openSession()) {
-            var listaRel = (List<RelationEntity>) session.createQuery("FROM RelationEntity WHERE Client_ID = " + empresa.getEmpresa().getId()).list();
+            var querry = session.createQuery("FROM RelationEntity WHERE clientId = :empresa");
+            querry.setParameter("empresa", empresa.getEmpresa());
+            @SuppressWarnings("unchecked")
+            var listaRel = (List<RelationEntity>) querry.getResultList();
             for (RelationEntity r : listaRel) {
                 DefaultTableModel tabmod = (DefaultTableModel) tablaAsociados.getModel();
                 Vector datos = new Vector();

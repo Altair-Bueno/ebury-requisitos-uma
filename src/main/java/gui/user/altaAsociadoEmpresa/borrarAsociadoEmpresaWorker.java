@@ -1,6 +1,7 @@
 package gui.user.altaAsociadoEmpresa;
 
 import database.HibernateStartUp;
+import database.tables.*;
 import org.hibernate.Session;
 
 import javax.swing.*;
@@ -30,15 +31,26 @@ public class borrarAsociadoEmpresaWorker extends SwingWorker<Void,Void> {
         try(Session session = HibernateStartUp.getSessionFactory().openSession()){
             var transaction = session.beginTransaction();
 
-            var NIFseleccionado = asociadoEmpresa.tablaAsociados.getValueAt(
+            var NIFseleccionado = (String)asociadoEmpresa.tablaAsociados.getValueAt(
                     asociadoEmpresa.tablaAsociados.getSelectedRow(),
                     1
             );
 
-            var client = session.createQuery("FROM AssociatedStaffEntity WHERE dni = " + NIFseleccionado.toString());
-            var login = session.createQuery("FROM LoginEntity WHERE user = " + NIFseleccionado.toString());
-            var address = session.createQuery("FROM AddressAssociatedStaffEntity WHERE AssociatedStaffDNI = " + NIFseleccionado.toString());
-            var relation = session.createQuery("FROM RelationEntity WHERE associatedStaffDni = " + NIFseleccionado.toString());
+            var queryClient = session.createQuery("FROM AssociatedStaffEntity WHERE dni = :dni");
+            queryClient.setParameter("dni",NIFseleccionado);
+            var client = (AssociatedStaffEntity) queryClient.getResultList().get(0);
+
+            var loginQuery = session.createQuery("FROM LoginEntity WHERE asFk = :user");
+            loginQuery.setParameter("user",client);
+            var login = (LoginEntity) loginQuery.getResultList().get(0);
+
+            var addressQuery = session.createQuery("FROM AddressAssociatedStaffEntity WHERE AssociatedStaffDNI =:dni");
+            addressQuery.setParameter("dni",client);
+            var address = (AddressAssociatedStaffEntity) addressQuery.getResultList().get(0);
+
+            var relationQuery = session.createQuery("FROM RelationEntity WHERE associatedStaffDni=:dni");
+            relationQuery.setParameter("dni",client);
+            var relation = (RelationEntity) relationQuery.getResultList().get(0);
 
             session.delete(login);
             session.delete(relation);

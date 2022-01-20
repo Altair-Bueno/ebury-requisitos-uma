@@ -51,7 +51,6 @@ public class altaAsociadoEmpresaWorker extends SwingWorker<Void, Void> {
             );
 
             var date = new java.util.Date();
-            var login = new LoginEntity(asociadoEmpresa.tNIF.getText(), asociadoEmpresa.pwd.getText(), Rol.User, null);
 
 
             var asociadoEm = new AssociatedStaffEntity(
@@ -76,6 +75,7 @@ public class altaAsociadoEmpresaWorker extends SwingWorker<Void, Void> {
                     asociadoEmpresa.empresa.getEmpresa(),
                     new java.sql.Date(date.getTime())
             );
+            var login = new LoginEntity(asociadoEmpresa.tNIF.getText(), asociadoEmpresa.pwd.getText(), Rol.User, asociadoEm);
 
             session.save(asociadoEm);
             session.save(relation);

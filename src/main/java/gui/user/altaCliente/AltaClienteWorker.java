@@ -57,7 +57,6 @@ public class AltaClienteWorker extends SwingWorker<Void, Void> {
             );
 
             var date = new java.util.Date();
-            var login = new LoginEntity(cliente.tNIF.getText(), cliente.tPassword.getText(), Rol.User, null);
             var client = new ClientEntity(
                     Status.Active,
                     cliente.tNIF.getText(),
@@ -67,6 +66,7 @@ public class AltaClienteWorker extends SwingWorker<Void, Void> {
                     new java.sql.Date(parsed.getTime()),
                     new java.sql.Date(date.getTime())
             );
+            var login = new LoginEntity(cliente.tNIF.getText(), cliente.tPassword.getText(), Rol.User, null);
 
             var address = new AddressEntity(
                     client,
