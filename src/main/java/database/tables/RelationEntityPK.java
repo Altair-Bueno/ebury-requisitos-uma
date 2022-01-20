@@ -5,12 +5,10 @@ import java.io.Serializable;
 import java.util.Objects;
 
 public class RelationEntityPK implements Serializable {
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Id
     @ManyToOne
     @JoinColumn(name = "AssociatedStaff_DNI")
     private AssociatedStaffEntity associatedStaffDni;
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Id
     @ManyToOne
     @JoinColumn(name = "Client_ID")

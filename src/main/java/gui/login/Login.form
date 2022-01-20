@@ -29,7 +29,7 @@
           <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
-          <text value="Username"/>
+          <text value="Usuario"/>
         </properties>
       </component>
       <component id="8e39f" class="javax.swing.JLabel" binding="label2">
@@ -37,7 +37,7 @@
           <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
-          <text value="Password"/>
+          <text value="Contraseña"/>
         </properties>
       </component>
       <component id="668bd" class="javax.swing.JLabel" binding="image">
@@ -72,7 +72,7 @@
               <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
-              <text value="Sign Up"/>
+              <text value="Registrarse"/>
             </properties>
           </component>
           <component id="7ad67" class="javax.swing.JButton" binding="loginButton" default-binding="true">
@@ -80,7 +80,7 @@
               <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
-              <text value="Login"/>
+              <text value="Iniciar sesión"/>
             </properties>
           </component>
         </children>

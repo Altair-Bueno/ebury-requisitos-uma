@@ -2,6 +2,7 @@ package gui.user.altaEmpresa;
 
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
+import database.tables.ClientEntity;
 import gui.Frame;
 import gui.login.Login;
 
@@ -34,6 +35,7 @@ public class AltaEmpresa extends JPanel implements Frame {
 
     private boolean ok = true;
     Map<String, String> countries = new HashMap<>();
+    private ClientEntity empresa;
 
     public AltaEmpresa() {
         countries.put("-", "");
@@ -95,6 +97,14 @@ public class AltaEmpresa extends JPanel implements Frame {
 
     JFrame getAppFrame() {
         return (JFrame) this.getTopLevelAncestor();
+    }
+
+    public ClientEntity getEmpresa() {
+        return empresa;
+    }
+
+    public void setEmpresa(ClientEntity empresa) {
+        this.empresa = empresa;
     }
 
     @Override

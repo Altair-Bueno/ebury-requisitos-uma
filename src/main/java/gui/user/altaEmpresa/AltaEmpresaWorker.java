@@ -66,6 +66,8 @@ public class AltaEmpresaWorker extends SwingWorker<Void, Void> {
                     empresa.countries.get(empresa.cPais.getSelectedItem().toString())
             );
 
+            empresa.setEmpresa(client);
+
             session.persist(client);
             session.persist(address);
             session.persist(login);

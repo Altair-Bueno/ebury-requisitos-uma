@@ -1,5 +1,7 @@
 package database.tables;
 
+import org.hibernate.annotations.GenericGenerator;
+
 import javax.persistence.*;
 import java.sql.Date;
 import java.util.Objects;
@@ -8,12 +10,10 @@ import java.util.Objects;
 @Table(name = "Relation", schema = "grupo10DB", catalog = "")
 @IdClass(RelationEntityPK.class)
 public class RelationEntity {
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Id
     @ManyToOne
     @JoinColumn(name = "AssociatedStaff_DNI")
     private AssociatedStaffEntity associatedStaffDni;
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Id
     @ManyToOne
     @JoinColumn(name = "Client_ID")
@@ -27,6 +27,16 @@ public class RelationEntity {
     @Basic
     @Column(name = "authorised")
     private boolean authorised;
+
+    public RelationEntity(AssociatedStaffEntity associatedStaffDni, ClientEntity clientId, Date start){
+        this.associatedStaffDni = associatedStaffDni;
+        this.clientId = clientId;
+        this.start = start;
+    }
+
+    public RelationEntity() {
+
+    }
 
     public AssociatedStaffEntity getAssociatedStaffDni() {
         return associatedStaffDni;

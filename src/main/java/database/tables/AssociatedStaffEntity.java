@@ -3,6 +3,7 @@ package database.tables;
 import database.HibernateStartUp;
 import database.types.Status;
 import org.hibernate.Session;
+import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.util.List;
@@ -11,7 +12,6 @@ import java.util.Objects;
 @Entity
 @Table(name = "AssociatedStaff", schema = "grupo10DB", catalog = "")
 public class AssociatedStaffEntity {
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Id
     @Column(name = "DNI")
     private String dni;
@@ -28,6 +28,22 @@ public class AssociatedStaffEntity {
     @Column(name = "state")
     @Enumerated(EnumType.STRING)
     private Status state;
+    @Basic
+    @Column(name = "tipoAsociado")
+    private String tipoAsociado;
+
+    public AssociatedStaffEntity(String dni, String name, String lastName1, String lastName2, String tipoAsociado){
+        this.dni = dni;
+        this.name = name;
+        this.lastName1 = lastName1;
+        this.lastName2 = lastName2;
+        this.state = Status.Active;
+        this.tipoAsociado = tipoAsociado;
+    }
+
+    public AssociatedStaffEntity() {
+
+    }
 
     public String getDni() {
         return dni;
@@ -67,6 +83,14 @@ public class AssociatedStaffEntity {
 
     public void setState(Status state) {
         this.state = state;
+    }
+
+    public String getTipoAsociado() {
+        return tipoAsociado;
+    }
+
+    public void setTipoAsociado(String tipoAsociado) {
+        this.tipoAsociado = tipoAsociado;
     }
 
     @SuppressWarnings("unchecked")

@@ -27,6 +27,7 @@
 
 
         <mapping class="database.tables.AddressEntity"/>
+        <mapping class="database.tables.AddressAssociatedStaffEntity"/>
         <mapping class="database.tables.AssociatedStaffEntity"/>
         <mapping class="database.tables.BankAccountEntity"/>
         <mapping class="database.tables.ClientEntity"/>
