@@ -2,6 +2,7 @@ package gui.login;
 
 import database.HibernateStartUp;
 import database.tables.LoginEntity;
+import gui.Frame;
 import gui.user.MainPanel;
 import org.hibernate.Session;
 
@@ -39,33 +40,50 @@ class SearchUserWorker extends SwingWorker<LoginEntity, Void> {
         return null;
     }
 
+    void setPanel(Frame panel){
+        var appFrame = login.getAppFrame();
+
+        appFrame.setTitle(panel.getTitleBarName());
+        appFrame.setMenuBar(panel.getMenuBar());
+        appFrame.remove(login);
+        appFrame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+        appFrame.setLocationRelativeTo(null);
+        appFrame.setSize(appFrame.getSize());
+        appFrame.add((JPanel) panel);
+
+        appFrame.addWindowListener(new WindowAdapter() {
+            public void windowClosing(WindowEvent e) {
+                System.exit(0);
+            }
+        });
+
+        appFrame.pack();
+        appFrame.setVisible(true);
+    }
     @Override
     protected void done() {
         try {
             var result = super.get();
-            var panel = switch (result.getRol()) {
-                case Regler -> new gui.alemania.Informe();
-                case Regelgever -> new gui.holanda.Informe();
-                case User -> new MainPanel(result);
-            };
-            var appFrame = login.getAppFrame();
-
-            appFrame.setTitle(panel.getTitleBarName());
-            appFrame.setMenuBar(panel.getMenuBar());
-            appFrame.remove(login);
-            appFrame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
-            appFrame.setLocationRelativeTo(null);
-            appFrame.setSize(appFrame.getSize());
-            appFrame.add(panel);
-
-            appFrame.addWindowListener(new WindowAdapter() {
-                public void windowClosing(WindowEvent e) {
-                    System.exit(0);
+            Frame panel = new Login();
+            switch (result.getRol()) {
+                case Regler -> {
+                    setPanel(new gui.alemania.Informe());
                 }
-            });
+                case Regelgever -> {
+                    setPanel(new gui.holanda.Informe());
+                }
+                case User -> {
+                    var m = "Inicio de sesión exitoso.";
+                    if(JOptionPane.showOptionDialog(null, m, "Éxito.", JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, null, null) == JOptionPane.OK_OPTION){
+                        setPanel(new Login());
+                    }
+                }
+            };
 
-            appFrame.pack();
-            appFrame.setVisible(true);
+
+
+
+
         } catch (NullPointerException e) {
             var m = "El usuario y/o contraseña no se reconocen";
             JOptionPane.showMessageDialog(login, m, m, JOptionPane.WARNING_MESSAGE);
@@ -77,7 +95,7 @@ class SearchUserWorker extends SwingWorker<LoginEntity, Void> {
             login.usernameField.setEnabled(true);
             login.passwordField.setEnabled(true);
             login.loginButton.setEnabled(true);
-            login.signUpButton.setEnabled(false);
+            login.signUpButton.setEnabled(true);
             login.setCursor(Cursor.getDefaultCursor());
         }
     }
