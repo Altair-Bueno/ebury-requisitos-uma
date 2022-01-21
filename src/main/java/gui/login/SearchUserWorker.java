@@ -46,7 +46,7 @@ class SearchUserWorker extends SwingWorker<LoginEntity, Void> {
         appFrame.setTitle(panel.getTitleBarName());
         appFrame.setMenuBar(panel.getMenuBar());
         appFrame.remove(login);
-        appFrame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+        appFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         appFrame.setLocationRelativeTo(null);
         appFrame.setSize(appFrame.getSize());
         appFrame.add((JPanel) panel);

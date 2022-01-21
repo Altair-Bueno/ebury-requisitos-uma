@@ -43,7 +43,7 @@ public class Login extends JPanel implements Frame {
             frame.setMenuBar(panel.getMenuBar());
 
             frame.remove(this);
-            frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+            frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
             frame.setLocationRelativeTo(null);
             frame.setSize(frame.getSize());
 
