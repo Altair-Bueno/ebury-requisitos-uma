@@ -31,15 +31,18 @@ public class AddressAssociatedStaffEntity {
     @Basic
     @Column(name = "country")
     private String country;
+    @Basic
+    @Column(name = "isValid")
+    private Boolean isValid;
 
-    public AddressAssociatedStaffEntity(AssociatedStaffEntity AssociatedStaffDNI, String street, String number, String city, String postalCode, String country) {
-        //this.id = 0;
+    public AddressAssociatedStaffEntity(AssociatedStaffEntity AssociatedStaffDNI, String street, String number, String city, String postalCode, String country, boolean isValid) {
         this.AssociatedStaffDNI = AssociatedStaffDNI;
         this.street = street;
         this.number = number;
         this.city = city;
         this.postalCode = postalCode;
         this.country = country;
+        this.isValid = isValid;
     }
 
     public AddressAssociatedStaffEntity() {
@@ -100,6 +103,14 @@ public class AddressAssociatedStaffEntity {
 
     public void setCountry(String country) {
         this.country = country;
+    }
+
+    public Boolean getValid() {
+        return isValid;
+    }
+
+    public void setValid(Boolean valid) {
+        isValid = valid;
     }
 
     @Override

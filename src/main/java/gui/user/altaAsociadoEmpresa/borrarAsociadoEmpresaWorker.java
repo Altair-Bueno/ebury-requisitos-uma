@@ -1,6 +1,10 @@
 package gui.user.altaAsociadoEmpresa;
 
 import database.HibernateStartUp;
+import database.tables.AddressAssociatedStaffEntity;
+import database.tables.AssociatedStaffEntity;
+import database.tables.LoginEntity;
+import database.tables.RelationEntity;
 import org.hibernate.Session;
 
 import javax.swing.*;
@@ -35,10 +39,10 @@ public class borrarAsociadoEmpresaWorker extends SwingWorker<Void,Void> {
                     1
             );
 
-            var client = session.createQuery("FROM AssociatedStaffEntity WHERE dni = " + NIFseleccionado.toString());
-            var login = session.createQuery("FROM LoginEntity WHERE user = " + NIFseleccionado.toString());
-            var address = session.createQuery("FROM AddressAssociatedStaffEntity WHERE AssociatedStaffDNI = " + NIFseleccionado.toString());
-            var relation = session.createQuery("FROM RelationEntity WHERE associatedStaffDni = " + NIFseleccionado.toString());
+            var client = (AssociatedStaffEntity) session.createQuery("FROM AssociatedStaffEntity WHERE dni = '" + NIFseleccionado.toString() + "'").list().get(0);
+            var login = (LoginEntity) session.createQuery("FROM LoginEntity WHERE asFk = '" + client.getDni() + "'").list().get(0);
+            var address = (AddressAssociatedStaffEntity) session.createQuery("FROM AddressAssociatedStaffEntity WHERE AssociatedStaffDNI = '" + client.getDni() + "'").list().get(0);
+            var relation = (RelationEntity) session.createQuery("FROM RelationEntity WHERE associatedStaffDni = '" + client.getDni() + "'").list().get(0);
 
             session.delete(login);
             session.delete(relation);

@@ -63,7 +63,8 @@ public class AltaEmpresaWorker extends SwingWorker<Void, Void> {
                     empresa.tNumero.getText(),
                     empresa.tCiudad.getText(),
                     empresa.tCP.getText(),
-                    empresa.countries.get(empresa.cPais.getSelectedItem().toString())
+                    empresa.countries.get(empresa.cPais.getSelectedItem().toString()),
+                    empresa.cbDirActual.isSelected()
             );
 
             empresa.setEmpresa(client);

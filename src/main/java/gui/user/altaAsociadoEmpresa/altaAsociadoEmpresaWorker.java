@@ -45,9 +45,9 @@ public class altaAsociadoEmpresaWorker extends SwingWorker<Void, Void> {
             SimpleDateFormat outputFormat = new SimpleDateFormat("MM");
 
             var parsed = format.parse(
-                    String.format("%02d", Integer.parseInt(asociadoEmpresa.fDD.getValue().toString()))
+                    String.format("%02d", (Integer) asociadoEmpresa.fDD.getSelectedItem())
                             + "-" + outputFormat.format(cal.getTime())
-                            + "-" + asociadoEmpresa.fYYYY.getValue().toString()
+                            + "-" + asociadoEmpresa.fYYYY.getSelectedItem().toString()
             );
 
             var date = new java.util.Date();
@@ -56,7 +56,7 @@ public class altaAsociadoEmpresaWorker extends SwingWorker<Void, Void> {
 
             var asociadoEm = new AssociatedStaffEntity(
                     asociadoEmpresa.tNIF.getText(),
-                    asociadoEmpresa.primerNom.getText() + " " + asociadoEmpresa.segundoNom.getText(),
+                    nombre,
                     asociadoEmpresa.primerAp.getText(),
                     asociadoEmpresa.segundoAp.getText(),
                     asociadoEmpresa.lTipo.getSelectedItem().toString()

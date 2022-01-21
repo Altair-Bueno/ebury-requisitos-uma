@@ -237,12 +237,6 @@
                           <text value="Año"/>
                         </properties>
                       </component>
-                      <component id="6a2f2" class="javax.swing.JSpinner" binding="fDD" custom-create="true">
-                        <constraints>
-                          <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
-                        </constraints>
-                        <properties/>
-                      </component>
                       <component id="5f885" class="javax.swing.JComboBox" binding="fMM">
                         <constraints>
                           <grid row="0" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
@@ -264,14 +258,6 @@
                           </model>
                         </properties>
                       </component>
-                      <component id="1c249" class="javax.swing.JSpinner" binding="fYYYY" custom-create="true">
-                        <constraints>
-                          <grid row="0" column="5" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
-                            <preferred-size width="40" height="-1"/>
-                          </grid>
-                        </constraints>
-                        <properties/>
-                      </component>
                       <component id="b4c4a" class="javax.swing.JLabel">
                         <constraints>
                           <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
@@ -279,6 +265,18 @@
                         <properties>
                           <text value="Fecha Nacimiento(*)"/>
                         </properties>
+                      </component>
+                      <component id="21f47" class="javax.swing.JComboBox" binding="fDD" custom-create="true">
+                        <constraints>
+                          <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
+                        </constraints>
+                        <properties/>
+                      </component>
+                      <component id="8c300" class="javax.swing.JComboBox" binding="fYYYY" custom-create="true">
+                        <constraints>
+                          <grid row="0" column="5" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
+                        </constraints>
+                        <properties/>
                       </component>
                     </children>
                   </grid>

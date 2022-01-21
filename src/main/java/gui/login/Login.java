@@ -26,8 +26,14 @@ public class Login extends JPanel implements Frame {
         ActionListener loginListener = (e) -> {
             var username = usernameField.getText();
             var password = String.valueOf(passwordField.getPassword());
-            var search = new SearchUserWorker(username, password, this);
-            search.execute();
+            if (username.isBlank() && password.isBlank())
+                JOptionPane.showMessageDialog(this, "Introduzca el usuario y la contraseña");
+            else if (username.isBlank()) JOptionPane.showMessageDialog(this, "Introduzca el usuario.");
+            else if (password.isBlank()) JOptionPane.showMessageDialog(this, "Introduzca la contraseña");
+            else {
+                var search = new SearchUserWorker(username, password, this);
+                search.execute();
+            }
         };
         ActionListener signUp = (e) -> {
             var panel = new SelTipoCliente();

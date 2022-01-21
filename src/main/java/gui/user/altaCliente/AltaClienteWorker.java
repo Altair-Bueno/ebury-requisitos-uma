@@ -51,9 +51,9 @@ public class AltaClienteWorker extends SwingWorker<Void, Void> {
             cal.setTime(inputFormat.parse(cliente.fMM.getSelectedItem().toString()));
             SimpleDateFormat outputFormat = new SimpleDateFormat("MM");
             var parsed = format.parse(
-                    String.format("%02d", Integer.parseInt(cliente.fDD.getValue().toString()))
+                    String.format("%02d", (Integer) cliente.fDD.getSelectedItem())
                     + "-" + outputFormat.format(cal.getTime())
-                    + "-" + cliente.fYYYY.getValue().toString()
+                    + "-" + cliente.fYYYY.getSelectedItem().toString()
             );
 
             var date = new java.util.Date();
@@ -74,7 +74,8 @@ public class AltaClienteWorker extends SwingWorker<Void, Void> {
                     cliente.tNumero.getText(),
                     cliente.tCiudad.getText(),
                     cliente.tCP.getText(),
-                    cliente.countries.get(cliente.cPais.getSelectedItem().toString())
+                    cliente.countries.get(cliente.cPais.getSelectedItem().toString()),
+                    cliente.cbValid.isSelected()
             );
             session.save(client);
             session.save(address);

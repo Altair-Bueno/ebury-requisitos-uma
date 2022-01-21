@@ -32,7 +32,7 @@ public class AddressEntity {
     @Column(name = "country")
     private String country;
 
-    public AddressEntity(ClientEntity clientId, String street, String number, String city, String postalCode, String country) {
+    public AddressEntity(ClientEntity clientId, String street, String number, String city, String postalCode, String country, Boolean isValid) {
         //this.id = 0;
         this.clientId = clientId;
         this.street = street;
@@ -40,6 +40,7 @@ public class AddressEntity {
         this.city = city;
         this.postalCode = postalCode;
         this.country = country;
+        this.isValid = isValid;
     }
 
     public AddressEntity() {

@@ -18,6 +18,8 @@ import javax.swing.text.DefaultFormatter;
 import javax.swing.text.StyleContext;
 import java.awt.*;
 import java.awt.event.ActionListener;
+import java.text.DateFormatSymbols;
+import java.time.YearMonth;
 import java.util.*;
 import java.util.List;
 
@@ -37,9 +39,9 @@ public class altaAsociadoEmpresa extends JPanel implements Frame {
     private JPanel nifPanel;
     private JPanel fechaNacTipoPanel;
     private JPanel fechaN;
-    JSpinner fDD;
+    JComboBox fDD;
     public JComboBox fMM;
-    JSpinner fYYYY;
+    JComboBox fYYYY;
     JComboBox lTipo;
     JTextField calle;
     JTextField num;
@@ -49,7 +51,7 @@ public class altaAsociadoEmpresa extends JPanel implements Frame {
     JTextField ciudad;
     JTextField region;
     JTextField cp;
-    private JCheckBox cbDirActual;
+    JCheckBox cbDirActual;
     private JPanel cPRCpPanel;
     private JPanel ciudadPaisVPanel;
     private JPanel regionCpPanel;
@@ -69,12 +71,6 @@ public class altaAsociadoEmpresa extends JPanel implements Frame {
 
     AltaEmpresa empresa;
 
-    private SpinnerModel dayModel31 = new SpinnerNumberModel(1, 1, 31, 1); //default value,lower bound,upper bound,increment by
-    private SpinnerModel dayModel30 = new SpinnerNumberModel(1, 1, 30, 1);
-    private SpinnerModel dayModel28 = new SpinnerNumberModel(1, 1, 28, 1);
-    private SpinnerModel dayModel29 = new SpinnerNumberModel(1, 1, 29, 1);
-    private List<String> months31 = new ArrayList(Arrays.asList("Enero", "Marzo", "Mayo", "Julio", "Agosto", "Octubre", "Diciembre"));
-    private List<String> months30 = new ArrayList<>(Arrays.asList("Abril", "Junio", "Septiembre", "Noviembre"));
     Map<String, String> countries = new HashMap<>();
 
     public altaAsociadoEmpresa(AltaEmpresa empresa) {
@@ -89,7 +85,7 @@ public class altaAsociadoEmpresa extends JPanel implements Frame {
         add(root);
 
 
-        ActionListener monthChange = (e) -> {
+        ActionListener dateChange = (e) -> {
             change();
         };
 
@@ -125,14 +121,42 @@ public class altaAsociadoEmpresa extends JPanel implements Frame {
             worker.execute();
         };
 
-        fMM.addActionListener(monthChange);
-        fYYYY.addChangeListener(e -> change());
+        ActionListener finalizarAS = (e) -> {
+            var m = "La cuenta de empresa ha sido dada de alta satisfactoriamente.";
+            if (JOptionPane.showOptionDialog(this, m, m, JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, null, null) == JOptionPane.OK_OPTION) {
+                back2Login();
+            }
+        };
+
+        fMM.addActionListener(dateChange);
+        fYYYY.addActionListener(e -> change());
         añadirButton.addActionListener(addAS);
         borrarButton.addActionListener(delAS);
+        finalizarButton.addActionListener(finalizarAS);
+    }
+
+    void back2Login() {
+        var panel = new Login();
+        var frame = getAppFrame();
+        frame.setTitle(panel.getTitleBarName());
+        frame.setMenuBar(panel.getMenuBar());
+
+        frame.remove(this);
+        frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+        frame.setLocationRelativeTo(null);
+        frame.setSize(frame.getSize());
+
+        frame.add(panel);
+        frame.pack();
+        frame.setVisible(true);
+    }
+
+    private JFrame getAppFrame() {
+        return (JFrame) this.getTopLevelAncestor();
     }
 
     void populateTable() {
-        String[] colHeadings = {"Nombre", "NIF", "Tipo"};
+        String[] colHeadings = {"Nombre", "NIF", "Tipo", ""};
         DefaultTableModel model = new DefaultTableModel();
         model.setColumnIdentifiers(colHeadings);
 
@@ -154,20 +178,51 @@ public class altaAsociadoEmpresa extends JPanel implements Frame {
     }
 
     private void change() {
-        var mes = fMM.getSelectedItem().toString();
-        var year = Integer.parseInt(fYYYY.getValue().toString());
-        if (months31.contains(mes)) {
-            fDD.setModel(dayModel31);
-        } else if (months30.contains(mes)) {
-            fDD.setModel(dayModel30);
-        } else {
-            if (year % 4 == 0) {
-                fDD.setModel(dayModel29);
-            } else {
-                fDD.setModel(dayModel28);
-            }
+        var ym = YearMonth.of((Integer) fYYYY.getSelectedItem(), fMM.getSelectedIndex() + 1);
 
+        fillDays(ym.lengthOfMonth());
+    }
+
+    private void fillDays(int length) {
+        var array = new ArrayList<>();
+        for (int i = 1; i <= length; i++) {
+            array.add(i);
         }
+
+        fDD.setModel(new DefaultComboBoxModel(array.toArray()));
+    }
+
+    private void setUpCalendar() {
+        var y = Calendar.getInstance().get(Calendar.YEAR);
+        var d = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
+        var m = Calendar.getInstance().get(Calendar.MONTH);
+        var days = YearMonth.of(y, m + 1).lengthOfMonth();
+        var dfs = new DateFormatSymbols();
+        var array = new ArrayList<>();
+
+        // Meter años en el combobox
+
+        for (int i = y - 150; i <= y; i++) {
+            array.add(i);
+        }
+
+        fYYYY = new JComboBox(array.toArray());
+        fYYYY.setSelectedIndex(fYYYY.getItemCount() - 1);
+
+        // Meter meses en el combobox
+
+        fMM = new JComboBox(dfs.getMonths());
+        var mm = (DefaultComboBoxModel) fMM.getModel();
+        fMM.setSelectedIndex(mm.getIndexOf(dfs.getMonths()[m]));
+
+        // Meter dias en el combobox
+
+        fDD = new JComboBox();
+        fillDays(days);
+
+        var dm = (DefaultComboBoxModel) fDD.getModel();
+        fDD.setSelectedIndex(dm.getIndexOf(d));
+
     }
 
     /**
@@ -266,7 +321,6 @@ public class altaAsociadoEmpresa extends JPanel implements Frame {
         if (label10Font != null) label10.setFont(label10Font);
         label10.setText("Año");
         fechaN.add(label10, new GridConstraints(1, 5, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        fechaN.add(fDD, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         fMM = new JComboBox();
         final DefaultComboBoxModel defaultComboBoxModel1 = new DefaultComboBoxModel();
         defaultComboBoxModel1.addElement("Enero");
@@ -283,10 +337,11 @@ public class altaAsociadoEmpresa extends JPanel implements Frame {
         defaultComboBoxModel1.addElement("Diciembre");
         fMM.setModel(defaultComboBoxModel1);
         fechaN.add(fMM, new GridConstraints(0, 3, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        fechaN.add(fYYYY, new GridConstraints(0, 5, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(40, -1), null, 0, false));
         final JLabel label11 = new JLabel();
         label11.setText("Fecha Nacimiento(*)");
         fechaN.add(label11, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        fechaN.add(fDD, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        fechaN.add(fYYYY, new GridConstraints(0, 5, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final JPanel panel1 = new JPanel();
         panel1.setLayout(new GridLayoutManager(2, 3, new Insets(0, 0, 0, 0), -1, -1));
         fechaNacTipoPanel.add(panel1, new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
@@ -447,15 +502,7 @@ public class altaAsociadoEmpresa extends JPanel implements Frame {
     private void createUIComponents() {
         // TODO: place custom component creation code here
 
-        fDD = new JSpinner();
-        fDD.setModel(dayModel31);
-        var yM = new SpinnerNumberModel(2022, 1900, 2022, 1);
-        fYYYY = new JSpinner(yM);
-        fYYYY.setEditor(new JSpinner.NumberEditor(fYYYY, "####"));
-        JComponent comp = fYYYY.getEditor();
-        JFormattedTextField field = (JFormattedTextField) comp.getComponent(0);
-        DefaultFormatter formatter = (DefaultFormatter) field.getFormatter();
-        formatter.setCommitsOnValidEdit(true);
+        setUpCalendar();
 
         var keys = new TreeSet<>(countries.keySet());
         var c = new ArrayList<String>();
