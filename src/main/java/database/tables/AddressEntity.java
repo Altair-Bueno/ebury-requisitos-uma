@@ -21,7 +21,7 @@ public class AddressEntity {
     private String street;
     @Basic
     @Column(name = "number")
-    private String number;
+    private int number;
     @Basic
     @Column(name = "city")
     private String city;
@@ -35,7 +35,7 @@ public class AddressEntity {
     @Column(name = "isValid")
     private boolean isValid;
 
-    public AddressEntity(ClientEntity clientId, String street, String number, String city, String postalCode, String country, Boolean isValid) {
+    public AddressEntity(ClientEntity clientId, String street, int number, String city, String postalCode, String country, String plantaPuertaOficina, Boolean isValid) {
         //this.id = 0;
         this.clientId = clientId;
         this.street = street;
@@ -74,11 +74,11 @@ public class AddressEntity {
         this.street = street;
     }
 
-    public String getNumber() {
+    public int getNumber() {
         return number;
     }
 
-    public void setNumber(String number) {
+    public void setNumber(int number) {
         this.number = number;
     }
 

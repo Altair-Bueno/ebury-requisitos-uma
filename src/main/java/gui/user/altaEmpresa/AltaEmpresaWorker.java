@@ -6,17 +6,11 @@ import database.tables.ClientEntity;
 import database.tables.LoginEntity;
 import database.types.Rol;
 import database.types.Status;
-import gui.login.Login;
 import gui.user.altaAsociadoEmpresa.altaAsociadoEmpresa;
 import org.hibernate.Session;
 
 import javax.swing.*;
 import java.awt.*;
-import java.sql.Date;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-
-import database.tables.ClientEntity;
 
 public class AltaEmpresaWorker extends SwingWorker<Void, Void> {
     AltaEmpresa empresa;
@@ -92,6 +86,9 @@ public class AltaEmpresaWorker extends SwingWorker<Void, Void> {
                 frame.pack();
                 frame.setVisible(true);
             }
+        } catch (NumberFormatException nfe){
+            var m = "El número de calle debe ser un número válido.";
+            JOptionPane.showMessageDialog(this.empresa, m,m,JOptionPane.ERROR_MESSAGE);
         } catch (Exception ex){
             var m = "Ha ocurrido un error en la operación de registro. Inténtelo de nuevo.";
             JOptionPane.showMessageDialog(this.empresa, m, m, JOptionPane.WARNING_MESSAGE);

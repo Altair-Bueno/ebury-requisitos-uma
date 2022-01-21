@@ -4,6 +4,7 @@ import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
 import database.HibernateStartUp;
+import database.tables.AddressAssociatedStaffEntity;
 import database.tables.RelationEntity;
 import gui.Frame;
 import gui.login.Login;
@@ -22,43 +23,45 @@ import java.util.*;
 import java.util.List;
 
 public class altaAsociadoEmpresa extends JPanel implements Frame {
-    private JPanel root;
-    private JPanel info;
-    private JPanel direccion;
-    private JPanel contra;
+    JComboBox fDD;
+    JComboBox fMM;
+    JComboBox fYYYY;
+    JComboBox lTipo;
+    JTextField calle;
+    JTextField num;
+    JTextField ppo;
     JTextField tNIF;
     JTextField primerNom;
     JTextField primerAp;
     JTextField segundoNom;
     JTextField segundoAp;
+    JTextField ciudad;
+    JTextField region;
+    JTextField cp;
+    JCheckBox cbDirActual;
+    JPasswordField pwd;
+    JTable tablaAsociados;
+    JComboBox cPais;
+    AltaEmpresa empresa;
+    Map<String, String> countries = new HashMap<>();
+    private JPanel root;
+    private JPanel info;
+    private JPanel direccion;
+    private JPanel contra;
     private JPanel primerNomAp;
     private JPanel segundoNomAp;
     private JPanel nomApPanel;
     private JPanel nifPanel;
     private JPanel fechaNacTipoPanel;
     private JPanel fechaN;
-    JComboBox fDD;
-    public JComboBox fMM;
-    JComboBox fYYYY;
-    JComboBox lTipo;
-    JTextField calle;
-    JTextField num;
-    JTextField ppo;
     private JPanel calleNumeroPanel;
     private JPanel ppoPanel;
-    JTextField ciudad;
-    JTextField region;
-    JTextField cp;
-    JCheckBox cbDirActual;
     private JPanel cPRCpPanel;
     private JPanel ciudadPaisVPanel;
     private JPanel regionCpPanel;
-    JPasswordField pwd;
     private JPasswordField repwd;
-    JTable tablaAsociados;
     private JButton borrarButton;
     private JButton finalizarButton;
-    JComboBox cPais;
     private JButton añadirButton;
     private JButton cancelarButton;
     private JScrollPane tablaPanel;
@@ -66,10 +69,8 @@ public class altaAsociadoEmpresa extends JPanel implements Frame {
     private JPanel finalizarPanel;
     private JPanel addcancelPanel;
     private JPanel formPanel;
+    private int selDay;
 
-    AltaEmpresa empresa;
-
-    Map<String, String> countries = new HashMap<>();
 
     public altaAsociadoEmpresa(AltaEmpresa empresa) {
         this.empresa = empresa;
@@ -82,15 +83,19 @@ public class altaAsociadoEmpresa extends JPanel implements Frame {
         $$$setupUI$$$();
         add(root);
 
-
-        ActionListener dateChange = (e) -> {
-            change();
-        };
-
         ActionListener addAS = (e) -> {
             var ok = true;
 
-            if (tNIF.getText().isBlank() || primerNom.getText().isBlank() || primerAp.getText().isBlank() || pwd.getText().isBlank() || repwd.getText().isBlank() || lTipo.getSelectedItem() == null) {
+            if (tNIF.getText().isBlank() ||
+                    primerNom.getText().isBlank() ||
+                    primerAp.getText().isBlank() ||
+                    pwd.getText().isBlank() ||
+                    repwd.getText().isBlank() ||
+                    lTipo.getSelectedItem() == null ||
+                    fDD.getSelectedItem().toString().equals("-") ||
+                    fMM.getSelectedItem().toString().equals("-") ||
+                    fYYYY.getSelectedItem().toString().equals("-")
+            ) {
                 var m = "Rellene los campos obligatorios de la persona.";
                 JOptionPane.showMessageDialog(this, m, m, JOptionPane.WARNING_MESSAGE);
                 ok = false;
@@ -114,23 +119,51 @@ public class altaAsociadoEmpresa extends JPanel implements Frame {
             }
         };
 
-        ActionListener delAS = (e) -> {
+        fDD.addActionListener((e) -> {
+            selDay = fDD.getSelectedItem().toString().equals("-") ? -1 : Integer.parseInt(fDD.getSelectedItem().toString());
+        });
+        fMM.addActionListener((e) -> {
+            change();
+        });
+        fYYYY.addActionListener((e) -> {
+            change();
+        });
+        añadirButton.addActionListener(addAS);
+        borrarButton.addActionListener((e) -> {
             var worker = new borrarAsociadoEmpresaWorker(this);
             worker.execute();
-        };
-
-        ActionListener finalizarAS = (e) -> {
+        });
+        finalizarButton.addActionListener((e) -> {
             var m = "La cuenta de empresa ha sido dada de alta satisfactoriamente.";
             if (JOptionPane.showOptionDialog(this, m, m, JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, null, null) == JOptionPane.OK_OPTION) {
                 back2Login();
             }
-        };
+        });
+        cancelarButton.addActionListener((e) -> {
+            clear();
+        });
+    }
 
-        fMM.addActionListener(dateChange);
-        fYYYY.addActionListener(e -> change());
-        añadirButton.addActionListener(addAS);
-        borrarButton.addActionListener(delAS);
-        finalizarButton.addActionListener(finalizarAS);
+    public void clear() {
+        tNIF.setText("");
+        primerNom.setText("");
+        segundoNom.setText("");
+        primerAp.setText("");
+        segundoAp.setText("");
+        lTipo.setSelectedIndex(0);
+        calle.setText("");
+        num.setText("");
+        ppo.setText("");
+        ciudad.setText("");
+        cPais.setSelectedIndex(0);
+        region.setText("");
+        cp.setText("");
+        cbDirActual.setSelected(false);
+        pwd.setText("");
+        repwd.setText("");
+        fDD.setSelectedIndex(0);
+        fMM.setSelectedIndex(0);
+        fYYYY.setSelectedIndex(0);
     }
 
     void back2Login() {
@@ -155,21 +188,44 @@ public class altaAsociadoEmpresa extends JPanel implements Frame {
 
     void populateTable() {
         String[] colHeadings = {"Nombre", "NIF", "Tipo", ""};
-        DefaultTableModel model = new DefaultTableModel();
+        DefaultTableModel model = new DefaultTableModel() {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                //all cells false
+                return false;
+            }
+
+            public Class<?> getColumnClass(int column) {
+                switch (column) {
+                    case 0:
+                        return String.class;
+                    case 1:
+                        return String.class;
+                    case 2:
+                        return String.class;
+                    case 3:
+                        return Boolean.class;
+                    default:
+                        return String.class;
+                }
+            }
+        };
         model.setColumnIdentifiers(colHeadings);
 
         tablaAsociados.setModel(model);
         try (Session session = HibernateStartUp.getSessionFactory().openSession()) {
             var listaRel = (List<RelationEntity>) session.createQuery("FROM RelationEntity WHERE Client_ID = " + empresa.getEmpresa().getId()).list();
+            var i = 0;
             for (RelationEntity r : listaRel) {
-                DefaultTableModel tabmod = (DefaultTableModel) tablaAsociados.getModel();
-                Vector datos = new Vector();
                 var as = r.getAssociatedStaffDni();
-                datos.add(as.fullName());
-                datos.add(as.getDni());
-                datos.add(as.getTipoAsociado());
-                datos.add(cbDirActual.isSelected());
-                tabmod.addRow(datos);
+                var address = (AddressAssociatedStaffEntity) session.createQuery("FROM AddressAssociatedStaffEntity  WHERE AssociatedStaffDNI = '" + as.getDni() + "'").list().get(0);
+
+                model.addRow(new Object[0]);
+                model.setValueAt(as.fullName(), i, 0);
+                model.setValueAt(as.getDni(), i, 1);
+                model.setValueAt(as.getTipoAsociado(), i, 2);
+                model.setValueAt(address.getValid(), i, 3);
+                i++;
             }
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -177,15 +233,25 @@ public class altaAsociadoEmpresa extends JPanel implements Frame {
     }
 
     private void change() {
-        var ym = YearMonth.of((Integer) fYYYY.getSelectedItem(), fMM.getSelectedIndex() + 1);
-
-        fillDays(ym.lengthOfMonth());
+        if (fMM.getSelectedItem().toString().equals("-")) {
+            fillDays(31);
+            if (selDay == -1 || selDay > fDD.getItemCount() - 1) fDD.setSelectedIndex(0);
+            else fDD.setSelectedIndex(selDay);
+            fDD.setSelectedIndex(0);
+        } else {
+            var yyyy = fYYYY.getSelectedItem().equals("-") ? Calendar.getInstance().get(Calendar.YEAR) : Integer.parseInt(fYYYY.getSelectedItem().toString());
+            var ym = YearMonth.of(yyyy, fMM.getSelectedIndex());
+            fillDays(ym.lengthOfMonth());
+            if (selDay == -1 || selDay > fDD.getItemCount() - 1) fDD.setSelectedIndex(0);
+            else fDD.setSelectedIndex(selDay);
+        }
     }
 
     private void fillDays(int length) {
         var array = new ArrayList<>();
+        array.add("-");
         for (int i = 1; i <= length; i++) {
-            array.add(i);
+            array.add(String.valueOf(i));
         }
 
         fDD.setModel(new DefaultComboBoxModel(array.toArray()));
@@ -193,34 +259,37 @@ public class altaAsociadoEmpresa extends JPanel implements Frame {
 
     private void setUpCalendar() {
         var y = Calendar.getInstance().get(Calendar.YEAR);
-        var d = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
-        var m = Calendar.getInstance().get(Calendar.MONTH);
-        var days = YearMonth.of(y, m + 1).lengthOfMonth();
         var dfs = new DateFormatSymbols();
         var array = new ArrayList<>();
 
         // Meter años en el combobox
 
-        for (int i = y - 150; i <= y; i++) {
-            array.add(i);
+        array.add("-");
+        for (int i = y; i >= y - 150; i--) {
+            array.add(String.valueOf(i));
         }
 
         fYYYY = new JComboBox(array.toArray());
-        fYYYY.setSelectedIndex(fYYYY.getItemCount() - 1);
+        fYYYY.setSelectedIndex(0);
 
         // Meter meses en el combobox
 
-        fMM = new JComboBox(dfs.getMonths());
-        var mm = (DefaultComboBoxModel) fMM.getModel();
-        fMM.setSelectedIndex(mm.getIndexOf(dfs.getMonths()[m]));
+        array.clear();
+        array.add("-");
+
+        for (int i = 0; i < dfs.getMonths().length - 1; i++) {
+            array.add(dfs.getMonths()[i]);
+        }
+
+        fMM = new JComboBox(array.toArray());
+        fMM.setSelectedIndex(0);
 
         // Meter dias en el combobox
 
         fDD = new JComboBox();
-        fillDays(days);
+        fillDays(31);
 
-        var dm = (DefaultComboBoxModel) fDD.getModel();
-        fDD.setSelectedIndex(dm.getIndexOf(d));
+        fDD.setSelectedIndex(0);
 
     }
 
@@ -320,21 +389,6 @@ public class altaAsociadoEmpresa extends JPanel implements Frame {
         if (label10Font != null) label10.setFont(label10Font);
         label10.setText("Año");
         fechaN.add(label10, new GridConstraints(1, 5, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        fMM = new JComboBox();
-        final DefaultComboBoxModel defaultComboBoxModel1 = new DefaultComboBoxModel();
-        defaultComboBoxModel1.addElement("Enero");
-        defaultComboBoxModel1.addElement("Febrero");
-        defaultComboBoxModel1.addElement("Marzo");
-        defaultComboBoxModel1.addElement("Abril");
-        defaultComboBoxModel1.addElement("Mayo");
-        defaultComboBoxModel1.addElement("Junio");
-        defaultComboBoxModel1.addElement("Julio");
-        defaultComboBoxModel1.addElement("Agosto");
-        defaultComboBoxModel1.addElement("Septiembre");
-        defaultComboBoxModel1.addElement("Octubre");
-        defaultComboBoxModel1.addElement("Noviembre");
-        defaultComboBoxModel1.addElement("Diciembre");
-        fMM.setModel(defaultComboBoxModel1);
         fechaN.add(fMM, new GridConstraints(0, 3, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final JLabel label11 = new JLabel();
         label11.setText("Fecha Nacimiento(*)");
@@ -350,10 +404,10 @@ public class altaAsociadoEmpresa extends JPanel implements Frame {
         label12.setText("Tipo(*)");
         panel1.add(label12, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         lTipo = new JComboBox();
-        final DefaultComboBoxModel defaultComboBoxModel2 = new DefaultComboBoxModel();
-        defaultComboBoxModel2.addElement("Socio");
-        defaultComboBoxModel2.addElement("Representante");
-        lTipo.setModel(defaultComboBoxModel2);
+        final DefaultComboBoxModel defaultComboBoxModel1 = new DefaultComboBoxModel();
+        defaultComboBoxModel1.addElement("Socio");
+        defaultComboBoxModel1.addElement("Representante");
+        lTipo.setModel(defaultComboBoxModel1);
         panel1.add(lTipo, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final Spacer spacer8 = new Spacer();
         fechaNacTipoPanel.add(spacer8, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_FIXED, 1, null, new Dimension(30, -1), null, 0, false));

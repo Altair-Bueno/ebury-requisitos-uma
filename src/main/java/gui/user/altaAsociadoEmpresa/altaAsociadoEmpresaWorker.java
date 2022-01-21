@@ -2,6 +2,7 @@ package gui.user.altaAsociadoEmpresa;
 
 import javax.swing.*;
 import java.awt.*;
+import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
@@ -33,6 +34,9 @@ public class altaAsociadoEmpresaWorker extends SwingWorker<Void, Void> {
     protected Void doInBackground() throws Exception {
         setPanelEnabled(asociadoEmpresa,false);
         asociadoEmpresa.setCursor(Cursor.getPredefinedCursor((Cursor.WAIT_CURSOR)));
+        var mes = asociadoEmpresa.fMM.getSelectedItem().toString();
+        var dia = Integer.parseInt(asociadoEmpresa.fDD.getSelectedItem().toString());
+        var anyo = Integer.parseInt(asociadoEmpresa.fYYYY.getSelectedItem().toString());
 
         try(Session session = HibernateStartUp.getSessionFactory().openSession()){
             var transaction = session.beginTransaction();
@@ -40,13 +44,13 @@ public class altaAsociadoEmpresaWorker extends SwingWorker<Void, Void> {
             var format = new SimpleDateFormat("dd-MM-yyyy");
             var inputFormat = new SimpleDateFormat("MMMM", new Locale("es", "ES"));
             Calendar cal = Calendar.getInstance();
-            cal.setTime(inputFormat.parse(asociadoEmpresa.fMM.getSelectedItem().toString()));
+            cal.setTime(inputFormat.parse(mes));
             SimpleDateFormat outputFormat = new SimpleDateFormat("MM");
 
             var parsed = format.parse(
-                    String.format("%02d", (Integer) asociadoEmpresa.fDD.getSelectedItem())
+                    String.format("%02d", dia)
                             + "-" + outputFormat.format(cal.getTime())
-                            + "-" + asociadoEmpresa.fYYYY.getSelectedItem().toString()
+                            + "-" + anyo
             );
 
             var date = new java.util.Date();
@@ -58,6 +62,7 @@ public class altaAsociadoEmpresaWorker extends SwingWorker<Void, Void> {
                     nombre,
                     asociadoEmpresa.primerAp.getText(),
                     asociadoEmpresa.segundoAp.getText(),
+                    new Date(parsed.getTime()),
                     asociadoEmpresa.lTipo.getSelectedItem().toString()
             );
 
@@ -98,6 +103,7 @@ public class altaAsociadoEmpresaWorker extends SwingWorker<Void, Void> {
         } catch (ExecutionException e) {
             e.printStackTrace();
         } finally {
+            asociadoEmpresa.clear();
             setPanelEnabled(asociadoEmpresa, true);
             asociadoEmpresa.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
             asociadoEmpresa.populateTable();

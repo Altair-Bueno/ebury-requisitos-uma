@@ -6,6 +6,7 @@ import org.hibernate.Session;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -29,15 +30,19 @@ public class AssociatedStaffEntity {
     @Enumerated(EnumType.STRING)
     private Status state;
     @Basic
+    @Column(name = "birth_date")
+    private Date birthDate;
+    @Basic
     @Column(name = "tipoAsociado")
     private String tipoAsociado;
 
-    public AssociatedStaffEntity(String dni, String name, String lastName1, String lastName2, String tipoAsociado){
+    public AssociatedStaffEntity(String dni, String name, String lastName1, String lastName2, Date birthDate, String tipoAsociado){
         this.dni = dni;
         this.name = name;
         this.lastName1 = lastName1;
         this.lastName2 = lastName2;
         this.state = Status.Active;
+        this.birthDate = birthDate;
         this.tipoAsociado = tipoAsociado;
     }
 
@@ -83,6 +88,14 @@ public class AssociatedStaffEntity {
 
     public void setState(Status state) {
         this.state = state;
+    }
+
+    public Date getBirthDate() {
+        return birthDate;
+    }
+
+    public void setBirthDate(Date birthDate) {
+        this.birthDate = birthDate;
     }
 
     public String getTipoAsociado() {

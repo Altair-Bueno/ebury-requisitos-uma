@@ -11,9 +11,7 @@ import org.hibernate.Session;
 import javax.swing.*;
 import java.awt.*;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.Locale;
 import java.util.concurrent.ExecutionException;
 
@@ -50,10 +48,11 @@ public class AltaClienteWorker extends SwingWorker<Void, Void> {
             Calendar cal = Calendar.getInstance();
             cal.setTime(inputFormat.parse(cliente.fMM.getSelectedItem().toString()));
             SimpleDateFormat outputFormat = new SimpleDateFormat("MM");
+
             var parsed = format.parse(
-                    String.format("%02d", (Integer) cliente.fDD.getSelectedItem())
+                    String.format("%02d", Integer.parseInt(cliente.fDD.getSelectedItem().toString()))
                     + "-" + outputFormat.format(cal.getTime())
-                    + "-" + cliente.fYYYY.getSelectedItem().toString()
+                    + "-" + Integer.parseInt(cliente.fYYYY.getSelectedItem().toString())
             );
 
             var date = new java.util.Date();
@@ -71,24 +70,31 @@ public class AltaClienteWorker extends SwingWorker<Void, Void> {
             var address = new AddressEntity(
                     client,
                     cliente.tCalle.getText(),
-                    cliente.tNumero.getText(),
+                    Integer.parseInt(cliente.tNumero.getText()),
                     cliente.tCiudad.getText(),
                     cliente.tCP.getText(),
                     cliente.countries.get(cliente.cPais.getSelectedItem().toString()),
+                    cliente.tPPO.getText(),
                     cliente.cbValid.isSelected()
             );
+
             session.save(client);
             session.save(address);
             session.save(login);
 
             transaction.commit();
+
             session.close();
 
             var m = "Registro completado con éxito.";
             if(JOptionPane.showOptionDialog(null, m, "Éxito.", JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, null, null) == JOptionPane.OK_OPTION){
                 cliente.back2Login();
             }
+        } catch (NumberFormatException nfe){
+            var m = "El número de calle debe ser un número válido.";
+            JOptionPane.showMessageDialog(this.cliente, m,m,JOptionPane.ERROR_MESSAGE);
         } catch (Exception e){
+            e.printStackTrace();
             var m = "Ha ocurrido un error en la operación de registro. Inténtelo de nuevo.";
             JOptionPane.showMessageDialog(this.cliente, m, m, JOptionPane.ERROR_MESSAGE);
         }

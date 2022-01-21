@@ -32,18 +32,18 @@ public class AltaCliente extends JPanel implements Frame {
     JComboBox cPais;
     JButton cancelarButton;
     JButton aceptarButton;
-    JPanel VSPACER;
-    JPanel HSPACER;
-    JPanel HSPACER2;
     JTextField tPPO; //OK
     JTextField tRegion; //OK
-    private JPanel fechaN;
     JComboBox fDD;
     JComboBox fMM;
     JComboBox fYYYY;
     JCheckBox cbValid;
-
     Map<String, String> countries = new HashMap<>();
+    private JPanel VSPACER;
+    private JPanel HSPACER;
+    private JPanel HSPACER2;
+    private JPanel fechaN;
+    private int selDay;
 
     public AltaCliente() {
         countries.put("-", "");
@@ -55,13 +55,17 @@ public class AltaCliente extends JPanel implements Frame {
         $$$setupUI$$$();
         add(root);
 
-        ActionListener cancelar = (e) -> {
-            back2Login();
-        };
-
         ActionListener aceptar = (e) -> {
             var ok = true;
-            if (tNIF.getText().isBlank() || tNombre.getText().isBlank() || tPrimerAp.getText().isBlank() || tPassword.getText().isBlank() || tRepPassword.getText().isBlank()) {
+            if (tNIF.getText().isBlank() ||
+                    tNombre.getText().isBlank() ||
+                    tPrimerAp.getText().isBlank() ||
+                    tPassword.getText().isBlank() ||
+                    tRepPassword.getText().isBlank() ||
+                    fDD.getSelectedItem().toString().equals("-") ||
+                    fMM.getSelectedItem().toString().equals("-") ||
+                    fYYYY.getSelectedItem().toString().equals("-")
+            ) {
                 var m = "Rellene los campos obligatorios de la empresa.";
                 JOptionPane.showMessageDialog(this, m, m, JOptionPane.WARNING_MESSAGE);
                 ok = false;
@@ -85,14 +89,19 @@ public class AltaCliente extends JPanel implements Frame {
 
         };
 
-        ActionListener dateChange = (e) -> {
-            change();
-        };
-
-        cancelarButton.addActionListener(cancelar);
+        cancelarButton.addActionListener((e) -> {
+            back2Login();
+        });
         aceptarButton.addActionListener(aceptar);
-        fMM.addActionListener(dateChange);
-        fYYYY.addActionListener(dateChange);
+        fDD.addActionListener((e) -> {
+            selDay = fDD.getSelectedItem().toString().equals("-") ? -1 : Integer.parseInt(fDD.getSelectedItem().toString());
+        });
+        fMM.addActionListener((e) -> {
+            change();
+        });
+        fYYYY.addActionListener((e) -> {
+            change();
+        });
     }
 
     void back2Login() {
@@ -112,18 +121,18 @@ public class AltaCliente extends JPanel implements Frame {
     }
 
     private void change() {
-        var ym = YearMonth.of((Integer) fYYYY.getSelectedItem(), fMM.getSelectedIndex() + 1);
-
-        fillDays(ym.lengthOfMonth());
-    }
-
-    private void fillDays(int length) {
-        var array = new ArrayList<>();
-        for (int i = 1; i <= length; i++) {
-            array.add(i);
+        if (fMM.getSelectedItem().toString().equals("-")) {
+            fillDays(31);
+            if (selDay == -1 || selDay > fDD.getItemCount() - 1) fDD.setSelectedIndex(0);
+            else fDD.setSelectedIndex(selDay);
+            fDD.setSelectedIndex(0);
+        } else {
+            var yyyy = fYYYY.getSelectedItem().equals("-") ? Calendar.getInstance().get(Calendar.YEAR) : Integer.parseInt(fYYYY.getSelectedItem().toString());
+            var ym = YearMonth.of(yyyy, fMM.getSelectedIndex());
+            fillDays(ym.lengthOfMonth());
+            if (selDay == -1 || selDay > fDD.getItemCount() - 1) fDD.setSelectedIndex(0);
+            else fDD.setSelectedIndex(selDay);
         }
-
-        fDD.setModel(new DefaultComboBoxModel(array.toArray()));
     }
 
     private JFrame getAppFrame() {
@@ -320,36 +329,49 @@ public class AltaCliente extends JPanel implements Frame {
         return root;
     }
 
+    private void fillDays(int length) {
+        var array = new ArrayList<>();
+        array.add("-");
+        for (int i = 1; i <= length; i++) {
+            array.add(String.valueOf(i));
+        }
+
+        fDD.setModel(new DefaultComboBoxModel(array.toArray()));
+    }
+
     private void setUpCalendar() {
         var y = Calendar.getInstance().get(Calendar.YEAR);
-        var d = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
-        var m = Calendar.getInstance().get(Calendar.MONTH);
-        var days = YearMonth.of(y, m + 1).lengthOfMonth();
         var dfs = new DateFormatSymbols();
         var array = new ArrayList<>();
 
         // Meter años en el combobox
 
-        for (int i = y - 150; i <= y; i++) {
-            array.add(i);
+        array.add("-");
+        for (int i = y; i >= y - 150; i--) {
+            array.add(String.valueOf(i));
         }
 
         fYYYY = new JComboBox(array.toArray());
-        fYYYY.setSelectedIndex(fYYYY.getItemCount() - 1);
+        fYYYY.setSelectedIndex(0);
 
         // Meter meses en el combobox
 
-        fMM = new JComboBox(dfs.getMonths());
-        var mm = (DefaultComboBoxModel) fMM.getModel();
-        fMM.setSelectedIndex(mm.getIndexOf(dfs.getMonths()[m]));
+        array.clear();
+        array.add("-");
+
+        for (int i = 0; i < dfs.getMonths().length - 1; i++) {
+            array.add(dfs.getMonths()[i]);
+        }
+
+        fMM = new JComboBox(array.toArray());
+        fMM.setSelectedIndex(0);
 
         // Meter dias en el combobox
 
         fDD = new JComboBox();
-        fillDays(days);
+        fillDays(31);
 
-        var dm = (DefaultComboBoxModel) fDD.getModel();
-        fDD.setSelectedIndex(dm.getIndexOf(d));
+        fDD.setSelectedIndex(0);
 
     }
 

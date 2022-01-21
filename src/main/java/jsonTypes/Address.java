@@ -6,11 +6,11 @@ public class Address implements Serializable {
 
     String city;
     String street;
-    String number;
+    int number;
     String postalCode;
     String country;
 
-    public Address(String city, String street, String number, String postalCode, String country) {
+    public Address(String city, String street, int number, String postalCode, String country) {
         this.city = city;
         this.street = street;
         this.number = number;
@@ -34,11 +34,11 @@ public class Address implements Serializable {
         this.street = street;
     }
 
-    public String getNumber() {
+    public int getNumber() {
         return number;
     }
 
-    public void setNumber(String number) {
+    public void setNumber(int number) {
         this.number = number;
     }
 

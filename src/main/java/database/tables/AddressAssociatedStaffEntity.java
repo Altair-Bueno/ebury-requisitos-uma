@@ -21,7 +21,7 @@ public class AddressAssociatedStaffEntity {
     private String street;
     @Basic
     @Column(name = "number")
-    private String number;
+    private int number;
     @Basic
     @Column(name = "city")
     private String city;
@@ -34,14 +34,18 @@ public class AddressAssociatedStaffEntity {
     @Basic
     @Column(name = "isValid")
     private Boolean isValid;
+    @Basic
+    @Column(name = "Planta_Puerta_Oficina")
+    private String plantaPuertaOficina;
 
-    public AddressAssociatedStaffEntity(AssociatedStaffEntity AssociatedStaffDNI, String street, String number, String city, String postalCode, String country, boolean isValid) {
+    public AddressAssociatedStaffEntity(AssociatedStaffEntity AssociatedStaffDNI, String street, int number, String city, String postalCode, String country, String plantaPuertaOficina, boolean isValid) {
         this.AssociatedStaffDNI = AssociatedStaffDNI;
         this.street = street;
         this.number = number;
         this.city = city;
         this.postalCode = postalCode;
         this.country = country;
+        this.plantaPuertaOficina = plantaPuertaOficina;
         this.isValid = isValid;
     }
 
@@ -73,11 +77,11 @@ public class AddressAssociatedStaffEntity {
         this.street = street;
     }
 
-    public String getNumber() {
+    public int getNumber() {
         return number;
     }
 
-    public void setNumber(String number) {
+    public void setNumber(int number) {
         this.number = number;
     }
 
@@ -104,6 +108,7 @@ public class AddressAssociatedStaffEntity {
     public void setCountry(String country) {
         this.country = country;
     }
+
 
     public Boolean getValid() {
         return isValid;
