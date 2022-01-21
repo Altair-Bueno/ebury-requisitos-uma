@@ -96,7 +96,9 @@ public class AltaClienteWorker extends SwingWorker<Void, Void> {
         } catch (Exception e){
             e.printStackTrace();
             var m = "Ha ocurrido un error en la operación de registro. Inténtelo de nuevo.";
-            JOptionPane.showMessageDialog(this.cliente, m, m, JOptionPane.ERROR_MESSAGE);
+            if(JOptionPane.showOptionDialog(this.cliente, m, m, JOptionPane.DEFAULT_OPTION, JOptionPane.ERROR_MESSAGE, null, null, null) == JOptionPane.OK_OPTION){
+                this.cliente.back2Login();
+            }
         }
 
         return null;

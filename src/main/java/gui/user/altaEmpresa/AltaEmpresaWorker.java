@@ -54,10 +54,11 @@ public class AltaEmpresaWorker extends SwingWorker<Void, Void> {
             var address = new AddressEntity(
                     client,
                     empresa.tCalle.getText(),
-                    empresa.tNumero.getText(),
+                    Integer.parseInt(empresa.tNumero.getText()),
                     empresa.tCiudad.getText(),
                     empresa.tCP.getText(),
                     empresa.countries.get(empresa.cPais.getSelectedItem().toString()),
+                    empresa.tPPO.getText(),
                     empresa.cbDirActual.isSelected()
             );
 
@@ -91,8 +92,9 @@ public class AltaEmpresaWorker extends SwingWorker<Void, Void> {
             JOptionPane.showMessageDialog(this.empresa, m,m,JOptionPane.ERROR_MESSAGE);
         } catch (Exception ex){
             var m = "Ha ocurrido un error en la operación de registro. Inténtelo de nuevo.";
-            JOptionPane.showMessageDialog(this.empresa, m, m, JOptionPane.WARNING_MESSAGE);
-            ex.printStackTrace();
+            if(JOptionPane.showOptionDialog(this.empresa, m, m, JOptionPane.DEFAULT_OPTION, JOptionPane.ERROR_MESSAGE, null, null, null) == JOptionPane.OK_OPTION){
+                empresa.back2Login();
+            }
         }
 
         return null;

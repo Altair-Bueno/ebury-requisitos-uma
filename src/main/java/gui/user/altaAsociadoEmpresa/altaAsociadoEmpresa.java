@@ -101,11 +101,17 @@ public class altaAsociadoEmpresa extends JPanel implements Frame {
                 ok = false;
             }
 
-            if (calle.getText().isBlank() || num.getText().isBlank() || ppo.getText().isBlank() || ciudad.getText().isBlank() || cPais.getSelectedItem().toString().equals("-") || cp.getText().isBlank()) {
+            if (calle.getText().isBlank() ||
+                    num.getText().isBlank() ||
+                    ppo.getText().isBlank() ||
+                    ciudad.getText().isBlank() ||
+                    cPais.getSelectedItem().toString().equals("-") ||
+                    cp.getText().isBlank()) {
                 var m = "Rellene los campos obligatorios de la direccion.";
                 JOptionPane.showMessageDialog(this, m, m, JOptionPane.WARNING_MESSAGE);
                 ok = false;
             }
+
 
             if (!Arrays.equals(pwd.getPassword(), repwd.getPassword())) {
                 var m = "Las contraseñas no coinciden";

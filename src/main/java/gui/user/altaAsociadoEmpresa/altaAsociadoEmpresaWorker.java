@@ -71,10 +71,11 @@ public class altaAsociadoEmpresaWorker extends SwingWorker<Void, Void> {
             var address = new AddressAssociatedStaffEntity(
                     asociadoEm,
                     asociadoEmpresa.calle.getText(),
-                    asociadoEmpresa.num.getText(),
+                    Integer.parseInt(asociadoEmpresa.num.getText()),
                     asociadoEmpresa.ciudad.getText(),
                     asociadoEmpresa.cp.getText(),
                     asociadoEmpresa.countries.get(asociadoEmpresa.cPais.getSelectedItem().toString()),
+                    asociadoEmpresa.ppo.getText(),
                     asociadoEmpresa.cbDirActual.isSelected()
             );
 
@@ -91,7 +92,17 @@ public class altaAsociadoEmpresaWorker extends SwingWorker<Void, Void> {
 
             transaction.commit();
             session.close();
+        } catch (NumberFormatException nfe){
+            var m = "El número de calle debe ser un número válido.";
+            JOptionPane.showMessageDialog(this.asociadoEmpresa, m,m,JOptionPane.ERROR_MESSAGE);
+        } catch (Exception e){
+            e.printStackTrace();
+            var m = "Ha ocurrido un error en la operación de registro. Inténtelo de nuevo.";
+            if(JOptionPane.showOptionDialog(this.asociadoEmpresa, m, m, JOptionPane.DEFAULT_OPTION, JOptionPane.ERROR_MESSAGE, null, null, null) == JOptionPane.OK_OPTION){
+                asociadoEmpresa.back2Login();
+            }
         }
+
         return null;
     }
 

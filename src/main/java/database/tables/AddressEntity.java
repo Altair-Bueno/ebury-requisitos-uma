@@ -34,6 +34,9 @@ public class AddressEntity {
     @Basic
     @Column(name = "isValid")
     private boolean isValid;
+    @Basic
+    @Column(name = "planta_Puerta_Oficina")
+    private String plantaPuertaOficina;
 
     public AddressEntity(ClientEntity clientId, String street, int number, String city, String postalCode, String country, String plantaPuertaOficina, Boolean isValid) {
         //this.id = 0;
@@ -43,6 +46,7 @@ public class AddressEntity {
         this.city = city;
         this.postalCode = postalCode;
         this.country = country;
+        this.plantaPuertaOficina = plantaPuertaOficina;
         this.isValid = isValid;
     }
 
@@ -109,6 +113,14 @@ public class AddressEntity {
     public void setValid(boolean valid) { this.isValid = valid; }
 
     public boolean getValid() { return isValid; }
+
+    public String getPlantaPuertaOficina() {
+        return plantaPuertaOficina;
+    }
+
+    public void setPlantaPuertaOficina(String plantaPuertaOficina) {
+        this.plantaPuertaOficina = plantaPuertaOficina;
+    }
 
     @Override
     public boolean equals(Object o) {

@@ -12,16 +12,18 @@ import java.awt.event.ActionListener;
 import java.util.*;
 
 public class AltaEmpresa extends JPanel implements Frame {
-    JPanel root; //OK
-    JTextField tCIF; //OK -- OBLIGATORIO
-    JPasswordField tPassword; //OK -- OBLIGATORIO
-    JPasswordField tRepPassword; //OK -- OBLIGATORIO
-    JTextField tNombre; // OK -- OBLIGATORIO
-    JTextField tCiudad; // OK -- Obligator
-    JTextField tCalle; //OK
-    JTextField tNumero; //OK
-    JTextField tCP; //OK
-    JComboBox cPais; //OK
+    private ClientEntity empresa;
+    private boolean ok = true;
+    JPanel root;
+    JTextField tCIF;
+    JPasswordField tPassword;
+    JPasswordField tRepPassword;
+    JTextField tNombre;
+    JTextField tCiudad;
+    JTextField tCalle;
+    JTextField tNumero;
+    JTextField tCP;
+    JComboBox cPais;
     JCheckBox cbDirActual;
     JButton cancelarButton;
     JButton aceptarButton;
@@ -29,13 +31,10 @@ public class AltaEmpresa extends JPanel implements Frame {
     JPanel VSPACER2;
     JPanel HSPACER;
     JPanel HSPACER2;
-    JTextField tPPO; //OK
-    JTextField tRegion; //OK+
-
-
-    private boolean ok = true;
+    JTextField tPPO;
+    JTextField tRegion;
     Map<String, String> countries = new HashMap<>();
-    private ClientEntity empresa;
+
 
     public AltaEmpresa() {
         countries.put("-", "");

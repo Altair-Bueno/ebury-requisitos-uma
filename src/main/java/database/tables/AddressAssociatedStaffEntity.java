@@ -118,6 +118,14 @@ public class AddressAssociatedStaffEntity {
         isValid = valid;
     }
 
+    public String getPlantaPuertaOficina() {
+        return plantaPuertaOficina;
+    }
+
+    public void setPlantaPuertaOficina(String plantaPuertaOficina) {
+        this.plantaPuertaOficina = plantaPuertaOficina;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
