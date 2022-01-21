@@ -30,7 +30,6 @@ public class altaAsociadoEmpresaWorker extends SwingWorker<Void, Void> {
         }
     }
 
-
     protected Void doInBackground() throws Exception {
         setPanelEnabled(asociadoEmpresa,false);
         asociadoEmpresa.setCursor(Cursor.getPredefinedCursor((Cursor.WAIT_CURSOR)));
@@ -51,8 +50,8 @@ public class altaAsociadoEmpresaWorker extends SwingWorker<Void, Void> {
             );
 
             var date = new java.util.Date();
-            var login = new LoginEntity(asociadoEmpresa.tNIF.getText(), asociadoEmpresa.pwd.getText(), Rol.User, null);
-
+            
+            var nombre = asociadoEmpresa.segundoNom.getText().isBlank() ? asociadoEmpresa.primerNom.getText() : asociadoEmpresa.primerNom.getText() + " " + asociadoEmpresa.segundoNom.getText();
 
             var asociadoEm = new AssociatedStaffEntity(
                     asociadoEmpresa.tNIF.getText(),
@@ -62,13 +61,16 @@ public class altaAsociadoEmpresaWorker extends SwingWorker<Void, Void> {
                     asociadoEmpresa.lTipo.getSelectedItem().toString()
             );
 
+            var login = new LoginEntity(asociadoEmpresa.tNIF.getText(), asociadoEmpresa.pwd.getText(), Rol.User, asociadoEm);
+
             var address = new AddressAssociatedStaffEntity(
                     asociadoEm,
                     asociadoEmpresa.calle.getText(),
                     asociadoEmpresa.num.getText(),
                     asociadoEmpresa.ciudad.getText(),
                     asociadoEmpresa.cp.getText(),
-                    asociadoEmpresa.countries.get(asociadoEmpresa.cPais.getSelectedItem().toString())
+                    asociadoEmpresa.countries.get(asociadoEmpresa.cPais.getSelectedItem().toString()),
+                    asociadoEmpresa.cbDirActual.isSelected()
             );
 
             var relation = new RelationEntity(
@@ -84,20 +86,7 @@ public class altaAsociadoEmpresaWorker extends SwingWorker<Void, Void> {
 
             transaction.commit();
             session.close();
-
-            /*
-            var m = "Registro completado con éxito.";
-            if(JOptionPane.showOptionDialog(null, m, "Éxito.", JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, null, null) == JOptionPane.OK_OPTION){
-                //TODO volver al login al dar finalizar.
-            }
-
-             */
-
-
         }
-
-
-
         return null;
     }
 

@@ -31,6 +31,9 @@ public class AddressEntity {
     @Basic
     @Column(name = "country")
     private String country;
+    @Basic
+    @Column(name = "isValid")
+    private boolean isValid;
 
     public AddressEntity(ClientEntity clientId, String street, String number, String city, String postalCode, String country, Boolean isValid) {
         //this.id = 0;
@@ -102,6 +105,10 @@ public class AddressEntity {
     public void setCountry(String country) {
         this.country = country;
     }
+
+    public void setValid(boolean valid) { this.isValid = valid; }
+
+    public boolean getValid() { return isValid; }
 
     @Override
     public boolean equals(Object o) {

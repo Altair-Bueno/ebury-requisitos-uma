@@ -170,6 +170,7 @@ public class altaAsociadoEmpresa extends JPanel implements Frame {
                 datos.add(as.fullName());
                 datos.add(as.getDni());
                 datos.add(as.getTipoAsociado());
+                datos.add(cbDirActual.isSelected());
                 tabmod.addRow(datos);
             }
         } catch (Exception ex) {
